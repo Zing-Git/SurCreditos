@@ -1,0 +1,347 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <!-- FORMULARIO INICIO -->
+            <form class="" [formGroup]="usuarioForm" (ngSubmit)="onFormSubmit()">
+                <fieldset>
+                    <ngb-tabset #t="ngbTabset" [justify]="currentJustify">
+
+                        <!--TABSET PARA EL PASO 1 -->
+                        <ngb-tab id="tab-selectbyid1" title="1- Datos Personales">
+                            <ng-template ngbTabContent>
+
+                                <div class="form-row">
+                                    <!-- Campo 1: Tipo de Dni-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputTipoDni">* Tipo de Documento</label>
+                                        <select formControlName="tipoDni" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoDni">
+                                        <option *ngFor="let tDni of tiposDni" [value]="tDni._id">
+                                          {{tDni.nombre}}
+                                        </option>
+                                      </select>
+                                    </div>
+                                    <!-- Campo 2:  Dni-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputDni">* Número de Documento</label>
+                                        <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDni" placeholder="30300300">
+                                    </div>
+                                    <!-- Dni error block -->
+                                    <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="dni.errors?.required">
+                                            El número de documento es requerido
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Campo 3:  Apellido-->
+                                <div class="form-group">
+                                    <label for="inputApellidos">* Apellido/s</label>
+                                    <input type="text" formControlName="apellidos" class="form-control form-control-sm" id="inputApellidos" placeholder="Perez">
+                                </div>
+                                <!-- Apellidos error block -->
+                                <div *ngIf="apellidos.invalid && apellidos.touched" class="col-sm-6 text-danger">
+                                    <div *ngIf="apellidos.errors?.required">
+                                        El apellido es requerido
+                                    </div>
+                                </div>
+
+                                <!-- Campo 4:  Nombres-->
+                                <div class="form-group">
+                                    <label for="inputNombres">* Nombres</label>
+                                    <input type="text" formControlName="nombres" class="form-control form-control-sm" id="inputNombres" placeholder="Juan">
+                                </div>
+                                <!-- Nombres error block -->
+                                <div *ngIf="nombres.invalid && nombres.touched" class="col-sm-6 text-danger">
+                                    <div *ngIf="nombres.errors?.required">
+                                        El nombre es requerido
+                                    </div>
+                                </div>
+
+                                <!-- Campo 5:  Fecha de Nacimiento-->
+                                <div class="form-group">
+                                    <label for="inputFechaNacimiento">* Fecha de Nacimiento</label>
+                                    <input type="date" formControlName="fechaNacimiento" class="form-control form-control-sm" id="inputFechaNacimiento">
+                                </div>
+                                <!-- FechaNacimiento error block -->
+                                <div *ngIf="fechaNacimiento.invalid && fechaNacimiento.touched" class="col-sm-6 text-danger">
+                                    <div *ngIf="fechaNacimiento.errors?.required">
+                                        Ingrese una Fecha Válida
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+
+
+                        <!--TABSET PARA EL PASO 2 -->
+                        <ngb-tab id="tab-selectbyid2" title="2- Registro de Domicilio">
+                            <ng-template ngbTabContent>
+
+                                <div class="form-row">
+                                    <!-- Campo 1: Pais-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPais">* País</label>
+                                        <select formControlName="pais" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputPais">
+                                      <option value="1" selected="">Argentina</option>
+                                    </select>
+                                    </div>
+
+                                    <!-- Campo 2: Provincia-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputProvincia">* Provincia</label>
+                                        <select formControlName="provincia" (change)="onChange()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputProvincia">
+                                      <option *ngFor="let fProv of provincias">
+                                          {{fProv.provincia}}
+                                      </option>
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <!-- Campo 3: Localidad-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputLocalidad">* Localidad</label>
+                                        <select formControlName="localidad" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputLocalidad">
+                                      <option *ngFor="let fLoc of localidades">
+                                          {{fLoc}}
+                                      </option>
+                                    </select>
+                                    </div>
+
+                                    <!-- Campo 4:  Barrio-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputBarrio">* Barrio</label>
+                                        <input type="text" formControlName="barrio" class="form-control form-control-sm" id="inputBarrio" placeholder="Alto Comedero">
+                                    </div>
+                                    <!-- Barrio error block -->
+                                    <div *ngIf="barrio.invalid && barrio.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="barrio.errors?.required">
+                                            El barrio es requerido
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <!-- Campo 5:  Calle-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputCalle">* Calle</label>
+                                        <input type="text" formControlName="calle" class="form-control form-control-sm" id="inputCalle" placeholder="Fuerza Aerea">
+                                    </div>
+                                    <!-- Calle error block -->
+                                    <div *ngIf="calle.invalid && calle.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="calle.errors?.required">
+                                            La calle es requerida
+                                        </div>
+                                    </div>
+
+                                    <!-- Campo 6:  numero-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputNumeroCasa">* Número</label>
+                                        <input type="text" formControlName="numeroCasa" class="form-control form-control-sm" id="inputNumeroCasa" placeholder="787">
+                                    </div>
+                                    <!-- Numero error block -->
+                                    <div *ngIf="numeroCasa.invalid && numeroCasa.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="numeroCasa.errors?.required">
+                                            El numero es requerido
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Campo 6: Estado Casa-->
+                                <div class="form-group">
+                                    <label for="inputEstadoCasa">* Situación de la Vivienda</label>
+                                    <select formControlName="estadoCasa" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputEstadoCasa">
+                                    <option *ngFor="let eCasa of estadosCasa" [value]="eCasa._id">
+                                        {{eCasa.nombre}}
+                                      </option>
+                                  </select>
+                                </div>
+                                <p>
+                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</button>
+                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</button>
+                                </p>
+                            </ng-template>
+                        </ngb-tab>
+
+
+
+                        <!--TABSET PARA EL PASO 3 -->
+                        <ngb-tab id="tab-selectbyid3" title="3- Datos de Contacto">
+                            <ng-template ngbTabContent>
+
+                                <div class="form-row">
+                                    <!-- Campos de Contactos-->
+                                    <!-- Contacto 1 - Celular-->
+                                    <div class="form-group col-md-4">
+                                        <label for="codPais">TEL CELULAR (Cod. País)</label>
+                                        <input list="codPais" value="+54" class="form-control form-control-sm" name="codPais1" formControlName="codigoPais1">
+                                        <datalist id="codPais">
+                                          <option value="+54">Argentina</option>
+                                          <option value="+591">Bolivia</option>
+                                          <option value="+55">Brasil</option>
+                                          <option value="+595">Paraguay</option>
+                                          <option value="+598">Uruguay</option>
+                                          <option value="+51">Peru</option>
+                                          <option value="+501">Chile</option>
+                                        </datalist>
+                                    </div>
+
+                                    <!-- <div class="form-group">
+                                        <label for="" class="h4">Teléfono Celular</label>
+                                        <label for="inputCodigoPais1">Cod. País</label>
+                                        <select formControlName="codigoPais1" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputCodigoPais1">
+                                          <option value="1" selected="">+549</option>
+                                        </select>
+                                    </div> -->
+
+                                    <div class="form-group col-md-4">
+                                        <label for="codArea1">(Cod. Area)</label>
+                                        <input list="codLocal" value="388" class="form-control form-control-sm" name="codArea1" formControlName="codigoArea1">
+                                        <datalist id="codLocal">
+                                        <option value="388">San Salvador de Jujuy</option>
+                                        <option value="3888">San Pedro de Jujuy</option>
+                                      </datalist>
+                                    </div>
+
+                                    <!-- <div class="form-group">
+                                        <label for="inputCodigoArea1">Cód. Area</label>
+                                        <select formControlName="codigoArea1" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputCodigoArea1">
+                                          <option value="1" selected="">388</option>
+                                        </select>
+                                    </div> -->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputNumero1">Número de Celular</label>
+                                        <input type="number" formControlName="numero1" class="form-control form-control-sm" id="inputNumero1" placeholder="6006060">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <!-- Contacto 2 - Fijo-->
+                                    <div class="form-group col-md-4">
+                                        <label for="codPais2">TELEFONO FIJO (Cod. País)</label>
+                                        <input list="codPais2" value="+54" class="form-control form-control-sm" name="codPais1" formControlName="codigoPais2">
+                                        <datalist id="codPais2">
+                                          <option value="+54">Argentina</option>
+                                          <option value="+591">Bolivia</option>
+                                          <option value="+55">Brasil</option>
+                                          <option value="+595">Paraguay</option>
+                                          <option value="+598">Uruguay</option>
+                                          <option value="+51">Peru</option>
+                                          <option value="+501">Chile</option>
+                                        </datalist>
+                                    </div>
+
+                                    <!-- <div class="form-group">
+                                        <label for="" class="h4">Teléfono Fijo</label>
+                                        <label for="inputCodigoPais2">Cod. País</label>
+                                        <select formControlName="codigoPais2" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputCodigoPais2">
+                                          <option value="1" selected="">+0549</option>
+                                        </select>
+                                    </div> -->
+
+                                    <div class="form-group col-md-4">
+                                        <label for="codArea2">Cod. Area</label>
+                                        <input list="codLocal2" value="388" class="form-control form-control-sm" name="codArea2" formControlName="codigoArea2">
+                                        <datalist id="codLocal2">
+                                        <option value="388">San Salvador de Jujuy</option>
+                                        <option value="3888">San Pedro de Jujuy</option>
+                                      </datalist>
+                                    </div>
+
+                                    <!-- <div class="form-group">
+                                        <label for="inputCodigoArea2">Cód. Area</label>
+                                        <select formControlName="codigoArea2" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputCodigoArea2">
+                                          <option value="1" selected="">0388</option>
+                                        </select>
+                                    </div> -->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputNumero2">Número de Teléfono</label>
+                                        <input type="number" formControlName="numero2" class="form-control form-control-sm" id="inputNumero2" placeholder="4222222">
+                                    </div>
+                                </div>
+
+
+                                <!-- Contacto 3 - EMail-->
+                                <div class="form-group">
+                                    <label for="inputEmail">Email</label>
+                                    <input type="text" formControlName="email" id="inputEmail" class="form-control form-control-sm" placeholder="Ingrese dirección de email">
+                                </div>
+                                <p>
+                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</button>
+                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid4')">Siguiente</button>
+                                </p>
+                            </ng-template>
+                        </ngb-tab>
+
+                        <!--TABSET PARA EL PASO 4 -->
+                        <ngb-tab id="tab-selectbyid4" title="4- Datos de Usuario">
+                            <ng-template ngbTabContent>
+
+                                <!-- Campo 1: Rol de Usuario -->
+                                <div class="form-group">
+                                    <label for="inputRol">* Rol del Usuario</label>
+                                    <select formControlName="rol" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputRol">
+                                    <option *ngFor="let fRol of roles" [value]="fRol._id">
+                                        {{fRol.nombre}}
+                                    </option>
+                                  </select>
+                                </div>
+
+                                <!-- Campo 2: Nombre de Usuario-->
+                                <div class="form-group">
+                                    <label for="inputNombreUsuario">* Usuario</label>
+                                    <input type="text" formControlName="nombreUsuario" id="inputNombreUsuario" class="form-control form-control-sm" placeholder="Ingrese Usuario">
+                                    <!-- Usuario error block -->
+                                    <div *ngIf="nombreUsuario.invalid && nombreUsuario.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="nombreUsuario.errors?.required">
+                                            El usuario es requerido
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Campo 3: Clave -->
+                                <div class="form-group">
+                                    <label for="inputClave">* Clave</label>
+                                    <input type="password" formControlName="clave" id="inputClave" class="form-control form-control-sm" placeholder="Ingrese Clave">
+                                    <!-- Clave error block -->
+                                    <div *ngIf="clave.invalid && clave.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="clave.errors?.required">
+                                            Ingrese una clave con 8 caracteres como mínimo
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Campo 4: Clave Reingreso-->
+                                <div class="form-group">
+                                    <label for="inputClaveReingreso">* Reingrese la Clave</label>
+                                    <input type="password" formControlName="claveReingreso" id="inputClaveReingreso" class="form-control form-control-sm" placeholder="Re-Ingrese Clave">
+                                    <!-- Clave error block -->
+                                    <!-- <div *ngIf="claveReingreso.invalid && claveReingreso.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="claveReingreso.errors?.required">
+                                            Ingrese una clave con 8 caracteres como mínimo
+                                        </div>
+                                    </div> -->
+                                </div>
+
+                                <!--- Buttons Block Solo envia si el form esta validado-->
+                                <p><button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Atrás</button></p>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-default">Cancel</button>
+                                    <button type="submit" [disabled]="!usuarioForm.valid" class="btn btn-primary">Enviar Solo si Form esta validado</button>
+                                </div>
+
+
+                            </ng-template>
+                        </ngb-tab>
+
+                    </ngb-tabset>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-1">
+        </div>
+    </div>
+</div>

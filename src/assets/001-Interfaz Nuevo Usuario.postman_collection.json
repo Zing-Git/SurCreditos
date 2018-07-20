@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "264c5fa6-773a-4882-88a3-f49f355ee1d5",
+		"name": "001-Interfaz Nuevo Usuario",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "obtener tipos de dni",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "persona",
+							"value": "5b18bdc44cff532d5cd3ce0c",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "nombreUsuario",
+							"value": "pepe",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "clave",
+							"value": "pepe123",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "rol",
+							"value": "5b0e2d3dfb6fc004efffec03",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "contactos[0]",
+							"value": "{\"5b17e2e3ca09c4238e312677\"}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/persona/tipos_dni",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"persona",
+						"tipos_dni"
+					]
+				},
+				"description": "Metodo que devuelve los tipos de documentos de identidad cargados en la base de datos"
+			},
+			"response": []
+		},
+		{
+			"name": "obtener provincias y localidades",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/domicilio/provincias",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"domicilio",
+						"provincias"
+					]
+				},
+				"description": "Devuelve todas las provincias de la Argentina junto con el nombre de la capital de cada una y las localidades que la componen."
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener roles permitidos para un usuario",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7ImVzdGFkbyI6dHJ1ZSwiY29udGFjdG9zIjpbIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxMSIsIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxMyIsIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxNSJdLCJfaWQiOiI1YjJkMDQ1NmRhNjM0ZjAwMTQzMWFiMTciLCJwZXJzb25hIjoiNWIyZDA0NTVkYTYzNGYwMDE0MzFhYjEwIiwibm9tYnJlVXN1YXJpbyI6ImVtYW51ZWwiLCJjbGF2ZSI6IiQyYiQxMCRxUlFHUk1NNVhhWWpEV1FJWFBYSEFlQm1xS0MxZnRoTkdHcWNCbWtIREFTZkdveG5OMDFiZSIsInJvbCI6eyJfaWQiOiI1YjIxMWZlY2JhYzM5NTI5ODhjYTkyYjAiLCJwcmVjZWRlbmNpYSI6Mn0sImZlY2hhQWx0YSI6IjIwMTgtMDYtMjJUMTQ6MTQ6NDYuMjYwWiIsIl9fdiI6MH0sImlhdCI6MTUzMDkzODMwNywiZXhwIjoxNTMzNTMwMzA3fQ.afx38kKERANgosuOcOEp8xCWYDOkImeVsIzWxOeet2c"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/usuario/roles_permitidos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"usuario",
+						"roles_permitidos"
+					]
+				},
+				"description": "Devuelve una lista de los roles que un usuario puede dar de alta segun su propio Rol. Por regla, un usuario de un tipo especifico de Rol no puede dar de alta otro usuario con un Rol igual o superior, solo puede dar de alta usuarios con roles inferiores al propio."
+			},
+			"response": []
+		},
+		{
+			"name": "obtener tipos de contacto",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/contacto/tipos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"contacto",
+						"tipos"
+					]
+				},
+				"description": "Devuelve una lista con todos los tipos de contactos habilitados.\nEl id seleccionado luego se usara para guardar el contacto."
+			},
+			"response": []
+		},
+		{
+			"name": "Nuevo Usuario",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7ImVzdGFkbyI6dHJ1ZSwiY29udGFjdG9zIjpbIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxMSIsIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxMyIsIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxNSJdLCJfaWQiOiI1YjJkMDQ1NmRhNjM0ZjAwMTQzMWFiMTciLCJwZXJzb25hIjoiNWIyZDA0NTVkYTYzNGYwMDE0MzFhYjEwIiwibm9tYnJlVXN1YXJpbyI6ImVtYW51ZWwiLCJjbGF2ZSI6IiQyYiQxMCRxUlFHUk1NNVhhWWpEV1FJWFBYSEFlQm1xS0MxZnRoTkdHcWNCbWtIREFTZkdveG5OMDFiZSIsInJvbCI6eyJfaWQiOiI1YjIxMWZlY2JhYzM5NTI5ODhjYTkyYjAiLCJwcmVjZWRlbmNpYSI6Mn0sImZlY2hhQWx0YSI6IjIwMTgtMDYtMjJUMTQ6MTQ6NDYuMjYwWiIsIl9fdiI6MH0sImlhdCI6MTUzMDUxMDU4OCwiZXhwIjoxNTMzMTAyNTg4fQ.M5UeczyUj_e92VhipRlryV5hz4JMaAyvlwSPTTlQqu0"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"persona\":{\n\t\t\"_id\": \"5b3e7cac96d0e11437cc6d2e\",\n\t\t\"tipoDni\": \"5b0d6a845b9d842646da57c9\",\n        \"dni\": 54752030,\n        \"apellidos\": \"Gonzalez\",\n        \"nombres\": \"Ismael\",\n        \"fechaNacimiento\": \"2015-02-02\"\n\t},\n\t\"domicilio\":{\n\t\t\"pais\": \"Argentina\",\n        \"provincia\": \"Jujuy\",\n        \"localidad\": \"San Salvador\",\n        \"barrio\": \"Santa teresita\",\n        \"calle\": \"Pablo arroyo\",\n        \"numeroCasa\": \"521\",\n        \"estadoCasa\": \"5b18a965a04a411ac18bdef2\"\n\t},\n\t\"contactos\":[{\"tipoContacto\": \"5b10071f42fb563dffcf6b8c\",\n        \"codigoPais\": \"+549\",\n        \"codigoArea\": \"388\",\n        \"numeroCelular\": \"6011978\"},\n        {\"tipoContacto\": \"5b10071f42fb563dffcf6b8e\",\n        \"email\": \"ismael_13@gmail.com\"}\n        ],\n\t\"usuario\":{\n\t\t\"nombreUsuario\":\"Ismael_03\",\n\t\t\"clave\":\"Ismael123\",\n\t\t\"rol\": \"5b211fecbac3952988ca92b2\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "{{url}}/usuario/nuevo",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"usuario",
+						"nuevo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/persona/obtener_persona/?dni=54752026",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7ImVzdGFkbyI6dHJ1ZSwiY29udGFjdG9zIjpbIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxMSIsIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxMyIsIjViMmQwNDU1ZGE2MzRmMDAxNDMxYWIxNSJdLCJfaWQiOiI1YjJkMDQ1NmRhNjM0ZjAwMTQzMWFiMTciLCJwZXJzb25hIjoiNWIyZDA0NTVkYTYzNGYwMDE0MzFhYjEwIiwibm9tYnJlVXN1YXJpbyI6ImVtYW51ZWwiLCJjbGF2ZSI6IiQyYiQxMCRxUlFHUk1NNVhhWWpEV1FJWFBYSEFlQm1xS0MxZnRoTkdHcWNCbWtIREFTZkdveG5OMDFiZSIsInJvbCI6eyJfaWQiOiI1YjIxMWZlY2JhYzM5NTI5ODhjYTkyYjAiLCJwcmVjZWRlbmNpYSI6Mn0sImZlY2hhQWx0YSI6IjIwMTgtMDYtMjJUMTQ6MTQ6NDYuMjYwWiIsIl9fdiI6MH0sImlhdCI6MTUzMDkzODMwNywiZXhwIjoxNTMzNTMwMzA3fQ.afx38kKERANgosuOcOEp8xCWYDOkImeVsIzWxOeet2c"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/persona/obtener_persona/?dni=54752026",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"persona",
+						"obtener_persona",
+						""
+					],
+					"query": [
+						{
+							"key": "dni",
+							"value": "54752026"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,23 +1,29 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators,
   FormBuilder
-} from "@angular/forms";
+} from '@angular/forms';
 
-import { UsuariosService } from "../../../modules/servicios/usuarios/usuarios.service";
-import { TipoDni } from "../../../modelo/negocio/tipoDni";
-import { Rol } from "../../../modelo/negocio/rol";
-import { Provincia } from "../../../modelo/negocio/provincia";
-import { EstadoCasa } from "../../../modelo/negocio/estado-casa";
-import { TipoContacto } from "../../../modelo/negocio/tipo-contacto";
+import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.service';
+import { TipoDni } from '../../../modelo/negocio/tipoDni';
+import { Rol } from '../../../modelo/negocio/rol';
+import { Provincia } from '../../../modelo/negocio/provincia';
+import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
+import { TipoContacto } from '../../../modelo/negocio/tipo-contacto';
+import { LoginService } from '../../../modules/servicios/login/login.service';
+import { TokenPost } from '../../../modelo/util/token';
+import { Domicilio } from '../../../modelo/negocio/domicilio';
 
 @Component({
-  selector: "app-form-usuario",
-  templateUrl: "./form-usuario.component.html",
-  styleUrls: ["./form-usuario.component.css"]
+  selector: 'app-form-usuario',
+  templateUrl: './form-usuario.component.html',
+  styleUrls: ['./form-usuario.component.css']
 })
+
+
+
 export class FormUsuarioComponent implements OnInit {
   public tiposDni: TipoDni[];
   public provincias: Provincia[];
@@ -32,7 +38,8 @@ export class FormUsuarioComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private usuariosService: UsuariosService
+    private usuariosService: UsuariosService,
+    private loginService: LoginService
   ) {}
 
   ngOnInit(): void {
@@ -49,27 +56,27 @@ export class FormUsuarioComponent implements OnInit {
 
       // Clase usuario
       tipoDni: new FormControl(), //codigo ID de una consulta GET previa de tipo de Dni
-      dni: new FormControl("", [Validators.required]),
-      apellidos: new FormControl("", [Validators.required]),
-      nombres: new FormControl("", [Validators.required]),
+      dni: new FormControl('', [Validators.required]),
+      apellidos: new FormControl('', [Validators.required]),
+      nombres: new FormControl('', [Validators.required]),
       domicilio: new FormControl(), // codigo ID obtenido despues de una POST domicilio
-      fechaNacimiento: new FormControl("", [Validators.required]),
+      fechaNacimiento: new FormControl('', [Validators.required]),
       // Clase Domicilio:
       pais: new FormControl(), // Por defecto dejar Argentina
       provincia: new FormControl(), //obtenido de una consulta de Get Provincias
       localidad: new FormControl(), //Idem
-      barrio: new FormControl("", [Validators.required]),
-      calle: new FormControl("", [Validators.required]),
-      numeroCasa: new FormControl("", [Validators.required]),
+      barrio: new FormControl('', [Validators.required]),
+      calle: new FormControl('', [Validators.required]),
+      numeroCasa: new FormControl('', [Validators.required]),
       estadoCasa: new FormControl(), //obtenido de una consulta de Get Estado Casa
       // Clase Usuario:
       persona: new FormControl(), //codigo ID en respuesta a un alta previa de Persona
-      nombreUsuario: new FormControl("", [Validators.required]),
-      clave: new FormControl("", [
+      nombreUsuario: new FormControl('', [Validators.required]),
+      clave: new FormControl('', [
         Validators.required,
         Validators.minLength(8)
       ]),
-      claveReingreso: new FormControl("", [
+      claveReingreso: new FormControl('', [
         Validators.required,
         Validators.minLength(8)
       ]),
@@ -87,51 +94,51 @@ export class FormUsuarioComponent implements OnInit {
       numero2: new FormControl(),
 
       tipoContacto3: new FormControl(),
-      email: new FormControl("", [
-        Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$")
+      email: new FormControl('', [
+        Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$')
       ])
     });
   }
   // hago los getters para referenciarlos mas facil desde la plantilla de la forma: *ngIf="(clave.invalid)
   get tipoDni() {
-    return this.usuarioForm.get("tipoDni");
+    return this.usuarioForm.get('tipoDni');
   }
   get dni() {
-    return this.usuarioForm.get("dni");
+    return this.usuarioForm.get('dni');
   }
   get apellidos() {
-    return this.usuarioForm.get("apellidos");
+    return this.usuarioForm.get('apellidos');
   }
   get nombres() {
-    return this.usuarioForm.get("nombres");
+    return this.usuarioForm.get('nombres');
   }
   get domicilio() {
-    return this.usuarioForm.get("domicilio");
+    return this.usuarioForm.get('domicilio');
   }
   get fechaNacimiento() {
-    return this.usuarioForm.get("fechaNacimiento");
+    return this.usuarioForm.get('fechaNacimiento');
   }
 
   get pais() {
-    return this.usuarioForm.get("pais");
+    return this.usuarioForm.get('pais');
   }
   get provincia() {
-    return this.usuarioForm.get("provincia");
+    return this.usuarioForm.get('provincia');
   }
   get localidad() {
-    return this.usuarioForm.get("localidad");
+    return this.usuarioForm.get('localidad');
   }
   get barrio() {
-    return this.usuarioForm.get("barrio");
+    return this.usuarioForm.get('barrio');
   }
   get calle() {
-    return this.usuarioForm.get("calle");
+    return this.usuarioForm.get('calle');
   }
   get numeroCasa() {
-    return this.usuarioForm.get("numeroCasa");
+    return this.usuarioForm.get('numeroCasa');
   }
   get estadoCasa() {
-    return this.usuarioForm.get("estadoCasa");
+    return this.usuarioForm.get('estadoCasa');
   }
   get persona() { return this.usuarioForm.get('persona'); }
     get nombreUsuario() { return this.usuarioForm.get('nombreUsuario'); }
@@ -142,28 +149,51 @@ export class FormUsuarioComponent implements OnInit {
 
   inicializarControlesUsandoGETServices() {
     this.usuariosService.getAllTipoDni().subscribe(result => {
-      this.tiposDni = result["tiposDni"];
+      this.tiposDni = result['tiposDni'];
     });
     this.usuariosService.getAllEstadoCasa().subscribe(result => {
-      this.estadosCasa = result["estadosCasaDB"];
+      this.estadosCasa = result['estadosCasaDB'];
     });
     this.usuariosService.getAllTipoContacto().subscribe(result => {
-      this.tiposContacto = result["tiposContactoDB"];
-    });
-    this.usuariosService.getAllRol().subscribe(result => {
-      this.roles = result["rol"];
+      this.tiposContacto = result['tiposContactoDB'];
     });
     this.usuariosService.getAllProvincia().subscribe(result => {
       this.provincias = result;
     });
+
+
+    let tokenizer = new TokenPost();
+    tokenizer.token = this.loginService.getTokenDeSession();
+    this.usuariosService.postGetRoles(tokenizer).subscribe(response => {
+      this.roles = response['rol'];
+      },
+      err => {
+        console.log('Ocurrio un Error al obtener los roles de usuarios: ', err);
+    });
+
+
+
+    let domicilio = new Domicilio({
+      barrio : 'Moreno',
+      calle : 'Mexico',
+      estadoCasa : '5b18a965a04a411ac18bdef2',
+      localidad : 'Palpala',
+      numeroCasa : '222',
+      pais : 'Argentina',
+      provincia : 'Jujuy'
+    });
+
   }
 
   onChange() {
     console.log('Eligio la Provincia: ',this.usuarioForm.get('provincia').value);
-    // console.log('Objeto de la Provincia: ', this.usuarioForm.get('provincia'));
-    // var prov =  this.provincias.find(x => x.provincia == this.usuarioForm.get('provincia').value);
     let prov =  this.provincias.find(x => x.provincia === this.usuarioForm.get('provincia').value);
     this.localidades = prov.localidad;
   }
+
+  resetForm() {
+    this.usuarioForm.reset();
+  }
+
 
 }

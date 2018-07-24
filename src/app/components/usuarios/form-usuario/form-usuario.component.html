@@ -70,8 +70,12 @@
                                         Ingrese una Fecha Válida
                                     </div>
                                 </div>
-                                <div>
-                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+
+
+                                <div class="form-row text-right">
+                                    <div class="col-12">
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+                                    </div>
                                 </div>
                             </ng-template>
                         </ngb-tab>
@@ -160,10 +164,15 @@
                                       </option>
                                   </select>
                                 </div>
-                                <p>
-                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</button>
-                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</button>
-                                </p>
+
+                                <div class="form-row text-right">
+                                    <div class="col-12">
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</button>
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</button>
+                                    </div>
+                                </div>
+
+
                             </ng-template>
                         </ngb-tab>
 
@@ -270,10 +279,14 @@
                                     <label for="inputEmail">Email</label>
                                     <input type="text" formControlName="email" id="inputEmail" class="form-control form-control-sm" placeholder="Ingrese dirección de email">
                                 </div>
-                                <p>
-                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</button>
-                                    <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid4')">Siguiente</button>
-                                </p>
+
+                                <div class="form-row text-right">
+                                    <div class="col-12">
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</button>
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid4')">Siguiente</button>
+                                    </div>
+                                </div>
+
                             </ng-template>
                         </ngb-tab>
 
@@ -326,11 +339,15 @@
                                     </div> -->
                                 </div>
 
+
                                 <!--- Buttons Block Solo envia si el form esta validado-->
-                                <p><button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Atrás</button></p>
-                                <div class="form-group">
-                                    <button type="reset" class="btn btn-default">Cancel</button>
-                                    <button type="submit" [disabled]="!usuarioForm.valid" class="btn btn-primary">Enviar Solo si Form esta validado</button>
+                                <div class="form-row text-right">
+                                    <div class="col-12">
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Atrás</button>
+                                        <!-- <button type="reset" class="btn btn-outline-primary">Cancelar</button> -->
+                                        <button type="button" href="#btnCancelarModal" class="btn btn-outline-primary" data-toggle="modal">Cancelar</button>
+                                        <button type="submit" [disabled]="!usuarioForm.valid" class="btn btn-outline-primary">Guardar</button>
+                                    </div>
                                 </div>
 
 
@@ -340,6 +357,28 @@
                     </ngb-tabset>
                 </fieldset>
             </form>
+
+
+            <!-- Modal / Ventana / Overlay en HTML -->
+            <div id="btnCancelarModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p>¿Seguro que quieres cancelar?</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Perderás los datos cargados</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">No estoy seguro</button>
+                            <button type="button" class="btn btn-warning" (click)="resetForm()" data-dismiss="modal">Si estoy Seguro</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
         <div class="col-md-1">
         </div>

@@ -14,7 +14,7 @@ const app = express();
 }); */
 
 // Create link to Angular build directory
-var distDir = __dirname + "/dist/";
+var distDir = __dirname + "/dist/surcreditosapp";
 app.use(express.static(distDir));
 
 // Start the app by listening on the default Heroku port

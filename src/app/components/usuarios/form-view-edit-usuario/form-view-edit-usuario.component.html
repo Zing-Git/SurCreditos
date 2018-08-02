@@ -17,7 +17,8 @@
                                     <div class="form-group col-md-6">
                                         <label for="inputTipoDni">* Tipo de Documento</label>
                                         <select formControlName="tipoDni" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoDni">
-                                        <option *ngFor="let tDni of tiposDni" [value]="tDni._id">
+                                        <!-- <option *ngFor="let tDni of tiposDni" [value]="tDni._id" > -->
+                                        <option *ngFor="let tDni of tiposDni" [ngValue]="tDni.nombre">
                                           {{tDni.nombre}}
                                         </option>
                                       </select>
@@ -98,10 +99,12 @@
                                     <div class="form-group col-md-6">
                                         <label for="inputProvincia">* Provincia</label>
                                         <select formControlName="provincia" (change)="onChange()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputProvincia">
-                                      <option *ngFor="let fProv of provincias">
-                                          {{fProv.provincia}}
-                                      </option>
-                                    </select>
+                                            <option *ngFor="let fProv of provincias" [ngValue]="fProv.provincia">
+                                                {{fProv.provincia}}
+                                            </option>
+                                      </select>
+
+
                                     </div>
                                 </div>
 
@@ -110,7 +113,7 @@
                                     <div class="form-group col-md-6">
                                         <label for="inputLocalidad">* Localidad</label>
                                         <select formControlName="localidad" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputLocalidad">
-                                      <option *ngFor="let fLoc of localidades">
+                                      <option *ngFor="let fLoc of localidades" [ngValue]="fLoc">
                                           {{fLoc}}
                                       </option>
                                     </select>
@@ -159,7 +162,8 @@
                                 <div class="form-group">
                                     <label for="inputEstadoCasa">* Situación de la Vivienda</label>
                                     <select formControlName="estadoCasa" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputEstadoCasa">
-                                    <option *ngFor="let eCasa of estadosCasa" [value]="eCasa._id">
+                                    <!-- <option *ngFor="let eCasa of estadosCasa" [value]="eCasa._id" [ngValue]="eCasa.nombre"> -->
+                                    <option *ngFor="let eCasa of estadosCasa" [ngValue]="eCasa.nombre">
                                         {{eCasa.nombre}}
                                       </option>
                                   </select>
@@ -298,7 +302,8 @@
                                 <div class="form-group">
                                     <label for="inputRol">* Rol del Usuario</label>
                                     <select formControlName="rol" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputRol">
-                                    <option *ngFor="let fRol of roles" [value]="fRol._id">
+                                      <option *ngFor="let fRol of roles" [ngValue]="fRol.nombre">
+                                      <!-- <option *ngFor="let fRol of roles" [value]="fRol._id" [ngValue]="fRol.nombre"> -->
                                         {{fRol.nombre}}
                                     </option>
                                   </select>

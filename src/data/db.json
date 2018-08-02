@@ -1,0 +1,43 @@
+{
+    "characters": [{
+            "id": "1",
+            "name": "Peter Dinklage",
+            "age": "45",
+            "test": {
+                "valor": "A"
+            }
+        },
+        {
+            "id": "2",
+            "name": "Lina Heady",
+            "age": "43",
+            "test": {
+                "valor": "b"
+            }
+        },
+        {
+            "id": "3",
+            "name": "Emilia Clarke",
+            "age": "30",
+            "test": {
+                "valor": "C"
+            }
+        },
+        {
+            "id": "4",
+            "name": "Kit Harrington",
+            "age": "30",
+            "test": {
+                "valor": "D"
+            }
+        },
+        {
+            "id": "5",
+            "name": "Sean Bean",
+            "age": "50",
+            "test": {
+                "valor": "E"
+            }
+        }
+    ]
+}

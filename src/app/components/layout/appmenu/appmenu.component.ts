@@ -9,9 +9,13 @@ import { LoginService } from '../../../modules/servicios/login/login.service';
 })
 export class AppmenuComponent implements OnInit, DoCheck {
   isLogged: boolean;
+  rol: string;
+  usuario: string;
 
   ngDoCheck(): void {
     this.isLogged = this.loginService.verificaEstadoLogin();
+    this.rol = (this.loginService.getDatosDeSession()).rolNombre;
+    this.usuario = (this.loginService.getDatosDeSession()).nombreUsuario;
   }
 
   constructor(private router: Router, private loginService: LoginService) {}

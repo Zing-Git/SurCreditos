@@ -6,9 +6,13 @@ export const environment = {
   production: false,
   LSTORE_USUARIO: 'nombreUsuario',
   LSTORE_TOKEN: 'token',
+  LSTORE_ROL: 'rol',
+  LSTORE_ROL_PRECEDENCIA: 'precedencia',
+  LSTORE_ROL_ID: 'rol_id',
+/*
   TOKEN : {
     VALOR: '',
-  }
+  } */
 };
 
 /*

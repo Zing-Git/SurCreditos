@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 // Datatable
 import { DataTablesModule } from 'angular-datatables';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 // Formularios Reactivos Module
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -36,6 +37,9 @@ import { InfoComponent } from './components/info/info.component';
 // Guards
 import { LoginGuard } from './login.guard';
 import { NoLoginGuard } from './no-login.guard';
+import { FormViewEditUsuarioComponent } from './components/usuarios/form-view-edit-usuario/form-view-edit-usuario.component';
+import { FormCambioClaveComponent } from './components/usuarios/form-cambio-clave/form-cambio-clave.component';
+
 
 
 @NgModule({
@@ -53,6 +57,8 @@ import { NoLoginGuard } from './no-login.guard';
     FormCreditoComponent,
     LoginComponent,
     InfoComponent,
+    FormViewEditUsuarioComponent,
+    FormCambioClaveComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,7 +69,8 @@ import { NoLoginGuard } from './no-login.guard';
     RouterModule.forRoot(appRoutes),
     ServiciosModule, // es mi modulo donde tengo servicios propios
     NgbModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    Ng2SmartTableModule,
   ],
   providers: [
     LoginGuard,

@@ -15,11 +15,11 @@ import { TipoContacto } from '../../../modelo/negocio/tipo-contacto';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { TokenPost } from '../../../modelo/util/token';
 import { Domicilio } from '../../../modelo/negocio/domicilio';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-form-usuario',
   templateUrl: './form-usuario.component.html',
-  styleUrls: ['./form-usuario.component.css']
 })
 
 
@@ -35,6 +35,7 @@ export class FormUsuarioComponent implements OnInit {
 
   currentJustify = 'justified';
   usuarioForm: FormGroup;
+  tokenizer: TokenPost;
 
   constructor(
     private fb: FormBuilder,
@@ -43,6 +44,9 @@ export class FormUsuarioComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.tokenizer = new TokenPost();
+    this.tokenizer.token = this.loginService.getTokenDeSession(); // Obtener el token de la sesion para realizar operaciones
+
     // Inicializar controles con GET a Webservices para llenenar en formulario
     this.inicializarControlesUsandoGETServices();
 
@@ -100,93 +104,116 @@ export class FormUsuarioComponent implements OnInit {
     });
   }
   // hago los getters para referenciarlos mas facil desde la plantilla de la forma: *ngIf="(clave.invalid)
-  get tipoDni() {
-    return this.usuarioForm.get('tipoDni');
-  }
-  get dni() {
-    return this.usuarioForm.get('dni');
-  }
-  get apellidos() {
-    return this.usuarioForm.get('apellidos');
-  }
-  get nombres() {
-    return this.usuarioForm.get('nombres');
-  }
-  get domicilio() {
-    return this.usuarioForm.get('domicilio');
-  }
-  get fechaNacimiento() {
-    return this.usuarioForm.get('fechaNacimiento');
-  }
-
-  get pais() {
-    return this.usuarioForm.get('pais');
-  }
-  get provincia() {
-    return this.usuarioForm.get('provincia');
-  }
-  get localidad() {
-    return this.usuarioForm.get('localidad');
-  }
-  get barrio() {
-    return this.usuarioForm.get('barrio');
-  }
-  get calle() {
-    return this.usuarioForm.get('calle');
-  }
-  get numeroCasa() {
-    return this.usuarioForm.get('numeroCasa');
-  }
-  get estadoCasa() {
-    return this.usuarioForm.get('estadoCasa');
-  }
-  get persona() { return this.usuarioForm.get('persona'); }
+    get tipoDni() {    return this.usuarioForm.get('tipoDni');  }
+    get dni() {    return this.usuarioForm.get('dni');   }
+    get apellidos() {    return this.usuarioForm.get('apellidos');  }
+    get nombres() {    return this.usuarioForm.get('nombres');  }
+    get domicilio() {    return this.usuarioForm.get('domicilio');  }
+    get fechaNacimiento() {    return this.usuarioForm.get('fechaNacimiento');  }
+    get pais() {    return this.usuarioForm.get('pais');  }
+    get provincia() {    return this.usuarioForm.get('provincia');  }
+    get localidad() {    return this.usuarioForm.get('localidad');  }
+    get barrio() {    return this.usuarioForm.get('barrio');  }
+    get calle() { return this.usuarioForm.get('calle');  }
+    get numeroCasa() {return this.usuarioForm.get('numeroCasa');}
+    get estadoCasa() {return this.usuarioForm.get('estadoCasa');}
+    get persona() { return this.usuarioForm.get('persona'); }
     get nombreUsuario() { return this.usuarioForm.get('nombreUsuario'); }
     get clave() { return this.usuarioForm.get('clave'); }
     get rol() { return this.usuarioForm.get('rol'); }
     get contactos() { return this.usuarioForm.get('contactos'); }
 
-
-  inicializarControlesUsandoGETServices() {
-    this.usuariosService.getAllTipoDni().subscribe(result => {
-      this.tiposDni = result['tiposDni'];
-    });
-    this.usuariosService.getAllEstadoCasa().subscribe(result => {
-      this.estadosCasa = result['estadosCasaDB'];
-    });
-    this.usuariosService.getAllTipoContacto().subscribe(result => {
-      this.tiposContacto = result['tiposContactoDB'];
-    });
-    this.usuariosService.getAllProvincia().subscribe(result => {
-      this.provincias = result;
-    });
+    get codigoPais1() { return this.usuarioForm.get('codigoPais1'); }
+    get codigoArea1() { return this.usuarioForm.get('codigoArea1'); }
+    get numero1() { return this.usuarioForm.get('numero1'); }
+    get codigoPais2() { return this.usuarioForm.get('codigoPais2'); }
+    get codigoArea2() { return this.usuarioForm.get('codigoArea2'); }
+    get numero2() { return this.usuarioForm.get('numero2'); }
+    get email() { return this.usuarioForm.get('email'); }
 
 
-    let tokenizer = new TokenPost();
-    tokenizer.token = this.loginService.getTokenDeSession();
-    this.usuariosService.postGetRoles(tokenizer).subscribe(response => {
-      this.roles = response['rol'];
-      },
-      err => {
-        console.log('Ocurrio un Error al obtener los roles de usuarios: ', err);
-    });
+    public onFormSubmit() {
+
+      if (this.usuarioForm.valid) {
+        this.guardarUsuario(this.capturarValoresDeFormulario());
+
+      }
+    }
 
 
+    capturarValoresDeFormulario(): any {
+      let usuario = {
+        persona: {
+            _id: '0',
+            tipoDni: this.tipoDni.value,
+            dni: String(this.dni.value),
+            apellidos: this.apellidos.value,
+            nombres: this.nombres.value,
+            fechaNacimiento: this.fechaNacimiento.value
+        },
+        domicilio: {
+            pais: this.pais.value,
+            provincia: this.provincia.value,
+            localidad: this.localidad.value,
+            barrio: this.barrio.value,
+            calle: this.calle.value,
+            numeroCasa: this.numeroCasa.value,
+            estadoCasa: this.estadoCasa.value
+        },
+        contactos: [
+              {tipoContacto: '5b10071f42fb563dffcf6b8c',
+                  codigoPais: this.codigoPais1.value,
+                  codigoArea: this.codigoArea1.value,
+                  numeroCelular: String(this.numero1.value) },
+              {tipoContacto: '5b10071f42fb563dffcf6b8d',
+                  codigoPais: this.codigoPais2.value,
+                  codigoArea: this.codigoArea2.value,
+                  numeroCelular: String(this.numero2.value) },
+              {tipoContacto: '5b10071f42fb563dffcf6b8e',
+                  email: this.email.value}],
+        usuario: {
+          nombreUsuario: this.nombreUsuario.value ,
+          clave: this.clave.value,
+          rol: this.rol.value
+        },
+        token: this.tokenizer.token
+       };
+       return usuario;
+    }
 
-    let domicilio = new Domicilio({
-      barrio : 'Moreno',
-      calle : 'Mexico',
-      estadoCasa : '5b18a965a04a411ac18bdef2',
-      localidad : 'Palpala',
-      numeroCasa : '222',
-      pais : 'Argentina',
-      provincia : 'Jujuy'
-    });
 
+    guardarUsuario(usuario: any) {
+      console.log(usuario);
+      this.usuariosService.postAddUsuario(usuario).subscribe(response => {
+            let respuesta = response['usuarioDB'];
+            let element: HTMLElement = document.getElementById('guardarOk') as HTMLElement;
+            element.click();
+          }, err => {
+            alert('Ocurrio un Error al dar de alta al usuario: ' + err);
+        });
+
+    }
+
+    inicializarControlesUsandoGETServices() {
+        this.usuariosService.getAllTipoDni().subscribe(result => {
+          this.tiposDni = result['tiposDni'];
+        });
+        this.usuariosService.getAllEstadoCasa().subscribe(result => {
+          this.estadosCasa = result['estadosCasaDB'];
+        });
+        this.usuariosService.getAllTipoContacto().subscribe(result => {
+          this.tiposContacto = result['tiposContactoDB'];
+        });
+        this.usuariosService.getAllProvincia().subscribe(result => {
+          this.provincias = result;
+        });
+
+        this.usuariosService.postGetRoles(this.tokenizer).subscribe(response => {
+          this.roles = response['rol'];
+        });
   }
 
   onChange() {
-    console.log('Eligio la Provincia: ',this.usuarioForm.get('provincia').value);
     let prov =  this.provincias.find(x => x.provincia === this.usuarioForm.get('provincia').value);
     this.localidades = prov.localidad;
   }

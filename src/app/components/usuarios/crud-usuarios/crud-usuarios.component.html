@@ -1,5 +1,6 @@
-<blockquote>Please click on a row</blockquote>
-<p class="text-danger">You clicked on: <strong>{{ message }}</strong></p>
-<br />
-
-<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover"></table>
+<div class="form-row text-right">
+    <div class="col-12">
+        <button type="button" class="btn btn-outline-primary" (click)="nuevoUsuario()">Nuevo</button>
+    </div>
+</div>
+<ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)"></ng2-smart-table>

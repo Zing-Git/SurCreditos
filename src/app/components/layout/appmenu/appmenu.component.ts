@@ -2,6 +2,7 @@ import { Component, OnInit, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 
+
 @Component({
   selector: 'app-appmenu',
   templateUrl: './appmenu.component.html',

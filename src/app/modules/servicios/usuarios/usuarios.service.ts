@@ -11,6 +11,7 @@ import { Rol } from '../../../modelo/negocio/rol';
 import { Session } from 'src/app/modelo/util/session';
 import { LoginService } from '../login/login.service';
 import { TokenPost } from 'src/app/modelo/util/token';
+import { environment } from '../../../../environments/environment.prod';
 
 
 
@@ -40,6 +41,7 @@ export class UsuariosService {
   // headers = new Headers();
 
   // URLs de Credisur
+  // public urlBase = environment.URL_BASE_WEBSERVICES;
   public urlBase = 'https://ws-sur-creditos.herokuapp.com';
 /*   public postNuevaPersonaUrl = this.urlBase + '/nueva_persona';
   public postNuevaDomicilioUrl = this.urlBase + '/log/nuevo';

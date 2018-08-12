@@ -1,3 +1,407 @@
-<p>
-  form-cliente works!
-</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <h4><strong>Nuevo Cliente</strong></h4>
+            <!-- FORMULARIO INICIO -->
+            <form class="" [formGroup]="clienteForm" (ngSubmit)="onFormSubmit()">
+                <fieldset>
+                    <ngb-tabset #t="ngbTabset" [justify]="currentJustify">
+
+                        <!--TABSET PARA EL PASO 1 -->
+                        <ngb-tab id="tab-selectbyid1" title="1- Titular y Comercio">
+                            <ng-template ngbTabContent>
+                                <h4>Datos del Titular</h4>
+
+                                <div class="form-row">
+                                    <!-- Campo 1:  Dni-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputDni">* Número de Documento</label>
+                                        <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDni" placeholder="30300300">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-primary" (click)="buscarClientePorDni()">Buscar</button>
+                                    </div>
+
+                                    <!-- Dni error block -->
+                                    <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="dni.errors?.required">
+                                            El número de documento es requerido
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-row">
+                                    <!-- Campo 2:  Apellido-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputApellidos">* Apellido/s</label>
+                                        <input type="text" formControlName="apellidos" class="form-control form-control-sm" id="inputApellidos" placeholder="Perez">
+                                    </div>
+
+                                    <!-- Campo 3:  Nombres-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputNombres">* Nombres</label>
+                                        <input type="text" formControlName="nombres" class="form-control form-control-sm" id="inputNombres" placeholder="Juan">
+                                    </div>
+
+                                    <!-- Campo 4:  Fecha de Nacimiento-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputFechaNacimiento">* Fecha de Nacimiento</label>
+                                        <input type="date" formControlName="fechaNacimiento" class="form-control form-control-sm" id="inputFechaNacimiento">
+                                    </div>
+
+
+                                    <!-- FechaNacimiento error block -->
+                                    <div *ngIf="fechaNacimiento.invalid && fechaNacimiento.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="fechaNacimiento.errors?.required">
+                                            Ingrese una Fecha Válida
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- <h4>Datos del Comercio</h4> -->
+                                <!-- Campo 5:  Cuit-->
+                                <!-- <div class="form-group col-md-6">
+                                    <label for="inputCuit">* Cuit</label>
+                                    <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20-30300300-0">
+                                </div> -->
+                                <!-- Cuit error block -->
+                                <!-- <div *ngIf="cuit.invalid && cuit.touched" class="col-sm-6 text-danger">
+                                    <div *ngIf="cuit.errors?.required">
+                                        El número de documento es requerido
+                                    </div>
+                                </div> -->
+
+                                <!-- Campo 6:  Razon Social-->
+                                <!-- <div class="form-group">
+                                    <label for="inputRazonSocial">* Razon Social</label>
+                                    <input type="text" formControlName="razonSocial" class="form-control form-control-sm" id="inputRazonSocial" placeholder="Juan Perez">
+                                </div> -->
+
+                                <!-- Campo 7 - Rubro -->
+                                <!-- <div class="form-group col-md-4">
+                                    <label for="rubro">Rubro</label>
+                                    <input list="rubro" value="+54" class="form-control form-control-sm" name="rubro" formControlName="rubro">
+                                    <datalist id="rubro">
+                                    <option value="Despensa">Despensa</option>
+                                    <option value="Kiosco">Kiosco</option>
+                                    <option value="Fotocopiadora">Fotocopiadora</option>
+                                    <option value="Librería">Librería</option>
+                                    <option value="Carnicería">Carnicería</option>
+                                    <option value="Panadería">Panadería</option>
+                                    <option value="Heladería">Heladería</option>
+                                    <option value="Peluquería">Peluquería</option>
+                                    <option value="Taller">Taller</option>
+                                    <option value="Sandwichería">Sandwichería</option>
+                                  </datalist>
+                                </div> -->
+
+                                <!-- Campo 8:  Fecha de Inicio de Actividades-->
+                                <!--  <div class="form-group">
+                                    <label for="inputFechaActividad">* Inicio de Actividad</label>
+                                    <input type="date" formControlName="fechaActividad" class="form-control form-control-sm" id="inputFechaActividad">
+                                </div> -->
+                                <!-- fechaActividad error block -->
+                                <!-- <div *ngIf="fechaActividad.invalid && fechaActividad.touched" class="col-sm-6 text-danger">
+                                    <div *ngIf="fechaActividad.errors?.required">
+                                        Ingrese una Fecha Válida
+                                    </div>
+                                </div>
+                               -->
+
+                                <div class="form-row text-right">
+                                    <div class="col-12">
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+
+
+                        <!--TABSET PARA EL PASO 2 -->
+                        <ngb-tab id="tab-selectbyid2" title="2- Domicilios">
+                            <ng-template ngbTabContent>
+
+                                <h4>Particular</h4>
+                                <div class="form-row">
+                                    <!-- Campo 1: Provincia-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputProvincia">* Provincia</label>
+                                        <select formControlName="provincia" (change)="onChange()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputProvincia">
+                                          <option *ngFor="let fProv of provincias">
+                                              {{fProv.provincia}}
+                                          </option>
+                                        </select>
+                                    </div>
+                                    <!-- Campo 2: Localidad-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputLocalidad">* Localidad</label>
+                                        <select formControlName="localidad" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputLocalidad">
+                                          <option *ngFor="let fLoc of localidades">
+                                              {{fLoc}}
+                                          </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <!-- Campo 3:  Barrio-->
+                                    <div class="form-group col-md-5">
+                                        <label for="inputBarrio">* Barrio</label>
+                                        <input type="text" formControlName="barrio" class="form-control form-control-sm" id="inputBarrio" placeholder="Alto Comedero">
+                                    </div>
+                                    <!-- Campo 4:  Calle-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputCalle">* Calle</label>
+                                        <input type="text" formControlName="calle" class="form-control form-control-sm" id="inputCalle" placeholder="Fuerza Aerea">
+                                    </div>
+                                    <!-- Campo 5:  numero-->
+                                    <div class="form-group col-md-3">
+                                        <label for="inputNumeroCasa">* Número</label>
+                                        <input type="text" formControlName="numeroCasa" class="form-control form-control-sm" id="inputNumeroCasa" placeholder="787">
+                                    </div>
+
+                                    <!-- Barrio error block -->
+                                    <div *ngIf="barrio.invalid && barrio.touched" class="col-sm-5 text-danger">
+                                        <div *ngIf="barrio.errors?.required">
+                                            Barrio es requerido
+                                        </div>
+                                    </div>
+                                    <!-- Calle error block -->
+                                    <div *ngIf="calle.invalid && calle.touched" class="col-sm-4 text-danger">
+                                        <div *ngIf="calle.errors?.required">
+                                            Calle es requerida
+                                        </div>
+                                    </div>
+                                    <!-- Numero error block -->
+                                    <div *ngIf="numeroCasa.invalid && numeroCasa.touched" class="col-sm-3 text-danger">
+                                        <div *ngIf="numeroCasa.errors?.required">
+                                            Requerido
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <!-- Campo 6:  piso-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPiso">Piso</label>
+                                        <input type="text" formControlName="piso" class="form-control form-control-sm" id="inputPiso" placeholder="1">
+                                    </div>
+                                    <!-- Campo 7:  piso-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputDepartamento">Depto</label>
+                                        <input type="text" formControlName="departamento" class="form-control form-control-sm" id="inputDepartamento" placeholder="A">
+                                    </div>
+
+                                    <!-- Campo 8: Estado Casa-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputEstadoCasa">* Situación de la Vivienda</label>
+                                        <select formControlName="estadoCasa" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputEstadoCasa">
+                                        <option *ngFor="let eCasa of estadosCasa" [value]="eCasa._id">
+                                            {{eCasa.nombre}}
+                                          </option>
+                                      </select>
+                                    </div>
+                                </div>
+
+
+                                <!--  <h4>Comercial</h4> -->
+                                <!-- <input type="checkbox" id="domicilioSimilar" value="domicilioSimilar"> <label for="domicilioSimilar">Igual que el domicilio Particular</label> -->
+
+                                <!-- <div class="form-row"> -->
+                                <!-- Campo 1: Provincia-->
+                                <!-- <div class="form-group col-md-6">
+                                        <label for="inputProvincia2">* Provincia</label>
+                                        <select formControlName="provincia2" (change)="onChange()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputProvincia2">
+                                  <option *ngFor="let fProv2 of provincias">
+                                      {{fProv2.provincia}}
+                                  </option>
+                                </select>
+                                    </div>
+                                </div> -->
+
+                                <!-- <div class="form-row"> -->
+                                <!-- Campo 2: Localidad-->
+                                <!-- <div class="form-group col-md-6">
+                                        <label for="inputLocalidad2">* Localidad</label>
+                                        <select formControlName="localidad2" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputLocalidad2">
+                                  <option *ngFor="let fLoc2 of localidades">
+                                      {{fLoc2}}
+                                  </option>
+                                </select>
+                                    </div> -->
+
+                                <!-- Campo 3:  Barrio-->
+                                <!-- <div class="form-group col-md-6">
+                                        <label for="inputBarrio2">* Barrio</label>
+                                        <input type="text" formControlName="barrio2" class="form-control form-control-sm" id="inputBarrio2" placeholder="Alto Comedero">
+                                    </div> -->
+                                <!-- Barrio error block -->
+                                <!-- <div *ngIf="barrio2.invalid && barrio2.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="barrio2.errors?.required">
+                                            El barrio es requerido
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                                <!-- <div class="form-row"> -->
+                                <!-- Campo 4:  Calle-->
+                                <!-- <div class="form-group col-md-6">
+                                        <label for="inputCalle2">* Calle</label>
+                                        <input type="text" formControlName="calle2" class="form-control form-control-sm" id="inputCalle2" placeholder="Fuerza Aerea">
+                                    </div> -->
+                                <!-- Calle error block -->
+                                <!-- <div *ngIf="calle2.invalid && calle2.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="calle2.errors?.required">
+                                            La calle es requerida
+                                        </div>
+                                    </div> -->
+
+                                <!-- Campo 5:  numero-->
+                                <!--  <div class="form-group col-md-6">
+                                        <label for="inputNumeroCasa2">* Número</label>
+                                        <input type="text" formControlName="numeroCasa2" class="form-control form-control-sm" id="inputNumeroCasa2" placeholder="787">
+                                    </div> -->
+                                <!-- Numero error block -->
+                                <!--  <div *ngIf="numeroCasa2.invalid && numeroCasa2.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="numeroCasa2.errors?.required">
+                                            El numero es requerido
+                                        </div>
+                                    </div> -->
+
+                                <!-- Campo 6:  piso-->
+                                <!-- <div class="form-group col-md-6">
+                                        <label for="inputPiso2">Piso</label>
+                                        <input type="text" formControlName="piso2" class="form-control form-control-sm" id="inputPiso2" placeholder="1">
+                                    </div> -->
+                                <!-- Campo 7:  piso-->
+                                <!-- <div class="form-group col-md-6">
+                                        <label for="inputDepartamento2">Depto</label>
+                                        <input type="text" formControlName="departamento2" class="form-control form-control-sm" id="inputDepartamento2" placeholder="A">
+                                    </div>
+                                </div> -->
+
+                                <!-- Campo 8: Estado Casa-->
+                                <!--  <div class="form-group">
+                                    <label for="inputEstadoCasa2">* Situación de la Vivienda</label>
+                                    <select formControlName="estadoCasa2" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputEstadoCasa2">
+                                <option *ngFor="let eCasa2 of estadosCasa" [value]="eCasa2._id">
+                                    {{eCasa2.nombre}}
+                                  </option>
+                              </select>
+                                </div> -->
+
+
+                                <div class="form-row text-right">
+                                    <div class="col-12">
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</button>
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</button>
+                                    </div>
+                                </div>
+
+
+                            </ng-template>
+                        </ngb-tab>
+
+
+
+                        <!--TABSET PARA EL PASO 3 -->
+                        <ngb-tab id="tab-selectbyid3" title="3- Datos de Contacto">
+                            <ng-template ngbTabContent>
+
+                                <div class="form-row">
+                                    <!-- Campos de Contactos-->
+                                    <!-- Contacto 1 - Celular-->
+                                    <div class="form-group col-md-4">
+                                        <label for="codPais">TEL CELULAR (Cod. País)</label>
+                                        <input list="codPais" value="+54" class="form-control form-control-sm" name="codPais1" formControlName="codigoPais1">
+                                        <datalist id="codPais">
+                                        <option value="+54">Argentina</option>
+                                        <option value="+591">Bolivia</option>
+                                        <option value="+55">Brasil</option>
+                                        <option value="+595">Paraguay</option>
+                                        <option value="+598">Uruguay</option>
+                                        <option value="+51">Peru</option>
+                                        <option value="+501">Chile</option>
+                                    </datalist>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="codArea1">(Cod. Area)</label>
+                                        <input list="codLocal" value="388" class="form-control form-control-sm" name="codArea1" formControlName="codigoArea1">
+                                        <datalist id="codLocal">
+                                    <option value="388">San Salvador de Jujuy</option>
+                                    <option value="3888">San Pedro de Jujuy</option>
+                                  </datalist>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="inputNumero1">Número de Celular</label>
+                                        <input type="number" formControlName="numero1" class="form-control form-control-sm" id="inputNumero1" placeholder="6006060">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <!-- Contacto 2 - Fijo-->
+                                    <div class="form-group col-md-4">
+                                        <label for="codPais2">TELEFONO FIJO (Cod. País)</label>
+                                        <input list="codPais2" value="+54" class="form-control form-control-sm" name="codPais2" formControlName="codigoPais2">
+                                        <datalist id="codPais2">
+                                      <option value="+54">Argentina</option>
+                                      <option value="+591">Bolivia</option>
+                                      <option value="+55">Brasil</option>
+                                      <option value="+595">Paraguay</option>
+                                      <option value="+598">Uruguay</option>
+                                      <option value="+51">Peru</option>
+                                      <option value="+501">Chile</option>
+                                    </datalist>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="codArea2">Cod. Area</label>
+                                        <input list="codLocal2" value="388" class="form-control form-control-sm" name="codArea2" formControlName="codigoArea2">
+                                        <datalist id="codLocal2">
+                                    <option value="388">San Salvador de Jujuy</option>
+                                    <option value="3888">San Pedro de Jujuy</option>
+                                  </datalist>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="inputNumero2">Número de Teléfono</label>
+                                        <input type="number" formControlName="numero2" class="form-control form-control-sm" id="inputNumero2" placeholder="4222222">
+                                    </div>
+                                </div>
+
+
+                                <!-- Contacto 3 - EMail-->
+                                <div class="form-group">
+                                    <label for="inputEmail">Email</label>
+                                    <input type="text" formControlName="email" id="inputEmail" class="form-control form-control-sm" placeholder="Ingrese dirección de email">
+                                </div>
+
+
+                                <div class="form-row text-right">
+                                    <div class="col-12">
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</button>
+                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid4')">Siguiente</button>
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                        </ngb-tab>
+
+
+
+                    </ngb-tabset>
+                </fieldset>
+            </form>
+
+        </div>
+        <div class="col-md-1">
+        </div>
+    </div>
+</div>

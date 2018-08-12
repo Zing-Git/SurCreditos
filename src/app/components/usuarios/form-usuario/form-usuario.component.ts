@@ -14,8 +14,6 @@ import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 import { TipoContacto } from '../../../modelo/negocio/tipo-contacto';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { TokenPost } from '../../../modelo/util/token';
-import { Domicilio } from '../../../modelo/negocio/domicilio';
-import { element } from 'protractor';
 
 @Component({
   selector: 'app-form-usuario',

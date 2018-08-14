@@ -25,7 +25,7 @@
                                 </div>
                                 <!-- Dni error block -->
                                 <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="dni.errors?.required">
+                                    <div *ngIf="dni.errors['required']">
                                         El número de documento es requerido
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                 </div>
                                 <!-- FechaNacimiento error block -->
                                 <div *ngIf="fechaNacimiento.invalid && fechaNacimiento.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="fechaNacimiento.errors?.required">
+                                    <div *ngIf="fechaNacimiento.errors['required']">
                                         Ingrese una Fecha Válida
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                 </div>
                                 <!-- montoSolicitado error block -->
                                 <div *ngIf="montoSolicitado.invalid && montoSolicitado.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="montoSolicitado.errors?.required">
+                                    <div *ngIf="montoSolicitado.errors['required']">
                                         El monto solicitado es requerido
                                     </div>
                                 </div>
@@ -135,7 +135,7 @@
                                 </div>
                                 <!-- Dni error block -->
                                 <div *ngIf="dniGarante.invalid && dniGarante.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="dniGarante.errors?.required">
+                                    <div *ngIf="dniGarante.errors['required']">
                                         El número de documento es requerido
                                     </div>
                                 </div>
@@ -162,7 +162,7 @@
                                 </div>
                                 <!-- FechaNacimiento error block -->
                                 <div *ngIf="fechaNacimientoGarante.invalid && fechaNacimientoGarante.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="fechaNacimientoGarante.errors?.required">
+                                    <div *ngIf="fechaNacimientoGarante.errors['required']">
                                         Ingrese una Fecha Válida
                                     </div>
                                 </div>
@@ -183,7 +183,7 @@
 
                                 <!-- Cuit error block -->
                                 <div *ngIf="cuit.invalid && cuit.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="cuit.errors?.required">
+                                    <div *ngIf="cuit.errors['required']">
                                         El número de documento es requerido
                                     </div>
                                 </div>

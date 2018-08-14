@@ -1,7 +1,7 @@
 <label>{{mensaje}}</label>
 
 <div class="container text-center">
-    <h1>Inicio de sesion</h1>
+    <h1 class="col-lg-8">Inicio de sesion</h1>
     <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" class="form form-horizontal">
         <div class="col-lg-8">
             <input type="text" name="nombreUsuario" id="nombreUsuario" placeholder="Usuario" class="form-control" ngModel>
@@ -9,8 +9,8 @@
             <input type="password" name="password" id="password" placeholder="Password" class="form-control" ngModel>
         </div>
         <br/>
-        <div class="col-lg-1">
-            <button class="submit btn btn-primary">Login</button>
+        <div class="col-lg-8">
+            <button class="submit btn btn-outline-info">Login</button>
         </div>
 
     </form>

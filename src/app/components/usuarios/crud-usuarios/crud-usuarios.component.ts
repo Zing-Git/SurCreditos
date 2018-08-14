@@ -162,12 +162,22 @@ export class CrudUsuariosComponent implements OnInit {
 
   imprimirUsuarios() {
     const doc = new jsPDF();
-   
+    doc.page=1;
+  
+    doc.setFontSize(18);
+    doc.setTextColor(40);
+    doc.setFontStyle('normal');
+    //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
+    doc.text("Reporte General", 100, 20,'center');  
+
     doc.autoTable({
       head: this.getData('cabecera'),
-      body: this.getData('cuerpo')                                                                                                                                                                        ,          
+      body: this.getData('cuerpo') ,       
+      margin: {
+        top: 35
+      }                                                                                                                                                                 ,          
     });
-
+   
     doc.save('reporte.pdf');
   }  
 

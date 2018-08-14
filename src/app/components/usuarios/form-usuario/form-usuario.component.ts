@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ViewChild, ElementRef } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -138,7 +138,6 @@ export class FormUsuarioComponent implements OnInit {
       }
     }
 
-
     capturarValoresDeFormulario(): any {
       let usuario = {
         persona: {
@@ -218,7 +217,6 @@ export class FormUsuarioComponent implements OnInit {
 
   resetForm() {
     this.usuarioForm.reset();
-  }
-
+  }  
 
 }

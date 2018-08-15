@@ -68,7 +68,7 @@ export class CrudUsuariosComponent implements OnInit {
     },
     pager: {
       display: true,
-      perPage: 10
+      perPage: 3
       },
   };
 

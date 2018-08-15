@@ -23,6 +23,10 @@ export class FormClienteComponent implements OnInit {
     private utilidadesService: UtilidadesService) { }
 
   ngOnInit() {
+    this.session = new Session();
+    this.session.token = this.loginService.getTokenDeSession();
+
+
     this.clienteForm = this.fb.group({
       dni: new FormControl('', [Validators.required]),
       apellidos: new FormControl('', [Validators.required]),
@@ -119,13 +123,13 @@ export class FormClienteComponent implements OnInit {
     let cliente = {
       persona: {
           _id: '0',
-          tipoDni: this.tipoDni.value,
+          tipoDni: 	'5b0d6a845b9d842646da57c9',
           dni: String(this.dni.value),
           apellidos: this.apellidos.value,
           nombres: this.nombres.value,
           fechaNacimiento: this.fechaNacimiento.value
       },
-      domicilio: {
+      /* domicilio: {
           pais: this.pais.value,
           provincia: this.provincia.value,
           localidad: this.localidad.value,
@@ -133,7 +137,7 @@ export class FormClienteComponent implements OnInit {
           calle: this.calle.value,
           numeroCasa: this.numeroCasa.value,
           estadoCasa: this.estadoCasa.value
-      },
+      }, */
       contactos: [
             {tipoContacto: '5b10071f42fb563dffcf6b8c',
                 codigoPais: this.codigoPais1.value,
@@ -145,14 +149,12 @@ export class FormClienteComponent implements OnInit {
                 numeroCelular: String(this.numero2.value) },
             {tipoContacto: '5b10071f42fb563dffcf6b8e',
                 email: this.email.value}],
-      usuario: {
-        nombreUsuario: this.nombreUsuario.value ,
-        clave: this.clave.value,
-        rol: this.rol.value
+      cliente: {
+        tipoCliente: '5b2dd87359597a2d9d3065fb',
       },
-      token: this.tokenizer.token
+      token: this.session.token,
      };
-     return usuario;
+     return cliente;
   }
 
 
@@ -163,6 +165,7 @@ export class FormClienteComponent implements OnInit {
 
   onFormSubmit() {
     console.log(this.clienteForm.value);
+    console.log(this.capturarValoresDeFormulario());
 
   }
 }

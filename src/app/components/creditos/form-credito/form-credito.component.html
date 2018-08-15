@@ -1,7 +1,6 @@
 <p>
     <button (click)="verClientes()">Ver Clientes</button>
     <button (click)="buscarClientePorDni()">Buscar Por DNI</button>
-    <button (click)="getCombos()">Combos</button>
 </p>
 
 <div class="container">
@@ -17,22 +16,22 @@
                         <!--TABSET PARA EL PASO 1 -->
                         <ngb-tab id="tab-selectbyid1" title="1- Datos del Titular">
                             <ng-template ngbTabContent>
-
-                                <!-- Campo 1:  Dni-->
-                                <div class="form-group col-md-6">
-                                    <label for="inputDni">* Número de Documento</label>
-                                    <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDni" placeholder="30300300">
-                                </div>
-                                <!-- Dni error block -->
-                                <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="dni.errors?.required">
-                                        El número de documento es requerido
+                                <div class="form-row">
+                                    <!-- Campo 1:  Dni-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputDni">* Número de Documento</label>
+                                        <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDni" placeholder="30300300">
+                                    </div>
+                                    <!-- Dni error block -->
+                                    <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="dni.errors?.required">
+                                            El número de documento es requerido
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-primary" (click)="buscarClientePorDni()">Buscar</button>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <button class="btn btn-outline-primary" (click)="buscarClientePorDni()">Buscar</button>
-                                </div>
-
 
 
                                 <!-- Campo 2:  Apellido-->
@@ -69,46 +68,47 @@
 
 
                         <!--TABSET PARA EL PASO 2 -->
-                        <ngb-tab id="tab-selectbyid2" title="2- Datos del Comercio">
+                        <ngb-tab id="tab-selectbyid2" title="2- Datos del Credito">
                             <ng-template ngbTabContent>
 
-
-                                <!-- Campo 1:  Monto Solicitado-->
-                                <div class="form-group col-md-6">
-                                    <label for="inputMontoSolicitado">* Monto Solicitado</label>
-                                    <input type="number" formControlName="montoSolicitado" class="form-control form-control-sm" id="inputMontoSolicitado" placeholder="10000">
-                                </div>
-                                <!-- montoSolicitado error block -->
-                                <div *ngIf="montoSolicitado.invalid && montoSolicitado.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="montoSolicitado.errors?.required">
-                                        El monto solicitado es requerido
+                                <div class="form-row">
+                                    <!-- Campo 1:  Monto Solicitado-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputMontoSolicitado">* Monto Solicitado</label>
+                                        <input type="number" formControlName="montoSolicitado" class="form-control form-control-sm" id="inputMontoSolicitado" placeholder="10000">
+                                    </div>
+                                    <!-- Campo 2: Tipo de Plan -->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputTipoDePlan">* Tipo de Plan</label>
+                                        <select formControlName="tipoDePlan" (change)="onChangePlanes()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoDePlan">
+                                      <!-- <option *ngFor="let eTipoDePlan of tiposPlanes" [value]="eTipoDePlan._id"> -->
+                                          <option *ngFor="let eTipoDePlan of tiposPlanes">
+                                          {{eTipoDePlan.nombre}}
+                                        </option>
+                                    </select>
+                                    </div>
+                                    <!-- montoSolicitado error block -->
+                                    <div *ngIf="montoSolicitado.invalid && montoSolicitado.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="montoSolicitado.errors?.required">
+                                            El monto solicitado es requerido
+                                        </div>
                                     </div>
                                 </div>
-
-                                <!-- Campo 2: Tipo de Plan -->
-                                <div class="form-group">
-                                    <label for="inputTipoDePlan">* Tipo de Plan</label>
-                                    <select formControlName="tipoDePlan" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoDePlan">
-                            <option *ngFor="let eTipoDePlan of estadosCasa" [value]="eTipoDePlan._id">
-                                {{eTipoDePlan.nombre}}
-                              </option>
-                          </select>
-                                </div>
-
                                 <!-- Campo 3: Plan-->
-                                <div class="form-group col-md-6">
-                                    <label for="inputPlan">* Plan</label>
-                                    <select formControlName="plan" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputPlan">
-                                <option *ngFor="let fPlan of planes">
-                                    {{fPlan}}
-                                </option>
-                              </select>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPlan">* Plan</label>
+                                        <select formControlName="plan" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputPlan">
+                                      <option *ngFor="let fPlan of planes">
+                                          {{fPlan.cantidadCuotas}}
+                                      </option>
+                                    </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <input formControlName="cobroDomicilio" type="checkbox" id="cobranzaDomicilio" value="cobranzaDomicilio"> <label for="cobranzaDomicilio">Cobranza en domicilio</label>
+                                    </div>
                                 </div>
-
-                                <input type="checkbox" id="cobranzaDomicilio" value="cobranzaDomicilio"> <label for="cobranzaDomicilio">Cobranza en domicilio</label>
-
-
-
 
 
                                 <div class="form-row text-right">
@@ -128,58 +128,62 @@
                         <ngb-tab id="tab-selectbyid3" title="3- Comercio y Garante">
                             <ng-template ngbTabContent>
                                 <h4>Datos del Garante</h4>
-                                <!-- Campo 1:  Dni-->
-                                <div class="form-group col-md-6">
-                                    <label for="inputDniGarante">* Número de Documento</label>
-                                    <input type="number" formControlName="dniGarante" class="form-control form-control-sm" id="inputDniGarante" placeholder="30300300">
-                                </div>
-                                <!-- Dni error block -->
-                                <div *ngIf="dniGarante.invalid && dniGarante.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="dniGarante.errors?.required">
-                                        El número de documento es requerido
+                                <div class="form-row">
+                                    <!-- Campo 1:  Dni Garante-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputDniGarante">* Número de Documento</label>
+                                        <input type="number" formControlName="dniGarante" class="form-control form-control-sm" id="inputDniGarante" placeholder="30300300">
+                                    </div>
+                                    <!-- Dni error block -->
+                                    <div *ngIf="dniGarante.invalid && dniGarante.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="dniGarante.errors?.required">
+                                            El número de documento es requerido
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-primary" (click)="buscarGarantePorDni()">Buscar</button>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <button class="btn btn-outline-primary" (click)="buscarGarantePorDni()">Buscar</button>
-                                </div>
+                                <div class="form-row">
+                                    <!-- Campo 2:  Apellido-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputApellidosGarante">* Apellido/s</label>
+                                        <input type="text" formControlName="apellidosGarante" class="form-control form-control-sm" id="inputApellidosGarante" placeholder="Perez">
+                                    </div>
 
-                                <!-- Campo 2:  Apellido-->
-                                <div class="form-group">
-                                    <label for="inputApellidosGarante">* Apellido/s</label>
-                                    <input type="text" formControlName="apellidosGarante" class="form-control form-control-sm" id="inputApellidosGarante" placeholder="Perez">
-                                </div>
+                                    <!-- Campo 3:  Nombres-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputNombresGarante">* Nombres</label>
+                                        <input type="text" formControlName="nombresGarante" class="form-control form-control-sm" id="inputNombresGarante" placeholder="Juan">
+                                    </div>
 
-                                <!-- Campo 3:  Nombres-->
-                                <div class="form-group">
-                                    <label for="inputNombresGarante">* Nombres</label>
-                                    <input type="text" formControlName="nombresGarante" class="form-control form-control-sm" id="inputNombresGarante" placeholder="Juan">
-                                </div>
-
-                                <!-- Campo 4:  Fecha de Nacimiento-->
-                                <div class="form-group">
-                                    <label for="inputFechaNacimientoGarante">* Fecha de Nacimiento</label>
-                                    <input type="date" formControlName="fechaNacimientoGarante" class="form-control form-control-sm" id="inputFechaNacimientoGarante">
-                                </div>
-                                <!-- FechaNacimiento error block -->
-                                <div *ngIf="fechaNacimientoGarante.invalid && fechaNacimientoGarante.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="fechaNacimientoGarante.errors?.required">
-                                        Ingrese una Fecha Válida
+                                    <!-- Campo 4:  Fecha de Nacimiento-->
+                                    <div class="form-group col-md-4">
+                                        <label for="inputFechaNacimientoGarante">* Fecha de Nacimiento</label>
+                                        <input type="date" formControlName="fechaNacimientoGarante" class="form-control form-control-sm" id="inputFechaNacimientoGarante">
+                                    </div>
+                                    <!-- FechaNacimiento error block -->
+                                    <div *ngIf="fechaNacimientoGarante.invalid && fechaNacimientoGarante.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="fechaNacimientoGarante.errors?.required">
+                                            Ingrese una Fecha Válida
+                                        </div>
                                     </div>
                                 </div>
-
 
 
                                 <h4>Datos del Comercio</h4>
-                                <!-- Campo 5:  Cuit-->
-                                <div class="form-group col-md-6">
-                                    <label for="inputCuit">* Cuit</label>
-                                    <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20-30300300-0">
-                                </div>
 
-                                <div class="col-md-6">
-                                    <button class="btn btn-outline-primary" (click)="buscarComercioPorCuit()">Buscar</button>
+                                <div class="form-row">
+                                    <!-- Campo 5:  Cuit-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputCuit">* Cuit</label>
+                                        <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20-30300300-0">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-primary" (click)="buscarComercioPorCuit()">Buscar</button>
+                                    </div>
                                 </div>
-
 
                                 <!-- Cuit error block -->
                                 <div *ngIf="cuit.invalid && cuit.touched" class="col-sm-6 text-danger">
@@ -194,73 +198,81 @@
                                     <input type="text" formControlName="razonSocial" class="form-control form-control-sm" id="inputRazonSocial" placeholder="Juan Perez">
                                 </div>
 
-
-
-
-
                                 <div class="form-row text-right">
                                     <div class="col-12">
                                         <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</button>
                                         <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid4')">Siguiente</button>
                                     </div>
                                 </div>
-
                             </ng-template>
                         </ngb-tab>
 
                         <!--TABSET PARA EL PASO 4 -->
                         <ngb-tab id="tab-selectbyid4" title="4- Referencias y Documentación">
                             <ng-template ngbTabContent>
-
                                 <h4>Documentación Presentada</h4>
                                 <!-- Campo 1: Documentacion presentada -->
-                                <label formArrayName="documentaciones" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i = index">
-                                  <input type="checkbox" [formControlName]="i">
-                                  {{documentaciones[i].name}}
-                                </label>
+                                <div class="form-group">
+                                    <label formArrayName="documentaciones" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i = index">
+                                    <input type="checkbox" [formControlName]="i">
+                                    {{documentaciones[i].name}}
+                                  </label>
+                                </div>
+                                <!-- Campo 2:  Numero de Legajo-->
+                                <div class="form-group">
+                                    <label for="numeroLegajo">* Nro. Legajo</label>
+                                    <input type="text" formControlName="numeroLegajo" class="form-control form-control-sm" id="inputnumeroLegajo" placeholder="111">
+                                </div>
+
 
                                 <h4>Referencias del Titular</h4>
-                                <!-- Campo 2: Combo Referencia Titular -->
+                                <!-- Campo 3: Combo Referencia Titular -->
                                 <div class="form-group">
                                     <label for="inputReferenciaTitular">* Referencia del Titular</label>
-                                    <select formControlName="referenciaTitular" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputReferenciaTitular">
-                                    <option *ngFor="let eReferencia of estadosCasa" [value]="eReferencia._id">
-                                        {{eReferencia.nombre}}
+                                    <select formControlName="tipoReferenciaTitular" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputReferenciaTitular">
+                                    <option *ngFor="let eReferencia of referenciaTitulares" [value]="eReferencia._id">
+                                        {{eReferencia.item}}
                                       </option>
                                     </select>
                                 </div>
 
-                                <!-- Campo 3: Checkbox Referencias TItular -->
-                                <label formArrayName="documentaciones" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i = index">
+                                <!-- Campo 4: Checkbox Referencias TItular -->
+                                <div class="form-group">
+                                    <label formArrayName="itemsReferenciasTitular" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i = index">
                                   <input type="checkbox" [formControlName]="i">
                                   {{documentaciones[i].name}}
                                 </label>
-
-                                <!-- Campo 4: Comentario Referencias Titular-->
-                                <textarea formControlName="comentarioTitular"></textarea>
-
-                                <h4>Referencias del Garante</h4>
-                                <!-- Campo 5: Combo Referencia Garante -->
-                                <div class="form-group">
-                                    <label for="inputReferenciaGarante">* Referencia del Titular</label>
-                                    <select formControlName="referenciaGarante" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputReferenciaGarante">
-                                  <option *ngFor="let eReferencia of estadosCasa" [value]="eReferencia._id">
-                                      {{eReferencia.nombre}}
-                                    </option>
-                                  </select>
                                 </div>
 
-                                <!-- Campo 6: Checkbox Referencias Garante -->
-                                <label formArrayName="documentaciones" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i = index">
-                                <input type="checkbox" [formControlName]="i">
-                                {{documentaciones[i].name}}
-                                </label>
-
-                                <!-- Campo 7: Comentario Referencias Garante-->
-                                <textarea formControlName="comentarioGarante"></textarea>
+                                <!-- Campo 5: TextArea Comentario Referencias Titular-->
+                                <div class="form-group">
+                                    <textarea formControlName="notaComentarioTitular"></textarea>
+                                </div>
 
 
 
+                                <h4>Referencias del Comercio</h4>
+                                <!-- Campo 6: Combo Referencia Garante -->
+                                <div class="form-group">
+                                    <label for="inputTipoReferenciaGarante">* Referencia del Titular</label>
+                                    <select formControlName="tipoReferenciaGarante" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoReferenciaGarante">
+                                        <option *ngFor="let eReferencia of referenciaComercios" [value]="eReferencia._id">
+                                                {{eReferencia.item}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- Campo 7: Checkbox Referencias Comercio -->
+                                <div class="form-group">
+                                    <label formArrayName="itemsReferenciasGarante" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i = index">
+                                    <input type="checkbox" [formControlName]="i">
+                                    {{documentaciones[i].name}}
+                                    </label>
+                                </div>
+                                <!-- Campo 8: Comentario Referencias Garante-->
+                                <div class="form-group">
+                                    <textarea formControlName="notaComentarioGarante"></textarea>
+                                </div>
 
 
                                 <!--- Buttons Block Solo envia si el form esta validado-->

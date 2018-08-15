@@ -67,24 +67,28 @@ export class FormClienteComponent implements OnInit {
 
 
   }
-  get dni() {    return this.clienteForm.get('dni');  }
-  get apellidos() {    return this.clienteForm.get('apellidos');  }
-  get nombres() {    return this.clienteForm.get('nombres');  }
-  get fechaNacimiento() {    return this.clienteForm.get('fechaNacimiento');  }
+  get dni() { return this.clienteForm.get('dni'); }
 
-/*   get cuit() {    return this.clienteForm.get('cuit');  }
-  get razonSocial() {    return this.clienteForm.get('razonSocial');  }
-  get rubro() {    return this.clienteForm.get('rubro');  }
-  get fechaActividad() {    return this.clienteForm.get('fechaActividad');  } */
+  get tipoDni() { return this.clienteForm.get('tipoDni') }
+  get pais() { return this.clienteForm.get('pais') }
 
-  get provincia() {    return this.clienteForm.get('provincia');  }
-  get localidad() {    return this.clienteForm.get('localidad');  }
-  get barrio() {    return this.clienteForm.get('barrio');  }
-  get calle() { return this.clienteForm.get('calle');  }
-  get numeroCasa() {return this.clienteForm.get('numeroCasa'); }
-  get estadoCasa() {return this.clienteForm.get('estadoCasa'); }
-  get piso() {return this.clienteForm.get('piso'); }
-  get departamento() {return this.clienteForm.get('departamento'); }
+  get apellidos() { return this.clienteForm.get('apellidos'); }
+  get nombres() { return this.clienteForm.get('nombres'); }
+  get fechaNacimiento() { return this.clienteForm.get('fechaNacimiento'); }
+
+  /*   get cuit() {    return this.clienteForm.get('cuit');  }
+    get razonSocial() {    return this.clienteForm.get('razonSocial');  }
+    get rubro() {    return this.clienteForm.get('rubro');  }
+    get fechaActividad() {    return this.clienteForm.get('fechaActividad');  } */
+
+  get provincia() { return this.clienteForm.get('provincia'); }
+  get localidad() { return this.clienteForm.get('localidad'); }
+  get barrio() { return this.clienteForm.get('barrio'); }
+  get calle() { return this.clienteForm.get('calle'); }
+  get numeroCasa() { return this.clienteForm.get('numeroCasa'); }
+  get estadoCasa() { return this.clienteForm.get('estadoCasa'); }
+  get piso() { return this.clienteForm.get('piso'); }
+  get departamento() { return this.clienteForm.get('departamento'); }
 
   get codigoPais1() { return this.clienteForm.get('codigoPais1'); }
   get codigoArea1() { return this.clienteForm.get('codigoArea1'); }
@@ -96,12 +100,12 @@ export class FormClienteComponent implements OnInit {
 
   buscarClientePorDni() {
     let dni = this.dni.value;
-    this.session  = new Session();
-    this.session.token =  this.loginService.getTokenDeSession();
-    this.clientesService.postGetClientePorDni(this.session, dni).subscribe( response => {
-        let cliente = response['clientes'];
-        console.log(cliente[0]);
-        this.cargarClienteForm(cliente[0]);
+    this.session = new Session();
+    this.session.token = this.loginService.getTokenDeSession();
+    this.clientesService.postGetClientePorDni(this.session, dni).subscribe(response => {
+      let cliente = response['clientes'];
+      console.log(cliente[0]);
+      this.cargarClienteForm(cliente[0]);
     });
   }
   cargarClienteForm(cliente: any) {
@@ -112,9 +116,9 @@ export class FormClienteComponent implements OnInit {
   }
   cargarControlesCombos() {
 
-    this.clientesService.postGetCombos().subscribe( result => {
+    this.clientesService.postGetCombos().subscribe(result => {
       this.provincias = result['respuesta'].provincias;
-      this.estadosCasa =  result['respuesta'].estadosCasa;
+      this.estadosCasa = result['respuesta'].estadosCasa;
     });
 
   }
@@ -159,7 +163,7 @@ export class FormClienteComponent implements OnInit {
 
 
   onChange() {
-    let prov =  this.provincias.find(x => x.provincia === this.clienteForm.get('provincia').value);
+    let prov = this.provincias.find(x => x.provincia === this.clienteForm.get('provincia').value);
     this.localidades = prov.localidad;
   }
 

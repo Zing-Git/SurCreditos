@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container" >
     <div class="row">
         <div class="col-md-1"></div>
-        <div class="col-md-10">
+        <div class="col-md-10" >
 
             <!-- FORMULARIO INICIO -->
-            <form class="" [formGroup]="usuarioForm" (ngSubmit)="onFormSubmit()">
+            <form class="" [formGroup]="usuarioForm" (ngSubmit)="onFormSubmit()" #usuarioForm>
                 <fieldset>
                     <ngb-tabset #t="ngbTabset" [justify]="currentJustify">
 
@@ -29,7 +29,7 @@
                                     </div>
                                     <!-- Dni error block -->
                                     <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
-                                        <div *ngIf="dni.errors?.required">
+                                        <div *ngIf="dni.errors['required']">
                                             El número de documento es requerido
                                         </div>
                                     </div>
@@ -42,7 +42,7 @@
                                 </div>
                                 <!-- Apellidos error block -->
                                 <div *ngIf="apellidos.invalid && apellidos.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="apellidos.errors?.required">
+                                    <div *ngIf="apellidos.errors['required']">
                                         El apellido es requerido
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                 </div>
                                 <!-- Nombres error block -->
                                 <div *ngIf="nombres.invalid && nombres.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="nombres.errors?.required">
+                                    <div *ngIf="nombres.errors['required']">
                                         El nombre es requerido
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                                 </div>
                                 <!-- FechaNacimiento error block -->
                                 <div *ngIf="fechaNacimiento.invalid && fechaNacimiento.touched" class="col-sm-6 text-danger">
-                                    <div *ngIf="fechaNacimiento.errors?.required">
+                                    <div *ngIf="fechaNacimiento.errors['required']">
                                         Ingrese una Fecha Válida
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                     </div>
                                     <!-- Barrio error block -->
                                     <div *ngIf="barrio.invalid && barrio.touched" class="col-sm-6 text-danger">
-                                        <div *ngIf="barrio.errors?.required">
+                                        <div *ngIf="barrio.errors['required']">
                                             El barrio es requerido
                                         </div>
                                     </div>
@@ -137,7 +137,7 @@
                                     </div>
                                     <!-- Calle error block -->
                                     <div *ngIf="calle.invalid && calle.touched" class="col-sm-6 text-danger">
-                                        <div *ngIf="calle.errors?.required">
+                                        <div *ngIf="calle.errors['required']">
                                             La calle es requerida
                                         </div>
                                     </div>
@@ -149,7 +149,7 @@
                                     </div>
                                     <!-- Numero error block -->
                                     <div *ngIf="numeroCasa.invalid && numeroCasa.touched" class="col-sm-6 text-danger">
-                                        <div *ngIf="numeroCasa.errors?.required">
+                                        <div *ngIf="numeroCasa.errors['required']">
                                             El numero es requerido
                                         </div>
                                     </div>
@@ -172,7 +172,7 @@
                                     </div>
                                 </div>
 
-
+                               
                             </ng-template>
                         </ngb-tab>
 
@@ -310,7 +310,7 @@
                                     <input type="text" formControlName="nombreUsuario" id="inputNombreUsuario" class="form-control form-control-sm" placeholder="Ingrese Usuario">
                                     <!-- Usuario error block -->
                                     <div *ngIf="nombreUsuario.invalid && nombreUsuario.touched" class="col-sm-6 text-danger">
-                                        <div *ngIf="nombreUsuario.errors?.required">
+                                        <div *ngIf="nombreUsuario.errors['required']">
                                             El usuario es requerido
                                         </div>
                                     </div>
@@ -322,7 +322,7 @@
                                     <input type="password" formControlName="clave" id="inputClave" class="form-control form-control-sm" placeholder="Ingrese Clave">
                                     <!-- Clave error block -->
                                     <div *ngIf="clave.invalid && clave.touched" class="col-sm-6 text-danger">
-                                        <div *ngIf="clave.errors?.required">
+                                        <div *ngIf="clave.errors['required']">
                                             Ingrese una clave con 8 caracteres como mínimo
                                         </div>
                                     </div>
@@ -408,4 +408,5 @@
         <div class="col-md-1">
         </div>
     </div>
+   
 </div>

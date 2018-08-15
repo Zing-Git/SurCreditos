@@ -1,7 +1,19 @@
-<form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
-    <input type="text" name="nombreUsuario" id="nombreUsuario" placeholder="Usuario" ngModel>
-    <input type="password" name="password" id="password" placeholder="Password" ngModel>
-    <button type="submit">Login</button>
+<label>{{mensaje}}</label>
 
-</form>
+<div class="container text-center">
+    <h1 class="col-lg-8">Inicio de sesion</h1>
+    <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" class="form form-horizontal">
+        <div class="col-lg-8">
+            <input type="text" name="nombreUsuario" id="nombreUsuario" placeholder="Usuario" class="form-control" ngModel>
+            <br/>
+            <input type="password" name="password" id="password" placeholder="Password" class="form-control" ngModel>
+        </div>
+        <br/>
+        <div class="col-lg-8">
+            <button class="submit btn btn-outline-info">Login</button>
+        </div>
+
+    </form>
+
+</div>
 <label>{{mensaje}}</label>

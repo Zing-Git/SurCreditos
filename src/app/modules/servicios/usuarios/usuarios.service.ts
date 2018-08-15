@@ -89,7 +89,7 @@ export class UsuariosService {
   } */
 
 
-  // POST SERVICES
+  // POST SERVICES   emanuel emanuel123 usuario administrador..... 
   postLogin(session: Session) {
     const newSession = Object.assign({}, session);
     return this.http.post<any>(this.urlPostTokenLogin, newSession, cudOptions);

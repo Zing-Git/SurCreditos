@@ -26,12 +26,18 @@
 
                                     <!-- Dni error block -->
                                     <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
-                                        <div *ngIf="dni.errors?.required">
+                                        <div *ngIf="dni.errors['required']">
                                             El número de documento es requerido
                                         </div>
                                     </div>
                                 </div>
-
+                                <!--Agregado por PEdro-->
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputTipoDni"> Tipo de Dni</label>
+                                        <input type="text" formControlName="tipoDni" class="form-control-sm" id="inputTipoDni" placeholder="DNI LU"/>
+                                    </div>
+                                </div>
 
                                 <div class="form-row">
                                     <!-- Campo 2:  Apellido-->
@@ -55,7 +61,7 @@
 
                                     <!-- FechaNacimiento error block -->
                                     <div *ngIf="fechaNacimiento.invalid && fechaNacimiento.touched" class="col-sm-6 text-danger">
-                                        <div *ngIf="fechaNacimiento.errors?.required">
+                                        <div *ngIf="fechaNacimiento.errors['required']">
                                             Ingrese una Fecha Válida
                                         </div>
                                     </div>
@@ -128,6 +134,11 @@
 
                                 <h4>Particular</h4>
                                 <div class="form-row">
+                                    <!--Agregado por Pedro-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPais">Paies</label>
+                                        <input type="text" formControlName="pais" class="form-control form-control-sm" id="inputPais" placeholder="Argentina Bolivia"/>
+                                    </div>
                                     <!-- Campo 1: Provincia-->
                                     <div class="form-group col-md-6">
                                         <label for="inputProvincia">* Provincia</label>
@@ -167,19 +178,19 @@
 
                                     <!-- Barrio error block -->
                                     <div *ngIf="barrio.invalid && barrio.touched" class="col-sm-5 text-danger">
-                                        <div *ngIf="barrio.errors?.required">
+                                        <div *ngIf="barrio.errors['required']">
                                             Barrio es requerido
                                         </div>
                                     </div>
                                     <!-- Calle error block -->
                                     <div *ngIf="calle.invalid && calle.touched" class="col-sm-4 text-danger">
-                                        <div *ngIf="calle.errors?.required">
+                                        <div *ngIf="calle.errors['required']">
                                             Calle es requerida
                                         </div>
                                     </div>
                                     <!-- Numero error block -->
                                     <div *ngIf="numeroCasa.invalid && numeroCasa.touched" class="col-sm-3 text-danger">
-                                        <div *ngIf="numeroCasa.errors?.required">
+                                        <div *ngIf="numeroCasa.errors['required']">
                                             Requerido
                                         </div>
                                     </div>

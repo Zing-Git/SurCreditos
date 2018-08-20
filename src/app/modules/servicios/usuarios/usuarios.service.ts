@@ -8,9 +8,9 @@ import { Provincia } from '../../../modelo/negocio/provincia';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 import { TipoContacto } from '../../../modelo/negocio/tipo-contacto';
 import { Rol } from '../../../modelo/negocio/rol';
-import { Session } from 'src/app/modelo/util/session';
+import { Session } from '../../../modelo/util/session';
 import { LoginService } from '../login/login.service';
-import { TokenPost } from 'src/app/modelo/util/token';
+import { TokenPost } from '../../../modelo/util/token';
 import { environment } from '../../../../environments/environment.prod';
 
 
@@ -89,7 +89,7 @@ export class UsuariosService {
   } */
 
 
-  // POST SERVICES   emanuel emanuel123 usuario administrador..... 
+  // POST SERVICES   emanuel emanuel123 usuario administrador.....
   postLogin(session: Session) {
     const newSession = Object.assign({}, session);
     return this.http.post<any>(this.urlPostTokenLogin, newSession, cudOptions);

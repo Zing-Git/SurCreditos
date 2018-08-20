@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import * as jsPDF from 'jspdf';
+// import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 import { TokenPost } from '../../../modelo/util/token';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.service';
 import { TableUsuarios } from './TableUsuarios';
+declare let jsPDF;
 
 @Component({
   selector: 'app-crud-usuarios',
@@ -162,7 +163,7 @@ export class CrudUsuariosComponent implements OnInit {
 
   imprimirUsuarios() {
     const doc = new jsPDF();
-    doc.page=1;
+    // doc.page=1;
 
     doc.setFontSize(18);
     doc.setTextColor(40);

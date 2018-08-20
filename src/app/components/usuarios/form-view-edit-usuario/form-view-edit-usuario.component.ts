@@ -3,7 +3,7 @@ import { ActivatedRoute} from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.service';
 import { LoginService } from '../../../modules/servicios/login/login.service';
-import { TokenPost } from 'src/app/modelo/util/token';
+import { TokenPost } from '../../../modelo/util/token';
 import { TipoDni } from '../../../modelo/negocio/tipoDni';
 import { UtilidadesService } from '../../../modules/servicios/utiles/utilidades.service';
 import { Provincia } from '../../../modelo/negocio/provincia';

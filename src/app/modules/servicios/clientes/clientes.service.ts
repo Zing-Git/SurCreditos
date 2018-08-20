@@ -28,8 +28,9 @@ export class ClientesService {
   public urlPostGetTodos = this.urlBase + '/cliente/todos';
   public urlPostGetCombos = this.urlBase + '/cliente/combos/';
 
-  constructor(public http: HttpClient) { }
+  public urlPostBuscarComercioPorCuit = this.urlBase + '/comercio/buscar/';
 
+  constructor(public http: HttpClient) { }
 
   // POST: Obtiene todos los clientes
   postGetClientes(session: Session): Observable<any[]> {
@@ -52,4 +53,14 @@ export class ClientesService {
     // const newSession = Object.assign({}, session);
     return this.http.post<any[]>(this.urlPostGetCombos, cudOptions);
   }
+  postGetComercioPorCuit(session: Session, cuit: string): Observable<any[]> {
+    const parametros = {
+      token: session.token,
+      cuit: cuit
+    };
+    const newSession = Object.assign({}, parametros);
+    return this.http.post<any[]>(this.urlPostBuscarComercioPorCuit, newSession, cudOptions);
+  }
+
+
 }

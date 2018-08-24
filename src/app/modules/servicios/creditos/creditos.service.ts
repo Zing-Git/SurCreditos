@@ -48,8 +48,4 @@ export class CreditosService {
     const newSession = Object.assign({}, credito);
     return this.http.post<any[]>(this.urlPostCambiarEstadoCredito, newSession,cudOptions);
   }
-<<<<<<< HEAD
-=======
-
->>>>>>> 47a381f31c5b38eec992a72867d542bb72271731
 }

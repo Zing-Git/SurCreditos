@@ -55,11 +55,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         },
         {
           name: 'PDF',
-<<<<<<< HEAD
-          title: 'Imprimir Credito'
-=======
           title: 'PDF'
->>>>>>> 47a381f31c5b38eec992a72867d542bb72271731
         }
       ],
     },
@@ -193,22 +189,6 @@ export class CrudCreditosAdminComponent implements OnInit {
     }
   }
 
-<<<<<<< HEAD
- 
-  postAprobarRechazar(id:string, nuevoEstado: string){
-    this.characters.forEach(element =>{
-      //console.log(element.estado._id);
-      if(element._id === id){
-        console.log(element.estado._id);
-        let nuevoCredito = {
-          idCredito: element._id,
-          nombre_nuevo_estado: nuevoEstado,
-          cliente: element.cliente._id,
-          nombre_estado_actual: element.estado.nombre,
-          token: this.session.token
-        };
-        
-=======
 // TODO: ESTA HARCODEADO ESTE METODO, SOLO PARA HACER EL APROBADO
   postAprobarRechazar(id:string, nuevoEstado: string){
     this.characters.forEach(element =>{
@@ -222,7 +202,6 @@ export class CrudCreditosAdminComponent implements OnInit {
           estado: '5b72b281708d0830d07f3562'        // element.estado._id
         };
 
->>>>>>> 47a381f31c5b38eec992a72867d542bb72271731
         this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result=>{
           let respuesta = result;
           alert('Se actualiso el estado de Credito');
@@ -231,11 +210,7 @@ export class CrudCreditosAdminComponent implements OnInit {
           alert('Ocurrio un problema');
         });
       }
-<<<<<<< HEAD
-    })
-=======
     });
->>>>>>> 47a381f31c5b38eec992a72867d542bb72271731
   }
 
   imprimirPDF(id: string) {

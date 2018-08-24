@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 // import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
+declare let jsPDF;
 
 import { TokenPost } from '../../../modelo/util/token';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.service';
 import { TableUsuarios } from './TableUsuarios';
-declare let jsPDF;
 
 @Component({
   selector: 'app-crud-usuarios',
@@ -38,11 +38,11 @@ export class CrudUsuariosComponent implements OnInit {
         },
         {
           name: 'delete',
-          title: 'Elim.',
+          title: 'Elim./ ',
         },
         {
           name:'imprimirPDF',
-          title:' /PDF'
+          title:'PDF '
         }
       ],
     },
@@ -147,6 +147,7 @@ export class CrudUsuariosComponent implements OnInit {
       }
     }
   }
+
   eliminarUsuario(id: string, dni: string) {
     this.usuariosService.postDeleteUsuario(this.tokenizer.token, id).subscribe(result => {
       console.log(result);
@@ -163,7 +164,7 @@ export class CrudUsuariosComponent implements OnInit {
 
   imprimirUsuarios() {
     const doc = new jsPDF();
-    // doc.page=1;
+    doc.page=1;
 
     doc.setFontSize(18);
     doc.setTextColor(40);
@@ -239,6 +240,19 @@ export class CrudUsuariosComponent implements OnInit {
             });
           }
         });
+        break;
+      }
+
+      case 'test':{
+
+        for(let i=0; i<500; ++i){
+          dataArray.push({
+            id:i.toString().trim(),
+            nombre : i.toString(),
+            dni:i.toString()
+          });
+        }
+
         break;
       }
       default:

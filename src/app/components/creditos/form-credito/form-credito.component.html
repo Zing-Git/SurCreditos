@@ -1,4 +1,6 @@
 <!-- <button (click)="verCreditoNuevoEstructura()">VER DATOS DE CREDITO NUEVO</button> -->
+<app-modal-cliente></app-modal-cliente>
+<app-form-cliente (pasameDatosDelCliente)="showCliente($event)"></app-form-cliente>
 <h4>Nuevo Crédito</h4>
 
 <div class="container">
@@ -22,7 +24,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <button class="btn btn-outline-primary" (click)="buscarClientePorDni()">Buscar</button>
+                                        <span class="btn btn-outline-primary" (click)="buscarClientePorDni()">Buscar</span>
                                     </div>
 
                                     <!-- Dni error block -->
@@ -108,7 +110,7 @@
                                         <input formControlName="cobroDomicilio" type="checkbox" id="cobranzaDomicilio" value="cobroDomicilio"> <label for="cobranzaDomicilio">Cobranza en domicilio</label>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <button class="btn btn-outline-primary" (click)="calcularPlanDePago()">Ver Plan de Pago</button>
+                                        <span class="btn btn-outline-primary" (click)="calcularPlanDePago()">Ver Plan de Pago</span>
                                     </div>
                                 </div>
 
@@ -141,7 +143,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <button class="btn btn-outline-primary" (click)="buscarGarantePorDni()">Buscar</button>
+                                        <span class="btn btn-outline-primary" (click)="buscarGarantePorDni()">Buscar</span>
                                     </div>
 
                                     <!-- Dni error block -->
@@ -184,10 +186,10 @@
                                     <!-- Campo 5:  Cuit-->
                                     <div class="form-group col-md-6">
                                         <label for="inputCuit">* Cuit</label>
-                                        <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20-30300300-0">
+                                        <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20303003000">
                                     </div>
                                     <div class="col-md-6">
-                                        <button class="btn btn-outline-primary" (click)="buscarComercioPorCuit()">Buscar</button>
+                                        <span class="btn btn-outline-primary" (click)="buscarComercioPorCuit()">Buscar</span>
                                     </div>
                                 </div>
 
@@ -367,3 +369,10 @@
         </div>
     </div>
 </div>
+
+
+<span class="btn btn-outline-primary" (click)="getReferenciaCliente()"> Ver Referencias</span>
+
+
+<!-- <button (click)="ngxSmartModalService.getModal('myModal').open()">Open myModal</button>
+<button (click)="ngxSmartModalService.getModal('clienteModal').open()">Open myModal</button> -->

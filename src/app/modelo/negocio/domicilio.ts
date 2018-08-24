@@ -1,3 +1,4 @@
+import { EstadoCasa } from './estado-casa';
 export class Domicilio {
         _id: string;
         pais: string; 		// Por defecto dejar Argentina
@@ -6,7 +7,7 @@ export class Domicilio {
         barrio: string;
         calle: string;
         numeroCasa: string;
-        estadoCasa: string; //obtenido de una consulta de Get Estado Casa
+        estadoCasa: EstadoCasa; //obtenido de una consulta de Get Estado Casa
         __v: number;
 
         constructor(values: Object = {}) {

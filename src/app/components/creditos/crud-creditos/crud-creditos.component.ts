@@ -2,25 +2,35 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 // import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
+declare let jsPDF;
 
 import { LoginService } from '../../../modules/servicios/login/login.service';
+import { ClientesService } from '../../../modules/servicios/clientes/clientes.service';
 import { CreditosService } from '../../../modules/servicios/creditos/creditos.service';
+
 import { Session } from '../../../modelo/util/session';
 import { TableCreditos } from './TableCreditos';
 import { ItemsReferencia } from '../../../modelo/negocio/itemsReferencia';
-import * as moment from 'moment';
-declare let jsPDF;
+import * as moment from 'moment/moment';
+import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
+// import { Plan } from '../../../modelo/negocio/plan';
 
 @Component({
   selector: 'app-crud-creditos',
   templateUrl: './crud-creditos.component.html',
+  styleUrls: ['./crud-creditos.component.css']
 })
 export class CrudCreditosComponent implements OnInit {
 
   message = '';
   characters: TableCreditos[];
+  estadosCasa: EstadoCasa[];
   session = new Session();
-  lineaDeCarro = 40;
+  lineaDeCarro = 40;      // para reporte general
+  carroIndividual = 50;    //para reporte individual
+  cantidadTotal = 0;
+  estadoCasa : EstadoCasa[];
+  // tiposPlanes : Plan[];
 
   settings = {
 
@@ -46,7 +56,7 @@ export class CrudCreditosComponent implements OnInit {
       razonSocial: {
         title: 'Razon Social',
         width: '15%',
-        valuePrepareFunction: (cell, row) => { return row.comercio.razonSocial }
+        valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       montoPedido: {
         title: 'Monto Pedido',
@@ -59,15 +69,21 @@ export class CrudCreditosComponent implements OnInit {
       valorCuota: {
         title: 'Valor Cuota',
         width: '15%',
+        valuePrepareFunction: (value) => {
+          return value === 'valorCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+        }
       },
       montoInteres: {
         title: 'Interes',
-        width: '10%'
+        width: '10%',
+        valuePrepareFunction: (value) => {
+          return value === 'montoInteres' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+        }
       },
       tieneCobranzaADomicilio: {
         title: 'Cobranza a Domicilio',
         width: '10%',
-        valuePrepareFunction: (value) => { return value === true ? 'Si' : 'NO' },
+        valuePrepareFunction: (value) => value === true ? 'Si' : 'NO',
       },
       porcentajeCobranzaADomicilio: {
         title: 'Cobranza a Domicilio %',
@@ -80,7 +96,7 @@ export class CrudCreditosComponent implements OnInit {
       estado: {
         title: 'Estado Credito',
         width: '15%',
-        valuePrepareFunction: (cell, row) => { return row.estado.nombre }
+        valuePrepareFunction: (cell, row) => row.estado.nombre
       },
     },
     pager: {
@@ -92,7 +108,8 @@ export class CrudCreditosComponent implements OnInit {
   constructor(
     private router: Router,
     private creditosService: CreditosService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private clientesServices: ClientesService
   ) { }
 
   ngOnInit() {
@@ -100,16 +117,25 @@ export class CrudCreditosComponent implements OnInit {
     this.creditosService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
       this.characters = response['credito'];
     });
+    this.cargarControlesCombos();
+  }
+
+  private cargarControlesCombos() {
+
+    this.clientesServices.postGetCombos().subscribe(result => {
+      //this.provincias = result['respuesta'].provincias;
+      this.estadosCasa = result['respuesta'].estadosCasa;
+      // this.tiposPlanes = result['respuesta'].tiposPlanes;
+    });
+
   }
 
   onCustom(event) {
-    // alert(`Custom event '${event.action}' fired on row №: ${event.data.dni}`);
-    let evento = (`${event.action}`);
-    let dni = (`${event.data.dni}`);
-    let id = (`${event.data._id}`);
-    let apellidos = (`${event.data.apellidos}`);
-    let nombres = (`${event.data.nombres}`);
-
+    //alert(`Custom event '${event.action}' fired on row №: ${event.data._id}`);
+    const evento = (`${event.action}`);
+    const dni = (`${event.data.dni}`);
+    const id = (`${event.data._id}`);
+    console.log(id);
     switch (evento) {
       case 'view': {
         this.router.navigate(['formclienteviewedit', evento, dni]);
@@ -121,7 +147,7 @@ export class CrudCreditosComponent implements OnInit {
       }
 
       case 'imprimirPDF': {
-        this.imprimirPDF(id, dni);
+        this.imprimirPDF(id);
         break;
       }
       default: {
@@ -141,9 +167,9 @@ export class CrudCreditosComponent implements OnInit {
     doc.setFontSize(18);
     doc.setTextColor(40);
     doc.setFontStyle('normal');
-    //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
-    doc.text("Reporte General", 150, 10, 'center');
-    doc.line(120, 13, 180, 13);   //13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
+    // doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
+    doc.text('Reporte General', 150, 10, 'center');
+    doc.line(120, 13, 180, 13);   // 13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
 
     doc.autoTable({
       head: this.getData('cabecera'),
@@ -153,118 +179,222 @@ export class CrudCreditosComponent implements OnInit {
       },
     });
 
-    doc.text("Pagina 1", 150, 200, 'center');
+    doc.text('Pagina 1', 150, 200, 'center');
 
     doc.save('reporte.pdf');
   }
 
-  imprimirPDF(id: string, dni: string) {
-    const doc = new jsPDF('l');
+  imprimirPDF(id: string) {
+    const doc = new jsPDF();
 
     ///////////////////////////////////////////////////////////////////////////////////
     doc.setFontSize(18);
     doc.setTextColor(40);
     doc.setFontStyle('normal');
-    //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
-    doc.text("Reporte Credito", 150, 10, 'center');
-    doc.line(120, 13, 180, 13);   //13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
+    const imgData = new Image();
+    // tslint:disable-next-line:max-line-length
+    // imgData.src = 'https://npclhg.dm.files.1drv.com/y4m9GX1-ImqUAw21oHBc1AU0cXj8xJb_B4EW3Omo1lOtFGEwYTmTagcQHp6Zn7AjSsa84JUu_H2bNDa_rY8Ubsl2hkNV4xk5zmWlUaN2tz_0i1q39QOAfWe_FLpR-Jfg_J94rvvQpLHLNw5_aT2hWdWRsBclGuCgF9U1i5taliO9DWw7sc4EnxfgcWT_WamOy60jkpOdDzEQIINslKGINAR6A?width=558&height=299&cropmode=none' ;
+    // doc.addImage(imgData, 50, 50);
+    doc.text('CrediSUR', 20, 15, 'center');
+    doc.setFontSize(7);
+    doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
 
+    doc.setFontSize(12);
+    doc.setTextColor(255);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
+    doc.setFillColor(1);
+
+    doc.text('NOTA DE PEDIDO', 72, 30, 'center');
+
+    doc.setFontSize(10);
+    doc.setTextColor(0)
+    doc.text('Vendedor: ' + this.session.nombreUsuario, 130, 20);
+    const today = Date.now();
+    doc.setTextColor(0)
+    doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
+    doc.text('Legajo Nº:  ', 130, 30)
+    doc.text('Estado: ', 130, 35);
+
+    doc.setFillColor(52, 152, 219)
+    doc.setTextColor(255);
+    doc.setFontSize(12);
+    doc.roundedRect(10, 38, 182, 8, 3, 3, 'FD')
+    doc.text('Datos del Titular', 100, 43, 'center');
+
+    doc.setFontSize(10);
     this.characters.forEach(element => {
-      if (element._id == id) {
-        // doc.setFontSize(24);
-        //doc.text('Documentos', this.lineaDeCarro, 40, 'right');
-        //doc.line(13, this.lineaDeCarro - 17, 250, this.lineaDeCarro - 17);   //13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
-        doc.setFontSize(12);
+      if (element._id === id) {
 
-        doc.autoTable({
-          head: this.getData('CabeceraDocumento'),
-          body: this.getData('CuerpoDocumento'),
-          margin: {
-            top: 30
-          },
-        });
+        doc.setTextColor(0);
+        doc.text('Apellido y Nombre: ' + element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 20, 53);
+        doc.text('Fecha de Nacimiento: ' + moment(element.cliente.titular.fechaNacimiento).format('DD-MM-YYYY') + '              D.N.I.: ' + element.cliente.titular.dni, 20, 58);
       }
     });
-    ///////////////////////////////////////////////////////////////////////////////////
-    this.lineaDeCarro = this.lineaDeCarro + 20;
+
     doc.setFontSize(12);
-    //doc.text('Cliente', 100, 30, 'right');
-    doc.line(13, this.lineaDeCarro - 10, 250, this.lineaDeCarro - 10);   //13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(10, 60, 182, 8, 3, 3, 'FD')
+
+    doc.setTextColor(255);
+    doc.text('Domicilio Particular', 100, 65, 'center');
+
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    this.characters.forEach(element => {
+      if (element._id === id) {
+        doc.text('Calle: ' + element.cliente.titular.domicilio.calle, 20, 75);
+        doc.text('Barrio: ' + element.cliente.titular.domicilio.barrio, 130, 75);
+        doc.text('Localidad: ' + element.cliente.titular.domicilio.localidad, 20, 80);
+        doc.text('Provincia: ' + element.cliente.titular.domicilio.provincia, 130, 80);
+        let miEstado: string;
+        this.estadosCasa.forEach(estadoC => {
+          if (element.cliente.titular.domicilio.estadoCasa._id == estadoC._id) {
+            miEstado = estadoC.nombre;
+          }
+
+        });
+        doc.text('Situacion de la vivienda: ' + miEstado, 20, 85);
+      }
+    });
+
+    doc.setFontSize(12);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(10, 90, 182, 8, 3, 3, 'FD')
+
+    doc.setTextColor(255);
+    doc.text('Domicilio Comercial', 100, 95, 'center');
+
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    this.characters.forEach(element => {
+      if (element._id === id) {
+        if (element.comercio.domicilio != null) {
+          doc.text('Calle: ' + element.comercio.domicilio.calle, 20, 105);
+          doc.text('Barrio:' + element.comercio.domicilio.barrio, 130, 105);
+          doc.text('Localidad: ' + element.comercio.domicilio.localidad, 20, 110);
+          doc.text('Provincia: ' + element.comercio.domicilio.provincia, 130, 110);
+
+          doc.text('Celular: ', 20, 115);
+          doc.text('T. Fijo:', 80, 115)
+          doc.text('Mail:  ', 130, 115);
+        } else {
+          doc.text('Calle: ', 20, 105);
+          doc.text('Barrio:', 130, 105);
+          doc.text('Localidad: ', 20, 110);
+          doc.text('Provincia: ', 130, 110);
+
+          doc.text('Celular: ', 20, 115);
+          doc.text('T. Fijo:', 80, 115)
+          doc.text('Mail:  ', 130, 115);
+        }
+      }
+    });
+
+    doc.setFontSize(12);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(10, 120, 182, 8, 3, 3, 'FD')
+
+    doc.setTextColor(255);
+    doc.text('Datos del Garante', 100, 125, 'center');
+
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+
+    this.characters.forEach(element => {
+      if (element._id === id) {
+        if (element.garante.titular != null) {
+          doc.text('Apellido y Nombre: ' + element.garante.titular.apellidos + ', ' + element.garante.titular.nombres, 20, 135);
+          doc.text('Fecha de Nacimiento: ' + moment(element.garante.titular.fechaNacimiento).format('DD-MM-YYYY'), 20, 140);
+          doc.text('D.N.I.: ' + element.garante.titular.dni, 130, 140);
+          if (element.garante.titular.domicilio != null) {
+            doc.text('Calle: ' + element.garante.titular.domicilio.calle, 20, 145);
+            doc.text('Localidad: ' + element.garante.titular.domicilio.localidad, 20, 150);
+            doc.text('Provincia: ' + element.garante.titular.domicilio.provincia, 130, 150);
+
+            doc.text('Celular: ', 20, 155);
+            doc.text('T. Fijo:', 80, 155)
+            doc.text('Mail:  ', 130, 155);
+          } else {
+            doc.text('Calle: ', 20, 145);
+            doc.text('Localidad: ', 20, 150);
+            doc.text('Provincia: ', 130, 150);
+
+            doc.text('Celular: ', 20, 155);
+            doc.text('T. Fijo:', 80, 155)
+            doc.text('Mail:  ', 130, 155);
+          }
+        }
+      }
+    });
+
+    doc.setFontSize(12);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(10, 160, 182, 8, 3, 3, 'FD')
+
+    doc.setTextColor(255);
+    doc.text('Plan de Pago', 100, 165, 'center');
+
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+
+    this.characters.forEach(element => {
+      if (element._id === id) {
+        doc.text('Monto Solicitado: ' + element.montoPedido, 20, 175);
+        doc.text('Cantidad de Cuotas: ' + element.cantidadCuotas, 80, 175);
+        //aqui iba tipo de plan que no existe en credito
+      }
+    });
+
+    this.getData('CuerpoPlanPago', id);
+    doc.setFontSize(6);
+    doc.text('Pagare sin protesto [art. 50 D. Ley 5965 / 53] a Sur Creditos o a su Oredn la Cantidad de Pesos ', 10, 190);
+    doc.setFontSize(10);
+    doc.text(this.toText(this.cantidadTotal), 50, 195);
+    doc.setFontSize(6);
+    doc.text('por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.', 10, 200);
+    doc.text('Firmante (Lugar y fecha): ', 10, 220);
+
+    this.carroIndividual = 50;
+    this.cantidadTotal = 0;
+
+    doc.addPage();
+
+    doc.text('CrediSUR', 20, 15, 'center');
+    doc.setFontSize(7);
+    doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
+
+    doc.setFontSize(12);
+    doc.setTextColor(255);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
+    doc.setFillColor(1);
+
+    doc.text('NOTA DE PEDIDO', 72, 30, 'center');
+
+    doc.setFontSize(12);
+
+    doc.setTextColor(0);
+    doc.text('Detalle de cuotas', 20, 40);
 
     doc.autoTable({
-      head: this.getData('CabeceraCliente'),
-      body: this.getData('CuerpoCliente', id),
+      head: this.getData('CabeceraPlanPago'),
+      body: this.getData('CuerpoPlanPago', id),
+
       margin: {
         top: 50
       }
     });
 
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    this.lineaDeCarro = this.lineaDeCarro + 40;
-    doc.line(13, this.lineaDeCarro - 10, 250, this.lineaDeCarro - 10);   //13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
-
-    doc.autoTable({
-      head: this.getData('CabeceraPlanPago'),
-      body: this.getData('CuerpoPlanPago')
-    })
-
-    doc.text('Pagina: 1' , this.lineaDeCarro, this.lineaDeCarro );
-    doc.addPage();
-
-    doc.setFontSize(18);
-    doc.setTextColor(40);
-    doc.setFontStyle('normal');
-    doc.text("Reporte Credito", 150, 10, 'center');
-    doc.line(120, 13, 180, 13);   //13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
-
-    this.characters.forEach(element => {
-      doc.text('Apellido y Nombre de Titular: ' + element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 30, 40);
-
-      element.cliente.referencias.forEach(x => {
-        doc.text('Comentario:   ' + x.comentario, 40, 50);
-
-      });
-
-    });
-    this.characters.forEach(element => {
-      //console.log(element.garante.titular);
-        doc.text('Apellido y Nombre del Garante:  ' + element.garante.titular.apellidos + ', ' +  element.garante.titular.nombres, 30, 60);
-      });
-
-    console.log(this.lineaDeCarro);
-    /*
-       contY = contY + 10;
-      doc.text('Nombre:  ' + docu.nombre, contX + 10, contY);
-      contY = contY + 10;
-      doc.text('Requerido:  ' + this.getString(docu.requerido), contX + 10, contY);
-      contY = contY + 10;
-      doc.text('Presentado: ' + this.getString(docu.presentado), contX + 10, contY);
-
-    doc.text('Nombre:  ' + element.documentos.nombre, 30, 50);
-     doc.text('Requerido:  ' + element.documentos.requerido =true: 'Si'? 'No'), 200,50);
-     doc.text('Localidad:  ' + element.titular.domicilio.localidad, 30, 60);
-     doc.text('Calle: ' + element.titular.domicilio.calle, 30, 70);
-     doc.text('Numero: ' + element.titular.domicilio.numeroCasa,30,80);*/
-
-
-
-    //doc.autoTable({
-    //  head: this.getData('cabecera'),
-    //  body: this.getData('filtro', id, dni),
-    //  margin: {
-    //    top: 20
-    //  }
-
-    //});
-
     doc.save('reporteIndividual.pdf');
-
+    this.carroIndividual = 50;
+    this.cantidadTotal = 0;
   }
 
 
   getData(tipo: string, id: string = null, dni: string = null, items: ItemsReferencia = null): Array<any> {
-    let dataArray = Array<any>();
+    const dataArray = Array<any>();
 
     switch (tipo) {
       case 'cabecera':
@@ -282,56 +412,6 @@ export class CrudCreditosComponent implements OnInit {
           this.lineaDeCarro = this.lineaDeCarro + 10;
           break;
         }
-      case 'CabeceraDocumento': {
-        dataArray.push({
-          nombre: 'DOCUMENTO - Nombre',
-          requerido: 'Requerido',
-          presentado: 'Presentado'
-        });
-        this.lineaDeCarro = this.lineaDeCarro + 10;
-        break;
-      }
-      case 'CabeceraCliente': {
-        dataArray.push({
-          titulo: 'CLIENTE - Titulo',
-          referencia: 'Referencia'
-        });
-        this.lineaDeCarro = this.lineaDeCarro + 10;
-        break;
-      }
-      case 'CuerpoCliente': {
-
-        console.log(this.characters);
-        this.characters.forEach(element => {
-          if (element._id == id) {
-            element.cliente.referencias.forEach(tipoR => {
-
-              tipoR.itemsReferencia.forEach(x => {
-                this.lineaDeCarro = this.lineaDeCarro + 10;
-
-                dataArray.push({
-                  titulo: x.item,
-                  referencia: this.getString(x.referenciaCliente)
-                });
-              })
-            });
-          }
-        });
-        break;
-      }
-      case 'CuerpoDocumento': {
-        this.characters.forEach(element => {
-          this.lineaDeCarro = this.lineaDeCarro + 10;
-          element.documentos.forEach(docu => {
-            dataArray.push({
-              nombre: docu.nombre,
-              requerido: this.getString(docu.requerido),
-              presentado: this.getString(docu.presentado)
-            });
-          });
-        });
-        break;
-      }
       case 'cuerpo': {
         this.characters.forEach(element => {
           this.lineaDeCarro = this.lineaDeCarro + 10;
@@ -339,7 +419,9 @@ export class CrudCreditosComponent implements OnInit {
             razonSocial: element.comercio.razonSocial,
             montoPedido: element.montoPedido,
             cantidadCuotas: element.cantidadCuotas,
-            valorCuota: element.valorCuota,
+
+            valorCuota: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+              .format(Number(element.valorCuota)).toString(),
             montoInteres: element.montoInteres,
             tieneCobranzaADomicilio: element.tieneCobranzaADomicilio,
             montoCobranzaADomicilio: element.montoCobranzaADomicilio,
@@ -350,55 +432,62 @@ export class CrudCreditosComponent implements OnInit {
       }
       case 'CabeceraPlanPago': {
         dataArray.push({
-          orden: 'PLAN PAGO - CUOTAS  Orden',
-          cuotaPagada: 'Pagado',
+          orden: 'Cuota',
+
           montoCapital: 'Capital',
+          fechaVencimiento: 'Vencimiento',
           montoInteres: 'Interes',
-          montoCobranzaADomicilio: 'Cobranza a Domicilio',
-          montoTotalCuota: 'Monto Total',
-          fechaVencimiento: 'Vencimiento'
+          montoCobranzaADomicilio: 'CAdic. cobro Domic.',
+          montoTotalCuota: 'Total Cuota',
+
         });
         break;
       }
       case 'CuerpoPlanPago': {
         this.characters.forEach(element => {
+          if (element._id === id) {
 
-          element.planPagos.cuotas.forEach(p => {
-            this.lineaDeCarro = this.lineaDeCarro + 10;
-            dataArray.push({
-              orden: p.orden,
-              cuotaPagada: this.getString(p.cuotaPagada),
-              montoCapital: p.montoCapital,
-              montoInteres: p.montoInteres,
-              montoCobranzaADomicilio: p.montoCobranzaADomicilio,
-              montoTotalCuota: p.MontoTotalCuota,
-              fechaVencimiento: moment(p.fechaVencimiento).format('DD-MM-YYYY')
+            element.planPagos.cuotas.forEach(p => {
+              this.carroIndividual = this.carroIndividual + 10;
+
+              dataArray.push({
+                orden: p.orden,
+                montoCapital: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                  .format(Number(p.montoCapital)).toString(),
+                fechaVencimiento: moment(p.fechaVencimiento).format('DD-MM-YYYY'),
+                montoInteres: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                  .format(Number(p.montoInteres)).toString(),
+                montoCobranzaADomicilio: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                  .format(Number(p.montoCobranzaADomicilio)).toString(),
+                montoTotalCuota: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                  .format(Number(p.MontoTotalCuota)).toString()
+              });
+              let numeroString = (+p.MontoTotalCuota).toFixed(2);
+              console.log(numeroString);
+              this.cantidadTotal = this.cantidadTotal + +(numeroString);    //+ se usa para convertir
             });
-          });
+            dataArray.push({
+              orden: ' ',
+              montoCapital: ' ',
+              fechaVencimiento: ' ',
+              montoInteres: ' ',
+              montoCobranzaADomicilio: ' Total',
+              montoTotalCuota: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                .format(Number(this.cantidadTotal)).toString(),
+            });
+            this.carroIndividual = this.carroIndividual + 5;
+            console.log(this.carroIndividual);
+          }
         });
       }
-
       case 'filtro': {
         this.characters.forEach(element => {
-          if (element._id == id) {
+          if (element._id === id) {
             dataArray.push({
               id: element._id
             });
           }
         });
-        break;
-      }
-
-      case 'test': {
-
-        for (let i = 0; i < 500; ++i) {
-          dataArray.push({
-            id: i.toString().trim(),
-            nombre: i.toString(),
-            dni: i.toString()
-          });
-        }
-
         break;
       }
       default:
@@ -413,7 +502,72 @@ export class CrudCreditosComponent implements OnInit {
     if (valor === true) {
       return 'SI';
     } else {
-      return 'NO'
+      return 'NO';
     }
+  }
+
+  private toText(numero: number): string {
+    //var entero = Convert.ToInt64(Math.Truncate(value1));
+    //double value = Convert.ToDouble(entero);
+    let Num2Text: string = "";
+    let value = Math.trunc(numero);
+
+    if (value == 0) Num2Text = "CERO";
+    else if (value == 1) Num2Text = "UNO";
+    else if (value == 2) Num2Text = "DOS";
+    else if (value == 3) Num2Text = "TRES";
+    else if (value == 4) Num2Text = "CUATRO";
+    else if (value == 5) Num2Text = "CINCO";
+    else if (value == 6) Num2Text = "SEIS";
+    else if (value == 7) Num2Text = "SIETE";
+    else if (value == 8) Num2Text = "OCHO";
+    else if (value == 9) Num2Text = "NUEVE";
+    else if (value == 10) Num2Text = "DIEZ";
+    else if (value == 11) Num2Text = "ONCE";
+    else if (value == 12) Num2Text = "DOCE";
+    else if (value == 13) Num2Text = "TRECE";
+    else if (value == 14) Num2Text = "CATORCE";
+    else if (value == 15) Num2Text = "QUINCE";
+    else if (value < 20) Num2Text = "DIECI" + this.toText(value - 10);
+    else if (value == 20) Num2Text = "VEINTE";
+    else if (value < 30) Num2Text = "VEINTI" + this.toText(value - 20);
+    else if (value == 30) Num2Text = "TREINTA";
+    else if (value == 40) Num2Text = "CUARENTA";
+    else if (value == 50) Num2Text = "CINCUENTA";
+    else if (value == 60) Num2Text = "SESENTA";
+    else if (value == 70) Num2Text = "SETENTA";
+    else if (value == 80) Num2Text = "OCHENTA";
+    else if (value == 90) Num2Text = "NOVENTA";
+    else if (value < 100) Num2Text = this.toText(Math.trunc(value / 10) * 10) + " Y " + this.toText(value % 10);
+    else if (value == 100) Num2Text = "CIEN";
+    else if (value < 200) Num2Text = "CIENTO " + this.toText(value - 100);
+    else if ((value == 200) || (value == 300) || (value == 400) || (value == 600) || (value == 800)) Num2Text = this.toText(Math.trunc(value / 100)) + "CIENTOS";
+    else if (value == 500) Num2Text = "QUINIENTOS";
+    else if (value == 700) Num2Text = "SETECIENTOS";
+    else if (value == 900) Num2Text = "NOVECIENTOS";
+    else if (value < 1000) Num2Text = this.toText(Math.trunc(value / 100) * 100) + " " + this.toText(value % 100);
+    else if (value == 1000) Num2Text = "MIL";
+    else if (value < 2000) Num2Text = "MIL " + this.toText(value % 1000);
+    else if (value < 1000000) {
+      Num2Text = this.toText(Math.trunc(value / 1000)) + " MIL";
+      if ((value % 1000) > 0) Num2Text = Num2Text + " " + this.toText(value % 1000);
+    }
+
+    else if (value == 1000000) Num2Text = "UN MILLON";
+    else if (value < 2000000) Num2Text = "UN MILLON " + this.toText(value % 1000000);
+    else if (value < 1000000000000) {
+      Num2Text = this.toText(Math.trunc(value / 1000000)) + " MILLONES ";
+      if ((value - Math.trunc(value / 1000000) * 1000000) > 0) Num2Text = Num2Text + " " + this.toText(value - Math.trunc(value / 1000000) * 1000000);
+    }
+
+    else if (value == 1000000000000) Num2Text = "UN BILLON";
+    else if (value < 2000000000000) Num2Text = "UN BILLON " + this.toText(value - Math.trunc(value / 1000000000000) * 1000000000000);
+
+    else {
+      Num2Text = this.toText(Math.trunc(value / 1000000000000)) + " BILLONES";
+      if ((value - Math.trunc(value / 1000000000000) * 1000000000000) > 0) Num2Text = Num2Text + " " + this.toText(value - Math.trunc(value / 1000000000000) * 1000000000000);
+    }
+    return Num2Text;
+
   }
 }

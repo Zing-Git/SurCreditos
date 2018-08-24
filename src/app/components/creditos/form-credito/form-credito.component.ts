@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ClientesService } from '../../../modules/servicios/clientes/clientes.service';
 import { Session } from '../../../modelo/util/session';
 import { LoginService } from '../../../modules/servicios/login/login.service';
@@ -10,6 +10,17 @@ import { formatNumber } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { CreditoNuevo } from './modelos/CreditoNuevo';
 import { DocumentoPresentado } from './modelos/DocumentoPresentado';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.service';
+
+
+// Importo el componente hijo CHILD
+import { FormClienteComponent } from '../../clientes/form-cliente/form-cliente.component';
+import { ReferenciaCliente } from './modelos/ReferenciaCliente';
+import { ReferenciaComercio } from './modelos/RefereciaComercio';
+import { element } from 'protractor';
+
+
 
 
 @Component({
@@ -17,6 +28,12 @@ import { DocumentoPresentado } from './modelos/DocumentoPresentado';
   templateUrl: './form-credito.component.html'
 })
 export class FormCreditoComponent implements OnInit {
+
+  // -------------------------
+  @ViewChild(FormClienteComponent) hijo: FormClienteComponent;
+  // --------------------------
+
+
   creditoNuevo: CreditoNuevo = new CreditoNuevo;
   session: Session;
   creditoForm: FormGroup;
@@ -26,10 +43,18 @@ export class FormCreditoComponent implements OnInit {
   planes: any[];
   referenciaComercios = [];
   referenciaTitulares = [];
+  referenciaTitularesElegidos = [];
+  referenciaComerciosElegidos = [];
+
   controls = [];
+
   cliente: any;
   comercio: any;
   garante: any;
+
+  referenciaCliente: ReferenciaCliente;
+  referenciaComercio: ReferenciaComercio;
+
 
   // documentos que presenta el titular del credito
   documentosAPresentar: DocumentoPresentado[];
@@ -120,16 +145,20 @@ export class FormCreditoComponent implements OnInit {
   constructor(
       private fb: FormBuilder,
       private clientesService: ClientesService,
+      private usuariosService: UsuariosService,
       private loginService: LoginService,
       private utilidadesService: UtilidadesService,
       private creditosService: CreditosService,
-      private datePipe: DatePipe ) { }
+      private datePipe: DatePipe,
+      public ngxSmartModalService: NgxSmartModalService) { }
+
+
+
 
   ngOnInit() {
     this.session = new Session();
     this.session.token = this.loginService.getTokenDeSession();
     this.cargarControlesForm();
-
 
     this.creditoForm = this.fb.group({
       dni: new FormControl('', [Validators.required]),
@@ -190,10 +219,6 @@ export class FormCreditoComponent implements OnInit {
 
 
 
-
-
-
-
   onFormSubmit() {
      this.guardarCredito();
   }
@@ -201,16 +226,131 @@ export class FormCreditoComponent implements OnInit {
   guardarCredito() {
     this.creditoNuevo.montoSolicitado = this.montoSolicitado.value;
     this.creditoNuevo.cobranzaEnDomicilio = this.cobroDomicilio.value;
-
     this.creditoNuevo.tasa = this.planPago.tasa;
     this.creditoNuevo.cantidadCuotas = this.planPago.cantidadCuotas;
     this.creditoNuevo.diasASumar = this.planPago.diasASumar;
     this.creditoNuevo.token = this.session.token;
+    this.creditoNuevo.legajo = this.numeroLegajo.value;
+    this.creditoNuevo.documentos = this.getDocumentosPresentadosAGuardar();
 
     this.creditoNuevo.cliente = this.cliente._id;
     this.creditoNuevo.garante = this.garante._id;
-    this.creditoNuevo.comercio = this.comercio._id;
 
+    this.getReferenciaCliente();
+    this.clientesService.postAgregarReferenciaCliente(this.referenciaCliente).subscribe( resultCliente => {
+
+        if (this.comercio) {
+          // Si existe comercio
+          this.creditoNuevo.comercio = this.comercio._id;
+          console.log('ID de Comercio: ', this.creditoNuevo.comercio);
+          // Agregar Referencia a Comercio
+          console.log('Referncia COmercio a GUARDAR: ', this.referenciaComercio);
+          this.clientesService.postAgregarReferenciaComercio(this.referenciaComercio).subscribe( resultComercio => {
+              // Alta de Credito
+              console.log(resultComercio);
+              this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
+                  let respuesta = result;
+                  alert('Solicitud de Credito generado con Exito, verifique en la lista de creditos cuando el administrador lo apruebe.');
+                  console.log(respuesta);
+              }, err => {
+                  alert('Hubo un problema al registrar la solicitud de credito');
+              });
+          }, err => {
+              alert('Ocurrio un error al asignar la referencia al comercio');
+          });
+        } else {
+          // Si no Existe el  Comercio, dar el alta antes de guardar credito--------------------
+          console.log('Lee de Form');
+        }
+    }, err => {
+      alert('Hubo un problema al asignar una referencia al cliente');
+    });
+    console.log(this.creditoNuevo);
+  }
+
+
+  getComercioAGuardar(): any {
+    let comercioAGuardar = {
+      token: this.session.token,
+      idComercio: 0,
+      cuit: this.cuit.value,
+      razonSocial: this.razonSocial.value,
+      // referencia:
+      idCliente: this.cliente._id,
+    };
+    return comercioAGuardar;
+  }
+
+  getItemsReferenciasCliente(): any[] {
+    // Agrega Referencias al Titular  y Comercio ---------------------
+    let itemsReferenciaCliente = [];
+    this.referenciaTitularesElegidos.forEach(element => {
+      if (element.referenciaCliente) {
+        let valorItem: Object = {
+          item: element._id
+        };
+        itemsReferenciaCliente.push(valorItem);
+      }
+    });
+    console.log('Items Cliente: ', itemsReferenciaCliente);
+    return itemsReferenciaCliente;
+  }
+
+  getItemsReferenciasComercio(): any[] {
+    let itemsReferenciaComercio = [];
+
+    console.log(this.referenciaComerciosElegidos);
+
+    this.referenciaComerciosElegidos.forEach(element => {
+      if (element.referenciaCliente) {
+        let valorItem: Object = {
+          item: element._id
+        };
+        itemsReferenciaComercio.push(valorItem);
+      }
+    });
+    console.log('Items Comercios: ', itemsReferenciaComercio);
+    return itemsReferenciaComercio;
+  }
+
+  getReferenciaCliente() {
+    console.log('id de Clienteeee: ', this.cliente._id);
+    this.referenciaCliente = {
+      token: this.session.token,
+      cliente: {
+        _id: this.cliente._id,
+        referencia: {
+          _id: '0',
+          tipoReferencia: this.tipoReferenciaTitular.value,
+          comentario: this.notaComentarioTitular.value,
+          itemsReferencia: this.getItemsReferenciasCliente()
+        }
+      }
+    };
+    console.log(this.referenciaCliente);
+  }
+
+  getReferenciaComercio() {
+    console.log('id de Comercio: ', this.comercio._id);
+    this.referenciaComercio = {
+      token: this.session.token,
+      comercio: {
+        id: this.comercio._id,
+        referencia: {
+          _id: '0',
+          tipoReferencia: this.tipoReferenciaComercio.value,
+          comentario: this.notaComentarioComercio.value,
+          itemsReferencia: this.getItemsReferenciasComercio()
+        }
+      }
+    };
+    console.log(this.referenciaComercio);
+  }
+
+
+
+
+  getDocumentosPresentadosAGuardar(): any[] {
     let documentosAGuardar = [];
     // Carga el array de  documentos a presentar
     for (let i = 0; i < this.documentosSolicitados.length; i++) {
@@ -221,19 +361,8 @@ export class FormCreditoComponent implements OnInit {
       documento.presentado = this.documentosAPresentar[i].requerido;
       documentosAGuardar.push(documento);
     }
-    this.creditoNuevo.documentos = documentosAGuardar;
-    this.creditoNuevo.legajo = this.numeroLegajo.value;
-    // console.log('Item de docs a a PARA PRESENTAR', this.documentosAPresentar);
-    // console.log('Item de docs a ORIGINAL', this.documentosSolicitados);
-    // console.log('SE MANDA A GUARDAR: ', documentosAGuardar);
-    console.log(this.creditoNuevo);
-    this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
-        let respuesta = result;
-        console.log(respuesta);
-    });
-
+    return documentosAGuardar;
   }
-
 
   verClientes() {
     this.clientesService.postGetClientes(this.session).subscribe( response => {
@@ -242,15 +371,48 @@ export class FormCreditoComponent implements OnInit {
   }
   buscarClientePorDni() {
     let dni = this.dni.value;
-    this.clientesService.postGetClientePorDni(this.session, dni).subscribe( response => {
-        this.cliente = response['clientes'][0];
-        this.cargarClienteForm(this.cliente);
-    });
+    let tipoDeAlta: string;
+    let persona: any;
+
+    // 1: si dni no es vacio
+    if ( this.dni.value !== '') {
+      // 2: Si el Cliente existe:
+      this.clientesService.postGetClientePorDni(this.session, dni).subscribe( response => {
+            this.cliente = response['clientes'][0];
+            this.cargarClienteForm(this.cliente);
+            console.log('cliente._id: ', this.cliente._id);
+      }, err => {
+            // 3: Si no existe el cliente, puede ser una persona, entonces llenar datos de persona
+            this.usuariosService.postGetPersona(this.session.token, this.dni.value).subscribe(response => {
+              persona = response['personaDB'][0];
+              tipoDeAlta = 'ExistePersona';
+              this.hijo.recibePametros(persona, tipoDeAlta);
+              this.ngxSmartModalService.getModal('clienteModal').open();
+            }, err => {
+              // 4: Si no es persona, entonces hay que darle de alta con ID Persona 0
+              let resp = confirm('Cliente Inexistente, quiere darle de Alta?');
+              if (resp) {
+                tipoDeAlta = 'NoExistePersona';
+                persona = {
+                  dni: this.dni.value,
+                };
+                this.hijo.recibePametros(persona, tipoDeAlta);
+                this.ngxSmartModalService.getModal('clienteModal').open();
+              }
+            });
+      });
+    } else {
+      alert('Debe ingresare un número de Dni');
+    }
+
   }
   cargarClienteForm(cliente: any) {
     this.apellidos.setValue(cliente.titular.apellidos);
     this.nombres.setValue(cliente.titular.nombres);
-    this.fechaNacimiento.setValue(this.utilidadesService.formateaDateAAAAMMDD(cliente.titular.fechaNacimiento));
+
+    if (cliente.titular.fechaNacimiento !== null) {
+      this.fechaNacimiento.setValue(this.utilidadesService.formateaDateAAAAMMDD(cliente.titular.fechaNacimiento));
+    }
   }
 
 
@@ -265,9 +427,9 @@ export class FormCreditoComponent implements OnInit {
       // Carga de combos de referencias
       let referencias = response['respuesta'].itemsReferencia;
       for (let ref of referencias) {
-        if (ref.referenciaCliente) {
+        if (ref.referenciaCliente) { // si la "referenciaCliente": true es de un Titular
           this.referenciaTitulares.push(ref);
-        } else {
+        } else {                     // si la "referenciaCliente": false es de un comercio
           this.referenciaComercios.push(ref);
         }
       }
@@ -276,6 +438,10 @@ export class FormCreditoComponent implements OnInit {
       this.documentosAPresentar = <DocumentoPresentado[]>response['respuesta'].documentos;
       // Se copia el contenido en otro objeto para mantener la solicitud ORIGINAL del sistema inicial de documentacion
       this.documentosSolicitados = JSON.parse(JSON.stringify(this.documentosAPresentar));
+
+     this.referenciaTitularesElegidos = JSON.parse(JSON.stringify(this.referenciaTitulares));
+     this.referenciaComerciosElegidos = JSON.parse(JSON.stringify(this.referenciaComercios));
+
 
     });
 
@@ -286,13 +452,19 @@ export class FormCreditoComponent implements OnInit {
       this.documentosAPresentar[i].requerido = !this.documentosAPresentar[i].requerido;
     }
   }
-  changeCheckboxReferenciaTitular(i){
+
+  changeCheckboxReferenciaTitular(i) {
     if (this.referenciaTitulares) {
       this.referenciaTitulares[i].referenciaCliente = !this.referenciaTitulares[i].referenciaCliente;
       let itemRTElegido = {
         item: this.referenciaTitulares[i].item,
         checkboxElegido: !this.referenciaTitulares[i].referenciaCliente,
       };
+
+      this.referenciaTitularesElegidos[i].referenciaCliente = !this.referenciaTitulares[i].referenciaCliente;
+      console.log(itemRTElegido);
+      console.log(this.referenciaTitularesElegidos[i]);
+
     }
   }
 
@@ -303,18 +475,22 @@ export class FormCreditoComponent implements OnInit {
         item: this.referenciaComercios[i].item,
         checkboxElegido: this.referenciaComercios[i].referenciaCliente,
       };
+      this.referenciaComerciosElegidos[i].referenciaCliente = !this.referenciaComerciosElegidos[i].referenciaCliente;
+      console.log(itemRTElegido);
+      console.log(this.referenciaComerciosElegidos[i]);
+
     }
   }
 
   calcularPlanDePago() {
 
-    this.planPago = {
-      montoSolicitado: this.montoSolicitado.value,
-      cobranzaEnDomicilio: this.cobroDomicilio.value,
-      cantidadCuotas: this.plan.value,
-      tasa: this.planElegido.tasa,
-      diasASumar: this.tipoPlanElegido.diasASumar,
-    };
+      this.planPago = {
+        montoSolicitado: this.montoSolicitado.value,
+        cobranzaEnDomicilio: this.cobroDomicilio.value,
+        cantidadCuotas: this.plan.value,
+        tasa: this.planElegido.tasa,
+        diasASumar: this.tipoPlanElegido.diasASumar,
+      };
 
 
       this.creditosService.postGetPlanDePago(this.planPago).subscribe( response => {
@@ -340,16 +516,48 @@ export class FormCreditoComponent implements OnInit {
     let cuit = this.cuit.value;
     this.clientesService.postGetComercioPorCuit(this.session, cuit).subscribe( response => {
         this.comercio = response['comercio'][0];
+        console.log('Comercio Buscado: ', this.comercio);
         this.cargarComercioForm(this.comercio);
+    }, err => {
+        alert('El comercio no existe, cargue los datos y se terminará de registrar al finalizar la solicitud del Crédito');
     });
   }
 
   buscarGarantePorDni() {
     let dni = this.dniGarante.value;
-    this.clientesService.postGetClientePorDni(this.session, dni).subscribe( response => {
-        this.garante = response['clientes'][0];
-        this.cargarGaranteForm(this.garante);
-    });
+    let tipoDeAlta: string;
+    let persona: any;
+
+
+    // 1: si dni no es vacio
+    if ( this.dniGarante.value !== '') {
+      // 2: Si el Garante existe:
+      this.clientesService.postGetClientePorDni(this.session, dni).subscribe( response => {
+            this.garante = response['clientes'][0];
+            this.cargarGaranteForm(this.garante);
+      }, err => {
+            // 3: Si no existe el cliente, puede ser una persona, entonces llenar datos de persona
+            this.usuariosService.postGetPersona(this.session.token, this.dni.value).subscribe(response => {
+              persona = response['personaDB'][0];
+              tipoDeAlta = 'ExistePersona';
+              this.hijo.recibePametros(persona, tipoDeAlta);
+              this.ngxSmartModalService.getModal('clienteModal').open();
+            }, err => {
+              // 4: Si no es persona, entonces hay que darle de alta con ID Persona 0
+              let resp = confirm('Garante Inexistente, quiere darle de Alta?');
+              if (resp) {
+                tipoDeAlta = 'NoExistePersona';
+                persona = {
+                  dni: this.dniGarante.value,
+                };
+                this.hijo.recibePametros(persona, tipoDeAlta);
+                this.ngxSmartModalService.getModal('clienteModal').open();
+              }
+            });
+      });
+    } else {
+      alert('Debe ingresare un número de Dni');
+    }
   }
 
   cargarGaranteForm(garante: any) {
@@ -360,5 +568,18 @@ export class FormCreditoComponent implements OnInit {
   cargarComercioForm(comercio: any){
     this.razonSocial.setValue(comercio.razonSocial);
   }
+
+
+  // METODO QUE COMUNICA AL HIJO FormClienteCOmponent con este FOrm que es el PADRE
+  // ------------------------------------------------------------------------------
+  showCliente(event): void {
+    /* alert(event.nombre);
+    this.apellidos.setValue(event.nombre); */
+
+    console.log('CLIENTE GUARDADO: ', event.cliente);
+    console.log('CLIENTE RESULT: ', event.result);
+  }
+
+
 
 }

@@ -48,6 +48,7 @@ export class UsuariosService {
   public postNuevoContactoUrl = this.urlBase + '/nuevo_contacto'; */
 
   // GET URLs
+  public urlPostGetPersonaPorDni = this.urlBase + '/persona/obtener_persona/';
   public urlGetTiposDni = this.urlBase + '/persona/tipos_dni';
   public urlGetProvincias = this.urlBase + '/domicilio/provincias';
   public urlGetEstadosCasa = this.urlBase + '/domicilio/estadoscasa';
@@ -81,14 +82,6 @@ export class UsuariosService {
   getAllTipoContacto(): Observable<TipoContacto[]> {
     return this.http.get<TipoContacto[]>(this.urlGetTiposContacto);
   }
-
-  // LLamada a Webservice Get con parametro en URL
-  /* getAllRoles(token: string): Observable<Rol[]> {
-    this.urlGetRoles = this.urlGetRoles + '?token=' + token;
-    return this.http.get<Rol[]>(this.urlGetRoles);
-  } */
-
-
   // POST SERVICES   emanuel emanuel123 usuario administrador.....
   postLogin(session: Session) {
     const newSession = Object.assign({}, session);
@@ -116,13 +109,6 @@ export class UsuariosService {
 
   // DELETE Services
    deleteUsuario(token: string, idUsuario: string): Observable<any> {
-    /* const parametros = new HttpParams()
-        .set('idUsuario', idUsuario)
-        .set('token', token);
-    const cudOptionsDelete = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
-      params:  parametros
-    }; */
      const url = `${this.urlDeleteUsuario}${idUsuario}/${token}`;
      // const url = `${this.urlDeleteUsuario}`;
      console.log('URL DELETE: ' , url);
@@ -151,15 +137,13 @@ export class UsuariosService {
     return this.http.post<any>(this.urlPostBlanquearClaveUsuario, newUsuario, cudOptions);
   }
 
-
-
-/*   getCharacters() {
-    let url = 'http://localhost:4000';
-    return this.http.get(`${url}/characters`);
-  } */
- /*  let tok2 = ({
-    campo : 'testCampo',
-    valor : 'testValor'
-  }); */
+  postGetPersona(token: string, dni: string): Observable<any> {
+    const parametros = {
+      token: token,
+      dni: dni
+    };
+    const newUsuario = Object.assign({}, parametros);
+    return this.http.post<any>(this.urlPostGetPersonaPorDni, newUsuario, cudOptions);
+  }
 
 }

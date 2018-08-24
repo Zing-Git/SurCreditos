@@ -3,5 +3,8 @@ export interface TableUsuarios {
   dni: string;
   nombreUsuario: string;
   estado: boolean;
+  apellidos: string;
+  nombres: string;
+  rol: string;
 }
 

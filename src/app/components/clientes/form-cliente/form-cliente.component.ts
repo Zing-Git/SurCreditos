@@ -1,30 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ClientesService } from '../../../modules/servicios/clientes/clientes.service';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { UtilidadesService } from '../../../modules/servicios/utiles/utilidades.service';
 import { Session } from '../../../modelo/util/session';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.service';
 
 @Component({
   selector: 'app-form-cliente',
   templateUrl: './form-cliente.component.html',
 })
 export class FormClienteComponent implements OnInit {
+  // Usamos el decorador Output para pasar datos al componente PADRE FormCreditoComponent
+  @Output() pasameDatosDelCliente = new EventEmitter();
+
   session: Session;
   clienteForm: FormGroup;
   currentJustify = 'justified';
   provincias: any[];
   localidades: any[];
   estadosCasa: any[];
+  idPersona = '0';
+  idDomicilio =  '0';
 
   constructor(private fb: FormBuilder,
     private clientesService: ClientesService,
     private loginService: LoginService,
-    private utilidadesService: UtilidadesService) { }
+    private utilidadesService: UtilidadesService,
+    private usuariosService: UsuariosService,
+    public ngxSmartModalService: NgxSmartModalService,
+    /* private usuariosService */
+    ) { }
+
+
+
 
   ngOnInit() {
     this.session = new Session();
     this.session.token = this.loginService.getTokenDeSession();
+
 
 
     this.clienteForm = this.fb.group({
@@ -44,8 +59,8 @@ export class FormClienteComponent implements OnInit {
       calle: new FormControl('', [Validators.required]),
       numeroCasa: new FormControl('', [Validators.required]),
       estadoCasa: new FormControl(),
-      piso: new FormControl(),
-      departamento: new FormControl(),
+   /*    piso: new FormControl(),
+      departamento: new FormControl(), */
 
       tipoContacto1: new FormControl(),
       codigoPais1: new FormControl(),
@@ -87,8 +102,8 @@ export class FormClienteComponent implements OnInit {
   get calle() { return this.clienteForm.get('calle'); }
   get numeroCasa() { return this.clienteForm.get('numeroCasa'); }
   get estadoCasa() { return this.clienteForm.get('estadoCasa'); }
-  get piso() { return this.clienteForm.get('piso'); }
-  get departamento() { return this.clienteForm.get('departamento'); }
+  /* get piso() { return this.clienteForm.get('piso'); }
+  get departamento() { return this.clienteForm.get('departamento'); } */
 
   get codigoPais1() { return this.clienteForm.get('codigoPais1'); }
   get codigoArea1() { return this.clienteForm.get('codigoArea1'); }
@@ -98,7 +113,7 @@ export class FormClienteComponent implements OnInit {
   get numero2() { return this.clienteForm.get('numero2'); }
   get email() { return this.clienteForm.get('email'); }
 
-  buscarClientePorDni() {
+/*   buscarClientePorDni() {
     let dni = this.dni.value;
     this.session = new Session();
     this.session.token = this.loginService.getTokenDeSession();
@@ -107,7 +122,7 @@ export class FormClienteComponent implements OnInit {
       console.log(cliente[0]);
       this.cargarClienteForm(cliente[0]);
     });
-  }
+  } */
   cargarClienteForm(cliente: any) {
     this.apellidos.setValue(cliente.titular.apellidos);
     this.nombres.setValue(cliente.titular.nombres);
@@ -122,26 +137,31 @@ export class FormClienteComponent implements OnInit {
     });
 
   }
+
+
   capturarValoresDeFormulario(): any {
 
     let cliente = {
       persona: {
-          _id: '0',
+          _id: this.idPersona,
           tipoDni: 	'5b0d6a845b9d842646da57c9',
           dni: String(this.dni.value),
           apellidos: this.apellidos.value,
           nombres: this.nombres.value,
-          fechaNacimiento: this.fechaNacimiento.value
+          fechaNacimiento: this.utilidadesService.formateaDateAAAAMMDD(this.fechaNacimiento.value)
       },
-      /* domicilio: {
-          pais: this.pais.value,
+      domicilio: {
+          _id: this.idDomicilio,
+          pais: 'Argentina',
           provincia: this.provincia.value,
           localidad: this.localidad.value,
           barrio: this.barrio.value,
           calle: this.calle.value,
           numeroCasa: this.numeroCasa.value,
-          estadoCasa: this.estadoCasa.value
-      }, */
+          estadoCasa: {
+            _id: this.estadoCasa.value
+          }
+      },
       contactos: [
             {tipoContacto: '5b10071f42fb563dffcf6b8c',
                 codigoPais: this.codigoPais1.value,
@@ -168,8 +188,54 @@ export class FormClienteComponent implements OnInit {
   }
 
   onFormSubmit() {
-    console.log(this.clienteForm.value);
-    console.log(this.capturarValoresDeFormulario());
+    /* console.log(this.clienteForm.value);
+    console.log(this.capturarValoresDeFormulario()); */
+    this.ngxSmartModalService.close('clienteModal');
 
   }
+ // COMUNICACION CON EL COMPONENTE PADRE FormCreditoComponent
+ // --------------------------------------------------------------
+  recibePametros(personaC: any, tipoDeAlta: string) {
+    // En caso de que la persona existe pero no el cliente
+    if (tipoDeAlta === 'ExistePersona') {
+      // console.log('LLego de formulario padre: ', personaC);
+      this.idPersona = personaC._id;
+      this.dni.setValue(personaC.dni);
+      this.apellidos.setValue(personaC.apellidos);
+      this.nombres.setValue(personaC.nombres);
+      if (personaC.fechaNacimiento !== null) {
+        this.fechaNacimiento.setValue(this.utilidadesService.formateaDateAAAAMMDD(personaC.fechaNacimiento));
+      }
+      this.provincia.setValue(personaC.domicilio.provincia, {onlySelf: true});
+      let prov =  this.provincias.find(x => x.provincia === this.provincia.value);
+      this.localidades = prov.localidad;
+      this.localidad.setValue(personaC.domicilio.localidad, {onlySelf: true});
+      this.barrio.setValue(personaC.domicilio.barrio);
+      this.calle.setValue(personaC.domicilio.calle);
+      this.numeroCasa.setValue(personaC.domicilio.numeroCasa);
+      this.estadoCasa.setValue(personaC.domicilio.estadoCasa.nombre, {onlySelf: true});
+    } else {
+      if (tipoDeAlta === 'NoExistePersona') {
+        this.idPersona = '0';
+        this.idDomicilio = '0';
+        this.dni.setValue(personaC.dni);
+      }
+    }
+  }
+
+
+
+  guardar(event) {
+    let clienteC = this.capturarValoresDeFormulario();
+    console.log('A guardar: ', JSON.stringify(clienteC));
+
+    this.clientesService.postGuardarCliente(clienteC).subscribe( result => {
+      let cliente = result['clienteDB'];
+      this.pasameDatosDelCliente.emit({cliente: clienteC, result: cliente});
+      alert('El cliente se guardo con éxito');
+    }, err => {
+      alert('Hubo un problema al Guardar el Cliente');
+    });
+  }
+
 }

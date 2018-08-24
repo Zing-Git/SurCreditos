@@ -1,11 +1,11 @@
-import { Documentos } from "../../../modelo/negocio/documentos";
-import { Cliente } from "../../../modelo/negocio/cliente";
-import { Garante } from "../../../modelo/negocio/garante";
-import { Comercio } from "../../../modelo/negocio/comercio";
-import { PlanPago } from "../../../modelo/negocio/planPago";
-import { Estado } from "../../../modelo/negocio/estado";
+import { Documentos } from '../../../modelo/negocio/documentos';
+import { Cliente } from '../../../modelo/negocio/cliente';
+import { Garante } from '../../../modelo/negocio/garante';
+import { Comercio } from '../../../modelo/negocio/comercio';
+import { PlanPago } from '../../../modelo/negocio/planPago';
+import { Estado } from '../../../modelo/negocio/estado';
 
-export interface TableCreditos{
+export interface TableCreditos {
     documentos: Documentos[];
     _id: string;
     cliente: Cliente;

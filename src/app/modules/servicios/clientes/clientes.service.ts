@@ -27,8 +27,11 @@ export class ClientesService {
   public urlPostBuscarPorDni = this.urlBase + '/cliente/buscar_por_dni/';
   public urlPostGetTodos = this.urlBase + '/cliente/todos';
   public urlPostGetCombos = this.urlBase + '/cliente/combos/';
-
   public urlPostBuscarComercioPorCuit = this.urlBase + '/comercio/buscar/';
+  public urlPostGuardarCliente = this.urlBase + '/cliente/nuevo/';
+  public urlPostAgregarReferenciaComercio = this.urlBase + '/comercio/agregar_referencia/';
+  public urlPostAgregarReferenciaCliente = this.urlBase + '/cliente/agregar_referencia/';
+
 
   constructor(public http: HttpClient) { }
 
@@ -60,6 +63,19 @@ export class ClientesService {
     };
     const newSession = Object.assign({}, parametros);
     return this.http.post<any[]>(this.urlPostBuscarComercioPorCuit, newSession, cudOptions);
+  }
+  postGuardarCliente(cliente: any): Observable<any[]> {
+    const newSession = Object.assign({}, cliente);
+    return this.http.post<any[]>(this.urlPostGuardarCliente, newSession, cudOptions);
+  }
+
+  postAgregarReferenciaCliente(referencia: any): Observable<any[]> {
+    const newSession = Object.assign({}, referencia);
+    return this.http.post<any[]>(this.urlPostAgregarReferenciaCliente, newSession, cudOptions);
+  }
+  postAgregarReferenciaComercio(comercio: any): Observable<any[]> {
+    const newSession = Object.assign({}, comercio);
+    return this.http.post<any[]>(this.urlPostAgregarReferenciaComercio, newSession, cudOptions);
   }
 
 

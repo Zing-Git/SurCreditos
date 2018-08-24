@@ -40,7 +40,9 @@ import { NoLoginGuard } from './no-login.guard';
 import { FormViewEditUsuarioComponent } from './components/usuarios/form-view-edit-usuario/form-view-edit-usuario.component';
 import { FormCambioClaveComponent } from './components/usuarios/form-cambio-clave/form-cambio-clave.component';
 
-
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { ModalClienteComponent } from './components/creditos/modal-cliente/modal-cliente.component';
+import { CrudCreditosAdminComponent } from './components/creditos/crud-creditos-admin/crud-creditos-admin.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,8 @@ import { FormCambioClaveComponent } from './components/usuarios/form-cambio-clav
     InfoComponent,
     FormViewEditUsuarioComponent,
     FormCambioClaveComponent,
+    ModalClienteComponent,
+    CrudCreditosAdminComponent
   ],
   imports: [
     BrowserModule,
@@ -71,10 +75,12 @@ import { FormCambioClaveComponent } from './components/usuarios/form-cambio-clav
     NgbModule,
     NgbModule.forRoot(),
     Ng2SmartTableModule,
+    NgxSmartModalModule.forRoot(),
   ],
   providers: [
     LoginGuard,
-    NoLoginGuard
+    NoLoginGuard,
+    NgxSmartModalService,
   ],
   bootstrap: [AppComponent]
 })

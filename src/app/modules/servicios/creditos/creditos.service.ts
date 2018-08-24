@@ -24,6 +24,7 @@ export class CreditosService {
    public urlPostGetPlanDePago = this.urlBase + '/credito/calcular_plan_pago/';
    public urlPostGetAllCreditos = this.urlBase + '/credito/listar_creditos/';
    public urlPostGuardarCredito = this.urlBase + '/credito/guardar/';
+   public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado';
 
   constructor(public http: HttpClient) { }
 
@@ -43,4 +44,12 @@ export class CreditosService {
     return this.http.post<any[]>(this.urlPostGuardarCredito, newSession, cudOptions);
   }
 
+  postCambiarEstadoCredito(credito: any):Observable<any[]>{
+    const newSession = Object.assign({}, credito);
+    return this.http.post<any[]>(this.urlPostCambiarEstadoCredito, newSession,cudOptions);
+  }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 47a381f31c5b38eec992a72867d542bb72271731
 }

@@ -12,6 +12,7 @@ import { NoLoginGuard } from './no-login.guard';
 import { FormViewEditUsuarioComponent } from './components/usuarios/form-view-edit-usuario/form-view-edit-usuario.component';
 import { FormCambioClaveComponent } from './components/usuarios/form-cambio-clave/form-cambio-clave.component';
 import { CrudCreditosAdminComponent } from './components/creditos/crud-creditos-admin/crud-creditos-admin.component';
+import { ModalComercioComponent } from './components/creditos/modal-comercio/modal-comercio.component';
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -30,6 +31,7 @@ export const appRoutes: Routes = [
 { path: 'info', component: InfoComponent , canActivate: [LoginGuard]},
 { path: 'login', component: LoginComponent , canActivate: [NoLoginGuard]},
 { path: 'crudcreditosadmin', component: CrudCreditosAdminComponent , canActivate: [NoLoginGuard]},
+{ path: 'formcomercio', component: ModalComercioComponent , canActivate: [LoginGuard]},
 // { path: '', component: LoginComponent , canActivate: [NoLoginGuard]},
 
 ];

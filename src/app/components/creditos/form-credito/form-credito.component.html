@@ -1,6 +1,9 @@
 <!-- <button (click)="verCreditoNuevoEstructura()">VER DATOS DE CREDITO NUEVO</button> -->
 <app-modal-cliente></app-modal-cliente>
+
+<app-modal-comercio (pasameDatosDelComercio)="showComercio($event)"></app-modal-comercio>
 <app-form-cliente (pasameDatosDelCliente)="showCliente($event)"></app-form-cliente>
+
 <h4>Nuevo Crédito</h4>
 
 <div class="container">
@@ -14,7 +17,7 @@
                     <ngb-tabset #t="ngbTabset" [justify]="currentJustify">
 
                         <!--TABSET PARA EL PASO 1 -->
-                        <ngb-tab id="tab-selectbyid1" title="1- Datos del Titular">
+                        <ngb-tab id="tab-selectbyid1" title="1- Datos del Titular ">
                             <ng-template ngbTabContent>
                                 <div class="form-row">
                                     <!-- Campo 1:  Dni-->
@@ -118,14 +121,13 @@
                                     <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters"></ng2-smart-table>
                                 </div>
 
+
                                 <div class="form-row text-right">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</button>
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</button>
+                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</span>
+                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</span>
                                     </div>
                                 </div>
-
-
                             </ng-template>
                         </ngb-tab>
 
@@ -220,10 +222,9 @@
                             <ng-template ngbTabContent>
                                 <h4>Documentación Presentada</h4>
 
-
                                 <!-- Campo 1: Documentacion presentada -->
                                 <div class="form-group">
-                                    <div class="form-check" *ngFor="let tag of documentosAPresentar; let i = index;">
+                                    <div class="form-check" *ngFor="let tag of documentosAPresentar; let i=index;">
                                         <label class="form-check-label" for="tag{{tag.nombre}}">
                                         <input
                                             class="form-check-input"
@@ -234,7 +235,6 @@
                                             [checked]="tag.requerido"
                                             >
                                             {{tag.nombre}}
-
                                         </label>
                                     </div>
                                 </div>
@@ -263,7 +263,7 @@
 
                                 <!-- Campo 4: Checkbox Referencias TItular -->
                                 <div class="form-group">
-                                    <div class="form-check" *ngFor="let tag of referenciaTitulares; let i = index;">
+                                    <div class="form-check" *ngFor="let tag of referenciaTitulares; let i=index;">
                                         <label class="form-check-label" for="tag{{tag.item}}">
                                         <input
                                             class="form-check-input"
@@ -273,7 +273,6 @@
                                             (change)="changeCheckboxReferenciaTitular(i)"
                                             >
                                             {{tag.item}}
-
                                         </label>
                                     </div>
                                 </div>
@@ -307,15 +306,15 @@
 
                                 <!-- Campo 7: Checkbox Referencias Comercio -->
                                 <!--   <div class="form-group">
-                                    <label formArrayName="itemsReferenciasGarante" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i = index">
+                                    <label formArrayName="itemsReferenciasGarante" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i=i ndex">
                                     <input type="checkbox" [formControlName]="i">
                                     {{documentaciones[i].name}}
                                     </label>
                                 </div> -->
 
                                 <div class="form-group">
-                                    <div class="form-check" *ngFor="let tag of referenciaComercios; let i = index;">
-                                        <label class="form-check-label" for="tag{{tag.item}}">
+                                    <div class="form-check" *ngFor="let tag of referenciaComercios; let i=index;">
+                                        <label class="form-check-label " for="tag{{tag.item}}">
                                         <input
                                             class="form-check-input"
                                             type="checkbox"
@@ -324,7 +323,6 @@
                                             (change)="changeCheckboxReferenciaComercio(i)"
                                             >
                                             {{tag.item}}
-
                                         </label>
                                     </div>
                                 </div>
@@ -342,8 +340,8 @@
                                 <!--- Buttons Block Solo envia si el form esta validado-->
                                 <div class="form-row text-right">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Atrás</button>
-                                        <!-- <button type="reset" class="btn btn-outline-primary">Cancelar</button> -->
+                                        <button class="btn btn-outline-primary" (click)="t.select( 'tab-selectbyid3')">Atrás</button>
+                                        <!-- <button type="reset " class="btn btn-outline-primary ">Cancelar</button> -->
                                         <button type="button" href="#btnCancelarModal" class="btn btn-outline-primary" data-toggle="modal">Cancelar</button>
                                         <button type="submit" [disabled]="!creditoForm.valid" class="btn btn-outline-primary">Guardar</button>
 
@@ -374,5 +372,5 @@
 <span class="btn btn-outline-primary" (click)="getReferenciaCliente()"> Ver Referencias</span>
 
 
-<!-- <button (click)="ngxSmartModalService.getModal('myModal').open()">Open myModal</button>
-<button (click)="ngxSmartModalService.getModal('clienteModal').open()">Open myModal</button> -->
+<!-- <button (click)="ngxSmartModalService.getModal( 'myModal').open() ">Open myModal</button>
+<button (click)="ngxSmartModalService.getModal( 'clienteModal').open() ">Open myModal</button> -->

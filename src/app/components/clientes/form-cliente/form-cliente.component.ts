@@ -59,19 +59,15 @@ export class FormClienteComponent implements OnInit {
       calle: new FormControl('', [Validators.required]),
       numeroCasa: new FormControl('', [Validators.required]),
       estadoCasa: new FormControl(),
-   /*    piso: new FormControl(),
-      departamento: new FormControl(), */
 
       tipoContacto1: new FormControl(),
       codigoPais1: new FormControl(),
       codigoArea1: new FormControl(),
       numero1: new FormControl(),
-
       tipoContacto2: new FormControl(),
       codigoPais2: new FormControl(),
       codigoArea2: new FormControl(),
       numero2: new FormControl(),
-
       tipoContacto3: new FormControl(),
       email: new FormControl('', [
         Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$')
@@ -84,8 +80,8 @@ export class FormClienteComponent implements OnInit {
   }
   get dni() { return this.clienteForm.get('dni'); }
 
-  get tipoDni() { return this.clienteForm.get('tipoDni') }
-  get pais() { return this.clienteForm.get('pais') }
+  get tipoDni() { return this.clienteForm.get('tipoDni'); }
+  get pais() { return this.clienteForm.get('pais'); }
 
   get apellidos() { return this.clienteForm.get('apellidos'); }
   get nombres() { return this.clienteForm.get('nombres'); }
@@ -102,8 +98,6 @@ export class FormClienteComponent implements OnInit {
   get calle() { return this.clienteForm.get('calle'); }
   get numeroCasa() { return this.clienteForm.get('numeroCasa'); }
   get estadoCasa() { return this.clienteForm.get('estadoCasa'); }
-  /* get piso() { return this.clienteForm.get('piso'); }
-  get departamento() { return this.clienteForm.get('departamento'); } */
 
   get codigoPais1() { return this.clienteForm.get('codigoPais1'); }
   get codigoArea1() { return this.clienteForm.get('codigoArea1'); }
@@ -196,6 +190,11 @@ export class FormClienteComponent implements OnInit {
  // COMUNICACION CON EL COMPONENTE PADRE FormCreditoComponent
  // --------------------------------------------------------------
   recibePametros(personaC: any, tipoDeAlta: string) {
+
+
+    // t.select('tab-selectbyid2')
+    this.clienteForm.reset();
+
     // En caso de que la persona existe pero no el cliente
     if (tipoDeAlta === 'ExistePersona') {
       // console.log('LLego de formulario padre: ', personaC);
@@ -232,9 +231,9 @@ export class FormClienteComponent implements OnInit {
     this.clientesService.postGuardarCliente(clienteC).subscribe( result => {
       let cliente = result['clienteDB'];
       this.pasameDatosDelCliente.emit({cliente: clienteC, result: cliente});
-      alert('El cliente se guardo con éxito');
+      alert('Se guardo correctamente...');
     }, err => {
-      alert('Hubo un problema al Guardar el Cliente');
+      alert('Hubo un problema al guardar los datos!');
     });
   }
 

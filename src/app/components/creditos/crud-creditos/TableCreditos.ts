@@ -22,6 +22,7 @@ export interface TableCreditos {
     valorCuota: string;
 
     planPagos: PlanPago;
+    legajo: string; // Agregó Jorge
 
     usuario: string;
     estado: Estado;

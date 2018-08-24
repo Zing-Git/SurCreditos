@@ -217,6 +217,6 @@ export class FormUsuarioComponent implements OnInit {
 
   resetForm() {
     this.usuarioForm.reset();
-  }
+  }  
 
 }

@@ -48,23 +48,30 @@ export class CrudCreditosComponent implements OnInit {
         },
         {
           name: 'imprimirPDF',
-          title: ' /PDF'
+          title: 'PDF'
         }
       ],
     },
     columns: {
+      legajo: {
+        title: 'Legajo',
+        width: '5%'
+      },
       razonSocial: {
         title: 'Razon Social',
-        width: '15%',
+        width: '30%',
         valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       montoPedido: {
         title: 'Monto Pedido',
-        width: '15%'
+        width: '15%',
+        valuePrepareFunction: (value) => {
+          return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+        }
       },
       cantidadCuotas: {
-        title: 'Cant. Cuotas',
-        width: '15%'
+        title: 'NºCuotas',
+        width: '10%'
       },
       valorCuota: {
         title: 'Valor Cuota',
@@ -80,21 +87,25 @@ export class CrudCreditosComponent implements OnInit {
           return value === 'montoInteres' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
-      tieneCobranzaADomicilio: {
-        title: 'Cobranza a Domicilio',
+     /*  tieneCobranzaADomicilio: {
+        title: 'Cobro a Dom.',
         width: '10%',
         valuePrepareFunction: (value) => value === true ? 'Si' : 'NO',
-      },
-      porcentajeCobranzaADomicilio: {
-        title: 'Cobranza a Domicilio %',
+      }, */
+     /*  porcentajeCobranzaADomicilio: {
+        title: 'Cobro a Dom.%',
         width: '10%'
-      },
+      }, */
       montoCobranzaADomicilio: {
-        title: 'Monto Cobranza Domicilio',
-        width: '10%'
+        title: 'Cobro a Dom',
+        width: '15%',
+        valuePrepareFunction: (value) => {
+          // tslint:disable-next-line:max-line-length
+          return value === 'montoCobranzaADomicilio' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+        }
       },
       estado: {
-        title: 'Estado Credito',
+        title: 'Estado',
         width: '15%',
         valuePrepareFunction: (cell, row) => row.estado.nombre
       },
@@ -211,9 +222,9 @@ export class CrudCreditosComponent implements OnInit {
     doc.setTextColor(0)
     doc.text('Vendedor: ' + this.session.nombreUsuario, 130, 20);
     const today = Date.now();
-    doc.setTextColor(0)
+    doc.setTextColor(0);
     doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
-    doc.text('Legajo Nº:  ', 130, 30)
+    doc.text('Legajo Nº:  ', 130, 30);
     doc.text('Estado: ', 130, 35);
 
     doc.setFillColor(52, 152, 219)
@@ -347,13 +358,16 @@ export class CrudCreditosComponent implements OnInit {
     });
 
     this.getData('CuerpoPlanPago', id);
-    doc.setFontSize(6);
-    doc.text('Pagare sin protesto [art. 50 D. Ley 5965 / 53] a Sur Creditos o a su Oredn la Cantidad de Pesos ', 10, 190);
     doc.setFontSize(10);
-    doc.text(this.toText(this.cantidadTotal), 50, 195);
-    doc.setFontSize(6);
-    doc.text('por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.', 10, 200);
-    doc.text('Firmante (Lugar y fecha): ', 10, 220);
+    doc.text('Pagare sin protesto [art. 50 D. Ley 5965 / 53] a Sur Creditos o a su Oredn la Cantidad de Pesos ', 10, 190);
+    doc.setFontSize(12);
+    doc.setLineWidth(0.5);
+    doc.line(10, 194, 190, 194);
+    doc.line(10, 202, 190, 202);   //x, , largo , y
+    doc.text(this.toText(this.cantidadTotal), 60, 200);
+    doc.setFontSize(10);
+    doc.text('por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.', 10, 210);
+    doc.text('Firmante (Lugar y fecha): ', 90, 230);
 
     this.carroIndividual = 50;
     this.cantidadTotal = 0;

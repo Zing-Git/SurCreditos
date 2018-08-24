@@ -53,18 +53,25 @@ export class CrudCreditosComponent implements OnInit {
       ],
     },
     columns: {
+      legajo: {
+        title: 'Legajo',
+        width: '5%'
+      },
       razonSocial: {
         title: 'Razon Social',
-        width: '15%',
+        width: '30%',
         valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       montoPedido: {
         title: 'Monto Pedido',
-        width: '15%'
+        width: '15%',
+        valuePrepareFunction: (value) => {
+          return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+        }
       },
       cantidadCuotas: {
-        title: 'Cant. Cuotas',
-        width: '15%'
+        title: 'NºCuotas',
+        width: '10%'
       },
       valorCuota: {
         title: 'Valor Cuota',
@@ -80,21 +87,25 @@ export class CrudCreditosComponent implements OnInit {
           return value === 'montoInteres' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
-      tieneCobranzaADomicilio: {
-        title: 'Cobranza a Domicilio',
+     /*  tieneCobranzaADomicilio: {
+        title: 'Cobro a Dom.',
         width: '10%',
         valuePrepareFunction: (value) => value === true ? 'Si' : 'NO',
-      },
-      porcentajeCobranzaADomicilio: {
-        title: 'Cobranza a Domicilio %',
+      }, */
+     /*  porcentajeCobranzaADomicilio: {
+        title: 'Cobro a Dom.%',
         width: '10%'
-      },
+      }, */
       montoCobranzaADomicilio: {
-        title: 'Monto Cobranza Domicilio',
-        width: '10%'
+        title: 'Cobro a Dom',
+        width: '15%',
+        valuePrepareFunction: (value) => {
+          // tslint:disable-next-line:max-line-length
+          return value === 'montoCobranzaADomicilio' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+        }
       },
       estado: {
-        title: 'Estado Credito',
+        title: 'Estado',
         width: '15%',
         valuePrepareFunction: (cell, row) => row.estado.nombre
       },

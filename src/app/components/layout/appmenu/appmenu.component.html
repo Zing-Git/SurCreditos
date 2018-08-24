@@ -30,10 +30,10 @@
                         <!--MENU CREDITOS -->
                         <ng-container *ngSwitchCase="rol === 'VENDEDOR' || rol=== 'ADMINISTRADOR'">
                             <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link"><i class="nav-icon fa fa-tree"></i><p>Creditos<i class="fa fa-angle-left right"></i></p></a>
+                                <a href="#" class="nav-link"><i class="nav-icon fa fa-edit"></i><p>Creditos<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudcreditos"><i class="fa fa-circle-o nav-icon"></i><p>Ver</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="formcredito"><i class="fa fa-circle-o nav-icon"></i><p>Nuevo</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudcreditos"><i class="fa fa-angle-right nav-icon"></i><p>Ver</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="formcredito"><i class="fa fa-angle-right nav-icon"></i><p>Nuevo</p></a></li>
 
                                 </ul>
                             </li>
@@ -43,10 +43,10 @@
                         <!--MENU CLIENTES -->
                         <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'VENDEDOR'">
                             <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link"><i class="nav-icon fa fa-tree"></i><p>Clientes<i class="fa fa-angle-left right"></i></p></a>
+                                <a href="#" class="nav-link"><i class="nav-icon fa fa-users"></i><p>Clientes<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-circle-o nav-icon"></i><p>Consultar</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="formcliente"><i class="fa fa-circle-o nav-icon"></i><p>Nuevo</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-angle-right nav-icon"></i><p>Consultar</p></a></li>
+                                    <!-- <li class="nav-item"><a class="nav-link" routerLink="formcliente"><i class="fa fa-angle-right nav-icon"></i><p>Nuevo</p></a></li> -->
                                 </ul>
                             </li>
                         </ng-container>
@@ -57,11 +57,11 @@
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link"><i class="nav-icon fa fa-tree"></i><p>Caja<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-circle-o nav-icon"></i><p>Orden de Pago</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-circle-o nav-icon"></i><p>Cobrar Cuota</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-circle-o nav-icon"></i><p>Rendir Cobro</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-circle-o nav-icon"></i><p>Registrar Salida</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-circle-o nav-icon"></i><p>Cierre</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-angle-right nav-icon"></i><p>Orden de Pago</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-angle-right nav-icon"></i><p>Cobrar Cuota</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-angle-right nav-icon"></i><p>Rendir Cobro</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-angle-right nav-icon"></i><p>Registrar Salida</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudclientes"><i class="fa fa-angle-right-icon"></i><p>Cierre</p></a></li>
                                 </ul>
                             </li>
                         </ng-container>
@@ -70,11 +70,11 @@
 
                         <!--MENU ADMINISTRACION -->
                         <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR'">
-                            <li class="nav-item has-treeview"><a href="#" class="nav-link"><i class="nav-icon fa fa-tree"></i><p>Administración<i class="fa fa-angle-left right"></i></p></a>
+                            <li class="nav-item has-treeview"><a href="#" class="nav-link"><i class="nav-icon fa fa-cog"></i><p>Administración<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudusuarios"><i class="fa fa-circle-o nav-icon"></i><p>Usuarios</p></a></li>
-                                    <!-- <li class="nav-item"><a class="nav-link" routerLink="formusuario"><i class="fa fa-circle-o nav-icon"></i><p>Nuevo Usuario</p></a></li> -->
-                                    <li class="nav-item"><a class="nav-link" routerLink="crudcreditosadmin"><i class="fa fa-circle-o nav-icon"></i><p>Estados de Creditos</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudusuarios"><i class="fa fa-angle-right nav-icon"></i><p>Usuarios</p></a></li>
+                                    <!-- <li class="nav-item"><a class="nav-link" routerLink="formusuario"><i class="fa fa-angle-right nav-icon"></i><p>Nuevo Usuario</p></a></li> -->
+                                    <li class="nav-item"><a class="nav-link" routerLink="crudcreditosadmin"><i class="fa fa-angle-right nav-icon"></i><p>Estados de Creditos</p></a></li>
                                 </ul>
                             </li>
                         </ng-container>

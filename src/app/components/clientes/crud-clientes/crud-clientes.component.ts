@@ -39,10 +39,10 @@ export class CrudClientesComponent implements OnInit {
           name: 'view',
           title: 'Ver/ ',
         },
-        {
+       /*  {
           name: 'edit',
           title: 'Blanquear Clave/ ',
-        },
+        }, */
         {
           name: 'imprimirPDF',
           title: ' /PDF'

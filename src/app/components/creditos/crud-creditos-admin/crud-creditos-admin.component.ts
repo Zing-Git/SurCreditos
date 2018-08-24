@@ -27,7 +27,7 @@ export class CrudCreditosAdminComponent implements OnInit {
   estadosCasa: EstadoCasa[];
   usuarios: TableUsuarios[];
   session = new Session();
-  
+
   lineaDeCarro = 40;      // para reporte general
   carroIndividual = 50;    //para reporte individual
   cantidadTotal = 0;
@@ -55,11 +55,15 @@ export class CrudCreditosAdminComponent implements OnInit {
         },
         {
           name: 'PDF',
-          title: 'Imprimir Credito'
+          title: 'PDF'
         }
       ],
     },
     columns: {
+      legajo: {
+        title: 'Legajo',
+        width: '10%'
+      },
       cuit: {
         title: 'CUIT',
         width: '15%',
@@ -77,7 +81,10 @@ export class CrudCreditosAdminComponent implements OnInit {
       //},
       montoPedido: {
         title: 'Monto Credito',
-        width: '15%'
+        width: '15%',
+        valuePrepareFunction: (value) => {
+          return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+        }
       },
       estado: {
         title: 'Estado',
@@ -90,7 +97,7 @@ export class CrudCreditosAdminComponent implements OnInit {
       perPage: 10
     },
   };
-  
+
   constructor(
     private router: Router,
     private creditosService: CreditosService,
@@ -106,7 +113,7 @@ export class CrudCreditosAdminComponent implements OnInit {
     });
     this.cargarControlesCombos();
     this.getAllUsuarios();
-    
+
   }
 
   private cargarControlesCombos() {
@@ -119,16 +126,16 @@ export class CrudCreditosAdminComponent implements OnInit {
   }
 
   private getAllUsuarios(){
-    
+
     this.usuariosServices.postGetAllUsuarios(this.session).subscribe((response: TableUsuarios[]) => {
       this.usuarios = response['respuesta'];
     });
-   
+
   }
 
   private getUsuario(id:string):string{
-    
-    
+
+
     let miUsuario:string;
     if(this.usuarios == null){ return this.session.nombreUsuario;}  // retorno si el listado esta vacio
     this.usuarios.forEach(element =>{
@@ -144,7 +151,7 @@ export class CrudCreditosAdminComponent implements OnInit {
     const evento = (`${event.action}`);
     const dni = (`${event.data.dni}`);
     const id = (`${event.data._id}`);
-    
+
     switch (evento) {
       case 'aprobar': {
        // this.router.navigate(['formclienteviewedit', evento, dni]);
@@ -156,7 +163,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         break;
       }
       case 'derivar': {
-        
+
         break;
       }
       case 'ver':{
@@ -174,17 +181,17 @@ export class CrudCreditosAdminComponent implements OnInit {
     }
   }
 
- 
+// TODO: ESTA HARCODEADO ESTE METODO, SOLO PARA HACER EL APROBADO
   postAprobarRechazar(id:string, nuevoEstado: string){
     this.characters.forEach(element =>{
       if(element._id === id){
         let nuevoCredito = {
           idCredito: element._id,
-          nombre_nuevo_estado: nuevoEstado,
+          nombre_nuevo_estado: 'APROBADO',           // nuevoEstado,
           cliente: element.cliente._id,
           nombre_estado_actual: element.estado.nombre,
           token: this.session.token,
-          estado: element.estado._id
+          estado: '5b72b281708d0830d07f3562'        // element.estado._id
         };
 
         this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result=>{
@@ -195,7 +202,7 @@ export class CrudCreditosAdminComponent implements OnInit {
           alert('Ocurrio un problema');
         });
       }
-    })
+    });
   }
 
   imprimirPDF(id: string) {

@@ -14,9 +14,9 @@
                                 <ng-template ngbTabContent>
 
                                     <!-- Campo 5:  Cuit-->
-                                    <div class="form-group col-md-6">
-                                        <label for="inputCuit">* Cuit</label>
-                                        <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20-30300300-0">
+                                    <div class="form-group col-md-12">
+                                        <label for="inputCuit" class="small h4 text-muted">* Cuit</label>
+                                        <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20303003000">
                                     </div>
                                     <!-- Cuit error block -->
                                     <div *ngIf="cuit.invalid && cuit.touched" class="col-sm-6 text-danger">
@@ -26,8 +26,8 @@
                                     </div>
 
                                     <!-- Campo 6:  Razon Social-->
-                                    <div class="form-group">
-                                        <label for="inputRazonSocial">* Razon Social</label>
+                                    <div class="form-group col-md-12">
+                                        <label for="inputRazonSocial" class="small h4 text-muted">* Razon Social</label>
                                         <input type="text" formControlName="razonSocial" class="form-control form-control-sm" id="inputRazonSocial" placeholder="Juan Perez">
                                     </div>
 
@@ -107,7 +107,7 @@
 
                                     <div class="form-row">
                                         <!-- Campo 8: Estado Casa-->
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-12">
                                             <label for="inputEstadoCasa" class="small h4 text-muted">* Vivienda</label>
                                             <select formControlName="estadoCasa" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputEstadoCasa">
                                       <option *ngFor="let eCasa of estadosCasa" [value]="eCasa._id">

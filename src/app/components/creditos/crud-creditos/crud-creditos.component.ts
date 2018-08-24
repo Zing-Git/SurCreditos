@@ -48,7 +48,7 @@ export class CrudCreditosComponent implements OnInit {
         },
         {
           name: 'imprimirPDF',
-          title: ' /PDF'
+          title: 'PDF'
         }
       ],
     },
@@ -347,13 +347,16 @@ export class CrudCreditosComponent implements OnInit {
     });
 
     this.getData('CuerpoPlanPago', id);
-    doc.setFontSize(6);
-    doc.text('Pagare sin protesto [art. 50 D. Ley 5965 / 53] a Sur Creditos o a su Oredn la Cantidad de Pesos ', 10, 190);
     doc.setFontSize(10);
-    doc.text(this.toText(this.cantidadTotal), 50, 195);
-    doc.setFontSize(6);
-    doc.text('por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.', 10, 200);
-    doc.text('Firmante (Lugar y fecha): ', 10, 220);
+    doc.text('Pagare sin protesto [art. 50 D. Ley 5965 / 53] a Sur Creditos o a su Oredn la Cantidad de Pesos ', 10, 190);
+    doc.setFontSize(12);
+    doc.setLineWidth(0.5);
+    doc.line(10, 194, 190, 194);
+    doc.line(10, 202, 190, 202);   //x, , largo , y
+    doc.text(this.toText(this.cantidadTotal), 60, 200);
+    doc.setFontSize(10);
+    doc.text('por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.', 10, 210);
+    doc.text('Firmante (Lugar y fecha): ', 90, 230);
 
     this.carroIndividual = 50;
     this.cantidadTotal = 0;

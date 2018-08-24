@@ -19,6 +19,7 @@ import { FormClienteComponent } from '../../clientes/form-cliente/form-cliente.c
 import { ReferenciaCliente } from './modelos/ReferenciaCliente';
 import { ReferenciaComercio } from './modelos/RefereciaComercio';
 import { element } from 'protractor';
+import { ModalComercioComponent } from '../modal-comercio/modal-comercio.component';
 
 
 
@@ -31,6 +32,7 @@ export class FormCreditoComponent implements OnInit {
 
   // -------------------------
   @ViewChild(FormClienteComponent) hijo: FormClienteComponent;
+  @ViewChild(ModalComercioComponent) hijoComercio: ModalComercioComponent;
   // --------------------------
 
 
@@ -54,6 +56,8 @@ export class FormCreditoComponent implements OnInit {
 
   referenciaCliente: ReferenciaCliente;
   referenciaComercio: ReferenciaComercio;
+
+  switchClienteGarante: string;
 
 
   // documentos que presenta el titular del credito
@@ -186,7 +190,7 @@ export class FormCreditoComponent implements OnInit {
       notaComentarioTitular: new FormControl('', [Validators.required]),
 
       tipoReferenciaComercio: new FormControl('', [Validators.required]),
-      itemsReferenciasGarante: new FormArray(this.controls),
+      itemsReferenciasComercio: new FormArray(this.controls),
       notaComentarioComercio: new FormControl(''),
 
 
@@ -213,9 +217,9 @@ export class FormCreditoComponent implements OnInit {
   get tipoReferenciaTitular() {    return this.creditoForm.get('tipoReferenciaTitular');  }
   get itemsReferenciasTitular() {    return this.creditoForm.get('itemsReferenciasTitular');  }
   get notaComentarioTitular() {    return this.creditoForm.get('notaComentarioTitular');  }
-  get tipoReferenciaComercio() {    return this.creditoForm.get('tipoReferenciaGarante');  }
-  get itemsReferenciasGarante() {    return this.creditoForm.get('itemsReferenciasGarante');  }
-  get notaComentarioComercio() {    return this.creditoForm.get('notaComentarioGarante');  }
+  get tipoReferenciaComercio() {    return this.creditoForm.get('tipoReferenciaComercio');  }
+  get itemsReferenciasComercio() {    return this.creditoForm.get('itemsReferenciasComercio');  }
+  get notaComentarioComercio() {    return this.creditoForm.get('notaComentarioComercio');  }
 
 
 
@@ -244,6 +248,7 @@ export class FormCreditoComponent implements OnInit {
           this.creditoNuevo.comercio = this.comercio._id;
           console.log('ID de Comercio: ', this.creditoNuevo.comercio);
           // Agregar Referencia a Comercio
+          this.getReferenciaComercio();
           console.log('Referncia COmercio a GUARDAR: ', this.referenciaComercio);
           this.clientesService.postAgregarReferenciaComercio(this.referenciaComercio).subscribe( resultComercio => {
               // Alta de Credito
@@ -373,6 +378,7 @@ export class FormCreditoComponent implements OnInit {
     let dni = this.dni.value;
     let tipoDeAlta: string;
     let persona: any;
+    this.switchClienteGarante = 'CLIENTE';
 
     // 1: si dni no es vacio
     if ( this.dni.value !== '') {
@@ -514,19 +520,39 @@ export class FormCreditoComponent implements OnInit {
 
   buscarComercioPorCuit() {
     let cuit = this.cuit.value;
-    this.clientesService.postGetComercioPorCuit(this.session, cuit).subscribe( response => {
-        this.comercio = response['comercio'][0];
-        console.log('Comercio Buscado: ', this.comercio);
-        this.cargarComercioForm(this.comercio);
-    }, err => {
-        alert('El comercio no existe, cargue los datos y se terminará de registrar al finalizar la solicitud del Crédito');
-    });
+    let tipoDeAlta: string;
+    let comercio: any;
+
+     // 1: si dni no es vacio
+     if ( this.cuit.value !== '') {
+        // 2: Si el Comercio con Cuit existe:
+        this.clientesService.postGetComercioPorCuit(this.session, cuit).subscribe( response => {
+              this.comercio = response['comercio'][0];
+              console.log('Comercio Buscado: ', this.comercio);
+              this.cargarComercioForm(this.comercio);
+        }, err => {
+              // 3: Si no existe el comercio, hay que darle de alta
+              let resp = confirm('Comercio Inexistente, quiere darle de Alta?');
+              if (resp) {
+                  tipoDeAlta = 'NoExisteComercio';
+                  comercio = {
+                      cuit: this.cuit.value,
+                      idCliente: this.cliente._id
+                  };
+                  this.hijoComercio.recibePametros(comercio, tipoDeAlta);
+                  this.ngxSmartModalService.getModal('comercioModal').open();
+              }
+          });
+    } else {
+      alert('Debe ingresare un número de Dni');
+    }
   }
 
   buscarGarantePorDni() {
     let dni = this.dniGarante.value;
     let tipoDeAlta: string;
     let persona: any;
+    this.switchClienteGarante = 'GARANTE';
 
 
     // 1: si dni no es vacio
@@ -536,8 +562,8 @@ export class FormCreditoComponent implements OnInit {
             this.garante = response['clientes'][0];
             this.cargarGaranteForm(this.garante);
       }, err => {
-            // 3: Si no existe el cliente, puede ser una persona, entonces llenar datos de persona
-            this.usuariosService.postGetPersona(this.session.token, this.dni.value).subscribe(response => {
+            // 3: Si no existe el garante, puede ser una persona, entonces llenar datos de persona
+            this.usuariosService.postGetPersona(this.session.token, dni).subscribe(response => {
               persona = response['personaDB'][0];
               tipoDeAlta = 'ExistePersona';
               this.hijo.recibePametros(persona, tipoDeAlta);
@@ -565,7 +591,7 @@ export class FormCreditoComponent implements OnInit {
     this.nombresGarante.setValue(garante.titular.nombres);
     this.fechaNacimientoGarante.setValue(this.utilidadesService.formateaDateAAAAMMDD(garante.titular.fechaNacimiento));
   }
-  cargarComercioForm(comercio: any){
+  cargarComercioForm(comercio: any) {
     this.razonSocial.setValue(comercio.razonSocial);
   }
 
@@ -573,11 +599,21 @@ export class FormCreditoComponent implements OnInit {
   // METODO QUE COMUNICA AL HIJO FormClienteCOmponent con este FOrm que es el PADRE
   // ------------------------------------------------------------------------------
   showCliente(event): void {
-    /* alert(event.nombre);
-    this.apellidos.setValue(event.nombre); */
-
-    console.log('CLIENTE GUARDADO: ', event.cliente);
+/*     console.log('CLIENTE GUARDADO: ', event.cliente);
     console.log('CLIENTE RESULT: ', event.result);
+ */
+    switch (this.switchClienteGarante) {
+        case 'CLIENTE':
+          this.buscarClientePorDni();
+          break;
+        case 'GARANTE':
+        this.buscarGarantePorDni();
+        break;
+    }
+  }
+  showComercio(event): void {
+    this.buscarComercioPorCuit();
+    console.log('COMERCIO GUARDADO: ', event.comercio);
   }
 
 

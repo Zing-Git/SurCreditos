@@ -1,0 +1,141 @@
+<ngx-smart-modal #comercioModal identifier="comercioModal" customClass="reveal">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <h4><strong>Nuevo Comercio</strong></h4>
+                <!-- FORMULARIO INICIO -->
+                <form class="" [formGroup]="comercioForm" (ngSubmit)="onFormSubmit()">
+                    <fieldset>
+                        <ngb-tabset #t="ngbTabset" [justify]="currentJustify">
+
+                            <!--TABSET PARA EL PASO 1 -->
+                            <ngb-tab id="tab-selectbyid1" title="1.Titular">
+                                <ng-template ngbTabContent>
+
+                                    <!-- Campo 5:  Cuit-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputCuit">* Cuit</label>
+                                        <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20-30300300-0">
+                                    </div>
+                                    <!-- Cuit error block -->
+                                    <div *ngIf="cuit.invalid && cuit.touched" class="col-sm-6 text-danger">
+                                        <div *ngIf="cuit.errors?.required">
+                                            El número de documento es requerido
+                                        </div>
+                                    </div>
+
+                                    <!-- Campo 6:  Razon Social-->
+                                    <div class="form-group">
+                                        <label for="inputRazonSocial">* Razon Social</label>
+                                        <input type="text" formControlName="razonSocial" class="form-control form-control-sm" id="inputRazonSocial" placeholder="Juan Perez">
+                                    </div>
+
+
+                                    <div class="form-row text-right">
+                                        <div class="col-12">
+                                            <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </ngb-tab>
+
+
+                            <!--TABSET PARA EL PASO 2 -->
+                            <ngb-tab id="tab-selectbyid2" title="2.Domicilio">
+                                <ng-template ngbTabContent>
+
+                                    <!--  <h4>Particular</h4> -->
+                                    <div class="form-row">
+
+                                        <!-- Campo 1: Provincia-->
+                                        <div class="form-group col-md-6">
+                                            <label for="inputProvincia" class="small h4 text-muted">* Provincia</label>
+                                            <select formControlName="provincia" (change)="onChange()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputProvincia">
+                                        <option *ngFor="let fProv of provincias">
+                                            {{fProv.provincia}}
+                                        </option>
+                                      </select>
+                                        </div>
+                                        <!-- Campo 2: Localidad-->
+                                        <div class="form-group col-md-6">
+                                            <label for="inputLocalidad" class="small h4 text-muted">* Localidad</label>
+                                            <select formControlName="localidad" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputLocalidad">
+                                        <option *ngFor="let fLoc of localidades">
+                                            {{fLoc}}
+                                        </option>
+                                      </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <!-- Campo 3:  Barrio-->
+                                        <div class="form-group col-md-5">
+                                            <label for="inputBarrio" class="small h4 text-muted">* Barrio</label>
+                                            <input type="text" formControlName="barrio" class="form-control form-control-sm" id="inputBarrio" placeholder="Alto Comedero">
+                                        </div>
+                                        <!-- Campo 4:  Calle-->
+                                        <div class="form-group col-md-4">
+                                            <label for="inputCalle" class="small h4 text-muted">* Calle</label>
+                                            <input type="text" formControlName="calle" class="form-control form-control-sm" id="inputCalle" placeholder="Fuerza Aerea">
+                                        </div>
+                                        <!-- Campo 5:  numero-->
+                                        <div class="form-group col-md-3">
+                                            <label for="inputNumeroCasa" class="small h4 text-muted">* Nº</label>
+                                            <input type="text" formControlName="numeroCasa" class="form-control form-control-sm" id="inputNumeroCasa" placeholder="787">
+                                        </div>
+
+                                        <!-- Barrio error block -->
+                                        <div *ngIf="barrio.invalid && barrio.touched" class="col-sm-5 text-danger">
+                                            <div *ngIf="barrio.errors['required']">
+                                                Barrio es requerido
+                                            </div>
+                                        </div>
+                                        <!-- Calle error block -->
+                                        <div *ngIf="calle.invalid && calle.touched" class="col-sm-4 text-danger">
+                                            <div *ngIf="calle.errors['required']">
+                                                Calle es requerida
+                                            </div>
+                                        </div>
+                                        <!-- Numero error block -->
+                                        <div *ngIf="numeroCasa.invalid && numeroCasa.touched" class="col-sm-3 text-danger">
+                                            <div *ngIf="numeroCasa.errors['required']">
+                                                Requerido
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <!-- Campo 8: Estado Casa-->
+                                        <div class="form-group col-md-4">
+                                            <label for="inputEstadoCasa" class="small h4 text-muted">* Vivienda</label>
+                                            <select formControlName="estadoCasa" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputEstadoCasa">
+                                      <option *ngFor="let eCasa of estadosCasa" [value]="eCasa._id">
+                                          {{eCasa.nombre}}
+                                        </option>
+                                    </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row text-right">
+                                        <div class="col-12">
+                                            <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</button>
+                                            <button class="btn btn-outline-primary" (click)="guardar($event)">Guardar</button>
+                                        </div>
+                                    </div>
+
+
+                                </ng-template>
+                            </ngb-tab>
+
+
+                        </ngb-tabset>
+                    </fieldset>
+                </form>
+
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
+    </div>
+</ngx-smart-modal>

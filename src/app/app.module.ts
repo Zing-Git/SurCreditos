@@ -43,6 +43,7 @@ import { FormCambioClaveComponent } from './components/usuarios/form-cambio-clav
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalClienteComponent } from './components/creditos/modal-cliente/modal-cliente.component';
 import { CrudCreditosAdminComponent } from './components/creditos/crud-creditos-admin/crud-creditos-admin.component';
+import { ModalComercioComponent } from './components/creditos/modal-comercio/modal-comercio.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { CrudCreditosAdminComponent } from './components/creditos/crud-creditos-
     FormViewEditUsuarioComponent,
     FormCambioClaveComponent,
     ModalClienteComponent,
-    CrudCreditosAdminComponent
+    CrudCreditosAdminComponent,
+    ModalComercioComponent
   ],
   imports: [
     BrowserModule,

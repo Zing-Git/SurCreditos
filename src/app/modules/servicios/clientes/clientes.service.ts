@@ -29,6 +29,7 @@ export class ClientesService {
   public urlPostGetCombos = this.urlBase + '/cliente/combos/';
   public urlPostBuscarComercioPorCuit = this.urlBase + '/comercio/buscar/';
   public urlPostGuardarCliente = this.urlBase + '/cliente/nuevo/';
+  public urlPostGuardarComercio = this.urlBase + '/cliente/agregar_comercio/';
   public urlPostAgregarReferenciaComercio = this.urlBase + '/comercio/agregar_referencia/';
   public urlPostAgregarReferenciaCliente = this.urlBase + '/cliente/agregar_referencia/';
 
@@ -67,6 +68,10 @@ export class ClientesService {
   postGuardarCliente(cliente: any): Observable<any[]> {
     const newSession = Object.assign({}, cliente);
     return this.http.post<any[]>(this.urlPostGuardarCliente, newSession, cudOptions);
+  }
+  postGuardarComercio(comercio: any): Observable<any[]> {
+    const newSession = Object.assign({}, comercio);
+    return this.http.post<any[]>(this.urlPostGuardarComercio, newSession, cudOptions);
   }
 
   postAgregarReferenciaCliente(referencia: any): Observable<any[]> {

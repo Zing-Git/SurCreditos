@@ -174,14 +174,6 @@ export class CrudCreditosAdminComponent implements OnInit {
         this.imprimirPDF(id)
         break;
       }
-      case 'ver':{
-        this.router.navigate(['crudcreditos'])
-        break;
-      }
-      case 'PDF':{
-        this.imprimirPDF(id)
-        break;
-      }
       default: {
         console.log('Invalid choice');
         break;

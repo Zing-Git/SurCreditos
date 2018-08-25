@@ -248,12 +248,13 @@ export class FormCreditoComponent implements OnInit {
           this.creditoNuevo.comercio = this.comercio._id;
           console.log('ID de Comercio: ', this.creditoNuevo.comercio);
           // Agregar Referencia a Comercio
-<<<<<<< HEAD
+
           console.log('Referncia Comercio a GUARDAR: ', this.referenciaComercio);
-=======
+
+
           this.getReferenciaComercio();
           console.log('Referncia COmercio a GUARDAR: ', this.referenciaComercio);
->>>>>>> 47a381f31c5b38eec992a72867d542bb72271731
+
           this.clientesService.postAgregarReferenciaComercio(this.referenciaComercio).subscribe( resultComercio => {
               // Alta de Credito
               console.log(resultComercio);

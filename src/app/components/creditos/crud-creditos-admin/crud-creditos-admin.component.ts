@@ -109,7 +109,7 @@ export class CrudCreditosAdminComponent implements OnInit {
   ngOnInit() {
     this.session.token = this.loginService.getTokenDeSession();
     this.creditosService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
-      this.characters = response['credito'];
+      this.characters = response['creditos'];
     });
     this.cargarControlesCombos();
     this.getAllUsuarios();

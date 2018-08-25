@@ -22,7 +22,10 @@ export class CreditosService {
   public urlBase = 'https://ws-sur-creditos.herokuapp.com';
    // GET URLs
    public urlPostGetPlanDePago = this.urlBase + '/credito/calcular_plan_pago/';
-   public urlPostGetAllCreditos = this.urlBase + '/credito/listar_creditos/';
+
+   public urlPostGetAllCreditos2 = this.urlBase + '/credito/listar_creditos/';
+
+   public urlPostGetAllCreditos = this.urlBase + '/credito/listar_creditos_admin/';
    public urlPostGuardarCredito = this.urlBase + '/credito/guardar/';
    public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado';
 
@@ -37,6 +40,11 @@ export class CreditosService {
   postGetAllCreditos(session: Session): Observable<any[]> {
     const newSession = Object.assign({}, session);
     return this.http.post<any[]>(this.urlPostGetAllCreditos, newSession, cudOptions);
+  }
+
+  postGetAllCreditos2(session: Session): Observable<any[]> {
+    const newSession = Object.assign({}, session);
+    return this.http.post<any[]>(this.urlPostGetAllCreditos2, newSession, cudOptions);
   }
 
   postGuardarCredito(credito: any): Observable<any[]> {

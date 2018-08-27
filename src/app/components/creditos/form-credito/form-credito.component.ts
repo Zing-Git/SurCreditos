@@ -195,6 +195,7 @@ export class FormCreditoComponent implements OnInit {
 
 
     });
+
   }
   get dni() {    return this.creditoForm.get('dni');  }
   get apellidos() {    return this.creditoForm.get('apellidos');  }
@@ -616,6 +617,14 @@ export class FormCreditoComponent implements OnInit {
     console.log('COMERCIO GUARDADO: ', event.comercio);
   }
 
+
+
+  // TEST
+  buscarCreditoPorID(){
+    this.creditosService.postGetCreditoPorId('5b83ea4631c08a43640dc8ca', this.session.token).subscribe( result => {
+        console.log(result['credito']);
+    });
+  }
 
 
 }

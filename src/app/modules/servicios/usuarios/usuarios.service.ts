@@ -26,16 +26,9 @@ const cudOptionsHtml = {
   headers: new HttpHeaders({ 'Content-Type': 'text/html; charset=utf-8'})
 };
 
-
-
-
-
 @Injectable({
   providedIn: 'root'
 })
-
-
-
 
 export class UsuariosService {
   // headers = new Headers();

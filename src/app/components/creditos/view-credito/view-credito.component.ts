@@ -105,27 +105,35 @@ export class ViewCreditoComponent implements OnInit {
       this.evento = params['evento'];
       if (this.evento === 'view') { // si es view carga controles deshabilitados, si es edit, habilitados
         this.habilitarControles = false;
-        this.newSession = ({
-          _id: this.idDni,
-          token: this.session.token
-        });
-        this.creditosService.postGetCreditoByid(this.newSession).subscribe((response: TableCreditos[]) => {
-          this.thisCreditos = response['credito'];
-        });
+       
+       
       } else {
         this.habilitarControles = true;
       }
     });
-    //this.cargarTablaCreditos();
+    this.cargarTablaCreditos();
     this.cargarformControls();
 
+   
     let creditos : TableCreditos;
+
     this.thisCreditos.forEach(element =>{
       creditos = element;
     })
     this.cargarFormConDatos(creditos);
   }
 
+  cargarTablaCreditos(){
+
+    this.newSession = ({
+      _id: this.idDni,
+      token: this.session.token
+    });
+    
+    this.creditosService.postGetCreditoByid(this.newSession).subscribe((response: TableCreditos[]) => {
+      this.thisCreditos = response['credito'];
+    });
+  }
   onFormSubmit() {
   }
   get dni() { return this.creditoForm.get('dni'); }

@@ -180,7 +180,7 @@ export class FormUsuarioComponent implements OnInit {
 
 
     guardarUsuario(usuario: any) {
-      console.log(usuario);
+     
       this.usuariosService.postAddUsuario(usuario).subscribe(response => {
             let respuesta = response['usuarioDB'];
             let element: HTMLElement = document.getElementById('guardarOk') as HTMLElement;

@@ -11,7 +11,6 @@ export interface TableCreditos {
     cliente: Cliente;
     garante: Garante;
     comercio: Comercio;
-
     montoPedido: string;
     porcentajeInteres: string;
     montoInteres: string;
@@ -20,11 +19,10 @@ export interface TableCreditos {
     montoCobranzaADomicilio: string;
     cantidadCuotas: number;
     valorCuota: string;
-
     planPagos: PlanPago;
-    legajo: string; // Agregó Jorge
-
     usuario: string;
     estado: Estado;
+    legajo: string; // Agregó Jorge
+    fechaAlta: string;
     __v: number;
 }

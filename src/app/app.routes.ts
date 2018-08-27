@@ -13,6 +13,7 @@ import { FormViewEditUsuarioComponent } from './components/usuarios/form-view-ed
 import { FormCambioClaveComponent } from './components/usuarios/form-cambio-clave/form-cambio-clave.component';
 import { CrudCreditosAdminComponent } from './components/creditos/crud-creditos-admin/crud-creditos-admin.component';
 import { ModalComercioComponent } from './components/creditos/modal-comercio/modal-comercio.component';
+import { ViewCreditoComponent } from './components/creditos/view-credito/view-credito.component';
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -28,6 +29,8 @@ export const appRoutes: Routes = [
 { path: 'formcliente', component: FormClienteComponent , canActivate: [LoginGuard]},
 { path: 'crudcreditos', component: CrudCreditosComponent , canActivate: [LoginGuard]},
 { path: 'formcredito', component: FormCreditoComponent , canActivate: [LoginGuard]},
+
+{ path: 'viewcredito/:evento/:id', component: ViewCreditoComponent, canActivate:[LoginGuard]},
 { path: 'info', component: InfoComponent , canActivate: [LoginGuard]},
 { path: 'login', component: LoginComponent , canActivate: [NoLoginGuard]},
 { path: 'crudcreditosadmin', component: CrudCreditosAdminComponent , canActivate: [NoLoginGuard]},

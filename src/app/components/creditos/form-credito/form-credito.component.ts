@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@ang
 import { UtilidadesService } from '../../../modules/servicios/utiles/utilidades.service';
 import { CreditosService } from '../../../modules/servicios/creditos/creditos.service';
 import { TablePlanCuotas } from './modelos/TablePlanCuotas';
-import { formatNumber } from '@angular/common';
+
 import { DatePipe } from '@angular/common';
 import { CreditoNuevo } from './modelos/CreditoNuevo';
 import { DocumentoPresentado } from './modelos/DocumentoPresentado';
@@ -18,7 +18,7 @@ import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.se
 import { FormClienteComponent } from '../../clientes/form-cliente/form-cliente.component';
 import { ReferenciaCliente } from './modelos/ReferenciaCliente';
 import { ReferenciaComercio } from './modelos/RefereciaComercio';
-import { element } from 'protractor';
+
 import { ModalComercioComponent } from '../modal-comercio/modal-comercio.component';
 
 

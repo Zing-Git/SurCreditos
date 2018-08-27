@@ -129,6 +129,7 @@ export class CrudCreditosComponent implements OnInit {
       this.characters = response['credito'];
     });
     this.cargarControlesCombos();
+   
   }
 
   private cargarControlesCombos() {
@@ -146,10 +147,11 @@ export class CrudCreditosComponent implements OnInit {
     const evento = (`${event.action}`);
     const dni = (`${event.data.dni}`);
     const id = (`${event.data._id}`);
-    console.log(id);
+    
     switch (evento) {
       case 'view': {
-        this.router.navigate(['formclienteviewedit', evento, dni]);
+        //this.router.navigate(['formclienteviewedit', evento, dni]);
+        this,this.router.navigate(['viewcredito', evento, id]);
         break;
       }
       case 'edit': {

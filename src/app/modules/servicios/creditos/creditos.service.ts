@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Session } from '../../../modelo/util/session';
 import { Observable } from 'rxjs';
+import { NewSession } from '../../../modelo/util/newSession';
 
 
 const cudOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
 };
 const cudOptionsXWWForm = {
   headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded'})
@@ -28,6 +29,7 @@ export class CreditosService {
    public urlPostGetAllCreditos = this.urlBase + '/credito/listar_creditos_admin/';
    public urlPostGuardarCredito = this.urlBase + '/credito/guardar/';
    public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado';
+   public urlPostGetCreditoByid = this.urlBase + '/credito/buscar_credito/';
 
   constructor(public http: HttpClient) { }
 
@@ -55,5 +57,11 @@ export class CreditosService {
   postCambiarEstadoCredito(credito: any):Observable<any[]>{
     const newSession = Object.assign({}, credito);
     return this.http.post<any[]>(this.urlPostCambiarEstadoCredito, newSession,cudOptions);
+  }
+
+  postGetCreditoByid(session: NewSession):Observable<any[]>{
+    const newSession = Object.assign({}, session);
+    //JSON.stringify(session)
+    return this.http.post<any[]>(this.urlPostGetCreditoByid, newSession, cudOptions);
   }
 }

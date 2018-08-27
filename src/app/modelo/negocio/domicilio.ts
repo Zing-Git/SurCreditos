@@ -7,7 +7,7 @@ export class Domicilio {
         barrio: string;
         calle: string;
         numeroCasa: string;
-        estadoCasa: EstadoCasa; //obtenido de una consulta de Get Estado Casa
+        estadoCasa: string; //obtenido de una consulta de Get Estado Casa
         __v: number;
 
         constructor(values: Object = {}) {

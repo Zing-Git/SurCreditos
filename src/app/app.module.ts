@@ -44,6 +44,7 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalClienteComponent } from './components/creditos/modal-cliente/modal-cliente.component';
 import { CrudCreditosAdminComponent } from './components/creditos/crud-creditos-admin/crud-creditos-admin.component';
 import { ModalComercioComponent } from './components/creditos/modal-comercio/modal-comercio.component';
+import { ViewCreditoComponent } from './components/creditos/view-credito/view-credito.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { ModalComercioComponent } from './components/creditos/modal-comercio/mod
     FormCambioClaveComponent,
     ModalClienteComponent,
     CrudCreditosAdminComponent,
-    ModalComercioComponent
+    ModalComercioComponent,
+    ViewCreditoComponent
   ],
   imports: [
     BrowserModule,

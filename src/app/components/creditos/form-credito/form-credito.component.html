@@ -310,24 +310,26 @@
                                     {{documentaciones[i].name}}
                                     </label>
                                 </div> -->
-
-                                <div class="form-group">
-                                    <div class="form-check" *ngFor="let tag of referenciaComercios; let i=index;">
-                                        <label class="form-check-label " for="tag{{tag.item}}">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            id="tag{{tag._id}}"
-                                            name="tagOptionsReferenciaComercios"
-                                            (change)="changeCheckboxReferenciaComercio(i)"
-                                            >
-                                            {{tag.item}}
-                                        </label>
+                                <div class="form-row text-left">
+                                    <div class="form-group col-md-8">
+                                        <div class="form-check" *ngFor="let tag of referenciaComercios; let i=index;">
+                                            <label class="form-check-label " for="tag{{tag.item}}">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                id="tag{{tag._id}}"
+                                                name="tagOptionsReferenciaComercios"
+                                                (change)="changeCheckboxReferenciaComercio(i)"
+                                                >
+                                                {{tag.item}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="badge badge-secondary">Calificacion: </label>
+                                        <label class="badge badge-warning"> {{calificacionComercio}} </label>
                                     </div>
                                 </div>
-
-
-
                                 <!-- Campo 8: Comentario Referencias Comercio-->
                                 <div class="form-row text-left">
                                     <div class="col-md-12">
@@ -337,10 +339,21 @@
                                     </div>
                                 </div>
 
-                                <!-- Campo 2:  Numero de Legajo-->
-                                <div class="form-group">
-                                    <label for="numeroLegajo">* Nro. Legajo</label>
-                                    <input type="text" formControlName="numeroLegajo" class="form-control form-control-sm" id="inputnumeroLegajo" placeholder="111">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPrefijoLegajo">Cod. Area</label>
+                                        <input list="prefijoLegajo" value="A" class="form-control form-control-sm" formControlName="prefijoLegajo">
+                                        <datalist id="prefijoLegajo">
+                                          <option value="0">Manual</option>
+                                          <option value="A">Automatico</option>
+                                        </datalist>
+                                    </div>
+
+                                    <!-- Campo 2:  Numero de Legajo-->
+                                    <div class="form-group col-md-6">
+                                        <label for="numeroLegajo">Nro. Legajo</label>
+                                        <input type="text" formControlName="numeroLegajo" class="form-control form-control-sm" id="inputnumeroLegajo" placeholder="111">
+                                    </div>
                                 </div>
 
 

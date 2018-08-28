@@ -12,4 +12,5 @@ export class CreditoNuevo {
       token: string;
       documentos: DocumentoPresentado[];
       legajo: string;
+      prefijoLegajo: string;
 }

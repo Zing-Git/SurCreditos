@@ -40,6 +40,8 @@ export class FormCreditoComponent implements OnInit {
   session: Session;
   creditoForm: FormGroup;
   currentJustify = 'justified';
+  calificacionComercio = 'Buena';
+
   tiposPlanes: any[];
   tiposReferencias: any[];
   planes: any[];
@@ -58,6 +60,7 @@ export class FormCreditoComponent implements OnInit {
   referenciaComercio: ReferenciaComercio;
 
   switchClienteGarante: string;
+
 
 
   // documentos que presenta el titular del credito
@@ -184,7 +187,7 @@ export class FormCreditoComponent implements OnInit {
 
       // array de checkbox dinamico
       documentaciones: new FormArray(this.controls),
-      numeroLegajo:  new FormControl('', [Validators.required]),
+
       tipoReferenciaTitular: new FormControl('', [Validators.required]),
       itemsReferenciasTitular: new FormArray(this.controls),
       notaComentarioTitular: new FormControl('', [Validators.required]),
@@ -192,7 +195,8 @@ export class FormCreditoComponent implements OnInit {
       tipoReferenciaComercio: new FormControl('', [Validators.required]),
       itemsReferenciasComercio: new FormArray(this.controls),
       notaComentarioComercio: new FormControl(''),
-
+      prefijoLegajo: new FormControl(''),
+      numeroLegajo:  new FormControl('', [Validators.required]),
 
     });
 
@@ -214,14 +218,15 @@ export class FormCreditoComponent implements OnInit {
 
 
   /* get documentacion() {    return this.creditoForm.get('documentacion');  } */
-  get numeroLegajo() {    return this.creditoForm.get('numeroLegajo');  }
+
   get tipoReferenciaTitular() {    return this.creditoForm.get('tipoReferenciaTitular');  }
   get itemsReferenciasTitular() {    return this.creditoForm.get('itemsReferenciasTitular');  }
   get notaComentarioTitular() {    return this.creditoForm.get('notaComentarioTitular');  }
   get tipoReferenciaComercio() {    return this.creditoForm.get('tipoReferenciaComercio');  }
   get itemsReferenciasComercio() {    return this.creditoForm.get('itemsReferenciasComercio');  }
   get notaComentarioComercio() {    return this.creditoForm.get('notaComentarioComercio');  }
-
+  get numeroLegajo() {    return this.creditoForm.get('numeroLegajo');  }
+  get prefijoLegajo() {    return this.creditoForm.get('prefijoLegajo');  }
 
 
   onFormSubmit() {
@@ -240,6 +245,8 @@ export class FormCreditoComponent implements OnInit {
 
     this.creditoNuevo.cliente = this.cliente._id;
     this.creditoNuevo.garante = this.garante._id;
+    this.creditoNuevo.prefijoLegajo = this.prefijoLegajo.value;
+
 
     this.getReferenciaCliente();
     this.clientesService.postAgregarReferenciaCliente(this.referenciaCliente).subscribe( resultCliente => {
@@ -254,14 +261,16 @@ export class FormCreditoComponent implements OnInit {
 
 
           this.getReferenciaComercio();
-          console.log('Referncia COmercio a GUARDAR: ', this.referenciaComercio);
-
+          console.log('Referencia COmercio a GUARDAR: ', this.referenciaComercio);
           this.clientesService.postAgregarReferenciaComercio(this.referenciaComercio).subscribe( resultComercio => {
               // Alta de Credito
               console.log(resultComercio);
               this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
                   let respuesta = result;
-                  alert('Solicitud de Credito generado con Exito, verifique en la lista de creditos cuando el administrador lo apruebe.');
+                  alert('Credito generado con Exito con el Legajo Numero: ');
+
+
+
                   console.log(respuesta);
               }, err => {
                   alert('Hubo un problema al registrar la solicitud de credito');

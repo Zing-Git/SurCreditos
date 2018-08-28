@@ -31,6 +31,20 @@
                                         <input type="text" formControlName="razonSocial" class="form-control form-control-sm" id="inputRazonSocial" placeholder="Juan Perez">
                                     </div>
 
+                                    <!-- Campo 1: Actividad-->
+                                    <div class="form-group col-md-12">
+                                        <label for="inputActividad" class="small h4 text-muted">* Actividad</label>
+                                        <select formControlName="actividad" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputActividad">
+                                  <option *ngFor="let fActividad of actividades">
+                                      {{fActividad.DESC_ACTIVIDAD_F883}}
+                                  </option>
+                                </select>
+                                    </div>
+
+
+
+
+
 
                                     <div class="form-row text-right">
                                         <div class="col-12">

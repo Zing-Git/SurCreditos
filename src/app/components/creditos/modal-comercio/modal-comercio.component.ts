@@ -21,6 +21,7 @@ currentJustify = 'justified';
 provincias: any[];
 localidades: any[];
 estadosCasa: any[];
+actividades: any[];
 idCliente = '0';
 idDomicilio =  '0';
 
@@ -39,6 +40,7 @@ constructor(private fb: FormBuilder,
     this.comercioForm = this.fb.group({
       cuit: new FormControl('', [Validators.required]),
       razonSocial: new FormControl('', [Validators.required]),
+      actividad: new FormControl(''),
       provincia: new FormControl(),
       localidad: new FormControl(),
       barrio: new FormControl('', [Validators.required]),
@@ -52,6 +54,7 @@ constructor(private fb: FormBuilder,
 
   get cuit() {    return this.comercioForm.get('cuit');  }
   get razonSocial() {    return this.comercioForm.get('razonSocial');  }
+  get actividad() {    return this.comercioForm.get('actividad');  }
   get provincia() { return this.comercioForm.get('provincia'); }
   get localidad() { return this.comercioForm.get('localidad'); }
   get barrio() { return this.comercioForm.get('barrio'); }
@@ -72,18 +75,22 @@ constructor(private fb: FormBuilder,
     this.clientesService.postGetCombos().subscribe(result => {
       this.provincias = result['respuesta'].provincias;
       this.estadosCasa = result['respuesta'].estadosCasa;
+      this.actividades = result['respuesta'].rubrosComerciales;
     });
 
   }
 
 
   capturarValoresDeFormulario(): any {
+        let actividadElegida = this.actividades.filter(activ => activ.DESC_ACTIVIDAD_F883 === this.actividad.value);
         let comercio = {
             token: this.session.token,
             comercio: {
                 _id: '0',
                 cuit: this.cuit.value,
                 razonSocial: this.razonSocial.value,
+                codigoActividad: actividadElegida[0].COD_ACTIVIDAD_F883,
+		            descripcionActividad: this.actividad.value,
                 domicilio: {
                         _id: '0',
                         pais: 'Argentina',

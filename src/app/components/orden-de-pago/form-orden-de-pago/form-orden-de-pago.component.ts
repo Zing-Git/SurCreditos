@@ -31,7 +31,6 @@ export class FormOrdenDePagoComponent implements OnInit {
   characters: TableCreditos[];
   creditos: TableCreditos[];
   cliente: Cliente;
-  serssion: Session;
 
   settings = {
 
@@ -144,7 +143,7 @@ export class FormOrdenDePagoComponent implements OnInit {
     if (this.dni.value !== '') {
        this.clientesService.postGetClientePorDni(this.session, dni).subscribe(response => {
       this.cliente = response['clientes'][0];
-      console.log(this.cliente);
+      //console.log(this.cliente);
       this.obtenerCreditosDelCliente();
       //this.cargarClienteForm(this.cliente);  aqui debo cargar los creditos
     });
@@ -155,7 +154,8 @@ export class FormOrdenDePagoComponent implements OnInit {
     this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
       this.characters = response['credito'];
     });
-console.log(this.characters)
+    console.log(this.characters)
+    console.log(this.session);
     if(this.characters != null){
       this.characters.forEach(element=> {
         if(element.estado.nombre === 'APROBADO'){

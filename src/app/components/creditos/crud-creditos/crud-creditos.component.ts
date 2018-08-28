@@ -55,11 +55,13 @@ export class CrudCreditosComponent implements OnInit {
     columns: {
       legajo_prefijo:{
         title: 'Prefijo',
-        width: '5%'
+        width: '8%',
+        valuePrepareFunction: (cell, row) => row.cliente.titular.legajo_prefijo
       },
       legajo: {
         title: 'Legajo',
-        width: '5%'
+        width: '8%',
+        valuePrepareFunction: (cell, row) => row.cliente.titular.legajo
       },
       razonSocial: {
         title: 'Razon Social',
@@ -136,6 +138,7 @@ export class CrudCreditosComponent implements OnInit {
     this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
       this.characters = response['credito'];
     });
+    
     this.cargarControlesCombos();
    
   }

@@ -138,7 +138,7 @@ constructor(private fb: FormBuilder,
     let comercioC = this.capturarValoresDeFormulario();
     console.log('A guardar: ', JSON.stringify(comercioC));
 
-/*     this.clientesService.postGuardarComercio(comercioC).subscribe( result => {
+    this.clientesService.postGuardarComercio(comercioC).subscribe( result => {
       if (result) {
         this.clientesService.postGetComercioPorCuit(this.session, this.cuit.value).subscribe ( res => {
           let comercioEncontrado = res['comercio'][0];
@@ -149,6 +149,6 @@ constructor(private fb: FormBuilder,
       }
     }, err => {
       alert('Hubo un problema al Guardar el Comercio');
-    }); */
+    });
   }
 }

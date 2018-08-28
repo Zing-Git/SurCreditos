@@ -60,6 +60,10 @@ export class CrudCreditosAdminComponent implements OnInit {
       ],
     },
     columns: {
+      legajo_prefijo:{
+        title: 'Prefijo',
+        width: '5%'
+      },
       legajo: {
         title: 'Legajo',
         width: '10%'
@@ -425,6 +429,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         {
           dataArray.push({
             razonSocial: 'Razon Social',
+            rubro: 'Rubro',
             montoPedido: 'Monto Pedido',
             cantidadCuotas: 'Cant. Cuotas',
             valorCuota: 'Valor de Cuota',
@@ -441,6 +446,7 @@ export class CrudCreditosAdminComponent implements OnInit {
           this.lineaDeCarro = this.lineaDeCarro + 10;
           dataArray.push({
             razonSocial: element.comercio.razonSocial,
+            rubro: element.rubro,
             montoPedido: element.montoPedido,
             cantidadCuotas: element.cantidadCuotas,
 

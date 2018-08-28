@@ -53,6 +53,10 @@ export class CrudCreditosComponent implements OnInit {
       ],
     },
     columns: {
+      legajo_prefijo:{
+        title: 'Prefijo',
+        width: '5%'
+      },
       legajo: {
         title: 'Legajo',
         width: '5%'
@@ -61,6 +65,10 @@ export class CrudCreditosComponent implements OnInit {
         title: 'Razon Social',
         width: '30%',
         valuePrepareFunction: (cell, row) => row.comercio.razonSocial
+      },
+      rubro:{
+        title: 'Rubro',
+        width: '30%'
       },
       montoPedido: {
         title: 'Monto Pedido',
@@ -226,7 +234,7 @@ export class CrudCreditosComponent implements OnInit {
     const today = Date.now();
     doc.setTextColor(0);
     doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
-    doc.text('Legajo Nº:  ', 130, 30);
+    doc.text('Legajo Nº:  ' , 130, 30);
     doc.text('Estado: ', 130, 35);
 
     doc.setFillColor(52, 152, 219)
@@ -416,7 +424,10 @@ export class CrudCreditosComponent implements OnInit {
       case 'cabecera':
         {
           dataArray.push({
+            legajo_prefijo:'Prefijo',
+            legajo:'Legajo',
             razonSocial: 'Razon Social',
+            rubro: 'Rubro',
             montoPedido: 'Monto Pedido',
             cantidadCuotas: 'Cant. Cuotas',
             valorCuota: 'Valor de Cuota',
@@ -432,7 +443,10 @@ export class CrudCreditosComponent implements OnInit {
         this.characters.forEach(element => {
           this.lineaDeCarro = this.lineaDeCarro + 10;
           dataArray.push({
+            legajo_prefijo: element.cliente.titular.legajo_prefijo,
+            legajo: element.legajo,
             razonSocial: element.comercio.razonSocial,
+            rubro: element.rubro,
             montoPedido: element.montoPedido,
             cantidadCuotas: element.cantidadCuotas,
 

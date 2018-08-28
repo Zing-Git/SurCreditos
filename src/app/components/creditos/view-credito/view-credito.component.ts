@@ -130,9 +130,14 @@ export class ViewCreditoComponent implements OnInit {
       token: this.session.token
     });
     
-    this.creditosService.postGetCreditoByid(this.newSession).subscribe((response: TableCreditos[]) => {
+    this.creditosService.postGetCreditoPorId(this.newSession._id,this.newSession.token).subscribe((response: TableCreditos[]) => {
       this.thisCreditos = response['credito'];
     });
+    this.thisCreditos.forEach(element=>{
+      element.estado.estadoTerminal;
+    });
+
+
   }
   onFormSubmit() {
   }
@@ -511,4 +516,7 @@ cargarUsuarioAControles(usuario: any){
     console.log('COMERCIO GUARDADO: ', event.comercio);
   }
 
+  getReferenciaCliente(){
+    
+  }
 }

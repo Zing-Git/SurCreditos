@@ -14,6 +14,7 @@ import { FormCambioClaveComponent } from './components/usuarios/form-cambio-clav
 import { CrudCreditosAdminComponent } from './components/creditos/crud-creditos-admin/crud-creditos-admin.component';
 import { ModalComercioComponent } from './components/creditos/modal-comercio/modal-comercio.component';
 import { ViewCreditoComponent } from './components/creditos/view-credito/view-credito.component';
+import { FormOrdenDePagoComponent } from './components/orden-de-pago/form-orden-de-pago/form-orden-de-pago.component';
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -35,6 +36,6 @@ export const appRoutes: Routes = [
 { path: 'login', component: LoginComponent , canActivate: [NoLoginGuard]},
 { path: 'crudcreditosadmin', component: CrudCreditosAdminComponent , canActivate: [NoLoginGuard]},
 { path: 'formcomercio', component: ModalComercioComponent , canActivate: [LoginGuard]},
-// { path: '', component: LoginComponent , canActivate: [NoLoginGuard]},
+{ path: 'ordendepago', component: FormOrdenDePagoComponent , canActivate: [NoLoginGuard]},
 
 ];

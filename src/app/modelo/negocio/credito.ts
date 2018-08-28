@@ -25,5 +25,6 @@ export class Credito {
 
     usuario: string;
     estado: Estado;
+    rubro: string;
     __v: number;
 }

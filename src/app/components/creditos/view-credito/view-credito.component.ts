@@ -101,7 +101,7 @@ export class ViewCreditoComponent implements OnInit {
     this.router.params.subscribe(params => {
       this.idDni = params['id'];
 
-      console.log(this.idDni);
+      //console.log(this.idDni);
       this.evento = params['evento'];
       console.log(this.evento);
 

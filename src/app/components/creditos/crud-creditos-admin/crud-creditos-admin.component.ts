@@ -112,8 +112,8 @@ export class CrudCreditosAdminComponent implements OnInit {
 
   ngOnInit() {
     this.session.token = this.loginService.getTokenDeSession();
-    this.creditosService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
-      this.characters = response['creditos'];
+    this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
+      this.characters = response['credito'];
     });
     this.cargarControlesCombos();
     this.getAllUsuarios();
@@ -159,15 +159,15 @@ export class CrudCreditosAdminComponent implements OnInit {
     switch (evento) {
       case 'aprobar': {
        // this.router.navigate(['formclienteviewedit', evento, dni]);
-       this.postAprobarRechazar(id,'APROBADO');
+       this.postAprobarRechazar(id,"APROBADO");
         break;
       }
       case 'rechazar': {
-        this.postAprobarRechazar(id, 'RECHAZADO');
+        this.postAprobarRechazar(id, "RECHAZADO");
         break;
       }
       case 'derivar': {
-
+        this.postAprobarRechazar(id,"DERIVADO")
         break;
       }
       case 'ver':{
@@ -191,12 +191,13 @@ export class CrudCreditosAdminComponent implements OnInit {
       if(element._id === id){
         let nuevoCredito = {
           idCredito: element._id,
-          nombre_nuevo_estado: 'APROBADO',           // nuevoEstado,
+          estado: element.estado._id,   // '5b72b281708d0830d07f3562'        // element.estado._id
+          nombre_nuevo_estado: nuevoEstado,           // APROBADO RECHASADO OTRO,          
           cliente: element.cliente._id,
+          monto: element.montoPedido,
           nombre_estado_actual: element.estado.nombre,
-          token: this.session.token,
-          estado: '5b72b281708d0830d07f3562'        // element.estado._id
-        };
+          token: this.session.token          
+        };       
 
         this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result=>{
           let respuesta = result;

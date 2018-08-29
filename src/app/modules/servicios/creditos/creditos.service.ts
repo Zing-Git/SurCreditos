@@ -29,7 +29,7 @@ export class CreditosService {
 
    public urlPostGetAllCreditos = this.urlBase + '/credito/listar_creditos_admin/';
    public urlPostGuardarCredito = this.urlBase + '/credito/guardar/';
-   public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado';
+   public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado/';
    public urlPostGetCreditoPorId = this.urlBase + '/credito/buscar_credito/';
 
 

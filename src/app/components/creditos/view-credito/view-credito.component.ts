@@ -103,24 +103,26 @@ export class ViewCreditoComponent implements OnInit {
 
       console.log(this.idDni);
       this.evento = params['evento'];
+      console.log(this.evento);
+
       if (this.evento === 'view') { // si es view carga controles deshabilitados, si es edit, habilitados
         this.habilitarControles = false;
-       
-       
+
+
       } else {
         this.habilitarControles = true;
       }
-    });
-    this.cargarTablaCreditos();
+       });
+    /* this.cargarTablaCreditos();
     this.cargarformControls();
 
-   
+
     let creditos : TableCreditos;
 
     this.thisCreditos.forEach(element =>{
       creditos = element;
-    })
-    this.cargarFormConDatos(creditos);
+    });
+    this.cargarFormConDatos(creditos); */
   }
 
   cargarTablaCreditos(){
@@ -129,7 +131,7 @@ export class ViewCreditoComponent implements OnInit {
       _id: this.idDni,
       token: this.session.token
     });
-    
+
     this.creditosService.postGetCreditoPorId(this.newSession._id,this.newSession.token).subscribe((response: TableCreditos[]) => {
       this.thisCreditos = response['credito'];
     });
@@ -169,7 +171,7 @@ export class ViewCreditoComponent implements OnInit {
 
   //1_ creo el formulario vacio
   cargarformControls() {
- 
+
         this.creditoForm = this.fb.group({
           dni: new FormControl('', [Validators.required]),
           apellidos: new FormControl('', [Validators.required]),
@@ -179,27 +181,27 @@ export class ViewCreditoComponent implements OnInit {
           tipoDePlan: new FormControl('', [Validators.required]),
           plan: new FormControl('', [Validators.required]),
           cobroDomicilio: new FormControl(false),
-  
+
           dniGarante: new FormControl('', [Validators.required]),
           apellidosGarante: new FormControl('', [Validators.required]),
           nombresGarante: new FormControl('', [Validators.required]),
           fechaNacimientoGarante: new FormControl('', [Validators.required]),
           cuit: new FormControl(''),
           razonSocial: new FormControl(''),
-  
+
           // array de checkbox dinamico
           documentaciones: new FormArray(this.controls),
           numeroLegajo: new FormControl('', [Validators.required]),
           tipoReferenciaTitular: new FormControl('', [Validators.required]),
           itemsReferenciasTitular: new FormArray(this.controls),
           notaComentarioTitular: new FormControl('', [Validators.required]),
-  
+
           tipoReferenciaComercio: new FormControl('', [Validators.required]),
           itemsReferenciasComercio: new FormArray(this.controls),
           notaComentarioComercio: new FormControl(''),
 
-      
-   
+
+
      // this.creditoForm = this.fb.group({
         // clase usuario
 
@@ -208,11 +210,11 @@ export class ViewCreditoComponent implements OnInit {
        // nombres: new FormControl('', [Validators.required]),
        // fechaNacimiento: new FormControl('', [Validators.required]),
 
-        // datos del credito      
+        // datos del credito
 
-       
+
       });
-    
+
 
 
     if (!this.habilitarControles) {
@@ -230,8 +232,8 @@ export class ViewCreditoComponent implements OnInit {
       this.dniGarante.disable();
       this.apellidosGarante.disable();
 
-      
-      
+
+
       this.nombresGarante.disable();
       this.fechaNacimientoGarante.disable();
       this.cuit.disable();
@@ -517,6 +519,6 @@ cargarUsuarioAControles(usuario: any){
   }
 
   getReferenciaCliente(){
-    
+
   }
 }

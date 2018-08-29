@@ -1,3 +1,4 @@
+import { forEach } from '@angular/router/src/utils/collection';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ClientesService } from '../../../modules/servicios/clientes/clientes.service';
 import { Session } from '../../../modelo/util/session';
@@ -20,6 +21,8 @@ import { ReferenciaCliente } from './modelos/ReferenciaCliente';
 import { ReferenciaComercio } from './modelos/RefereciaComercio';
 
 import { ModalComercioComponent } from '../modal-comercio/modal-comercio.component';
+import { Persona } from '../../../modelo/negocio/persona';
+import { Router } from '@angular/router';
 
 
 
@@ -40,7 +43,8 @@ export class FormCreditoComponent implements OnInit {
   session: Session;
   creditoForm: FormGroup;
   currentJustify = 'justified';
-  calificacionComercio = 'Buena';
+  calificacionComercio = 0;
+  calificacionTitular = 0;
 
   tiposPlanes: any[];
   tiposReferencias: any[];
@@ -49,6 +53,7 @@ export class FormCreditoComponent implements OnInit {
   referenciaTitulares = [];
   referenciaTitularesElegidos = [];
   referenciaComerciosElegidos = [];
+
 
   controls = [];
 
@@ -150,6 +155,7 @@ export class FormCreditoComponent implements OnInit {
 
 
   constructor(
+      private router: Router,
       private fb: FormBuilder,
       private clientesService: ClientesService,
       private usuariosService: UsuariosService,
@@ -166,6 +172,8 @@ export class FormCreditoComponent implements OnInit {
     this.session = new Session();
     this.session.token = this.loginService.getTokenDeSession();
     this.cargarControlesForm();
+
+
 
     this.creditoForm = this.fb.group({
       dni: new FormControl('', [Validators.required]),
@@ -199,6 +207,13 @@ export class FormCreditoComponent implements OnInit {
       numeroLegajo:  new FormControl('', [Validators.required]),
 
     });
+
+    // Inicializar controles:----------
+    this.tipoReferenciaComercio.setValue('5b684e87e4958a3e0cbfddc0'); // calificacion mala
+    this.tipoReferenciaComercio.disable();
+    this.tipoReferenciaTitular.setValue('5b684e87e4958a3e0cbfddc0'); // calificacion mala
+    // ----------------------------------
+
 
   }
   get dni() {    return this.creditoForm.get('dni');  }
@@ -267,10 +282,8 @@ export class FormCreditoComponent implements OnInit {
               console.log(resultComercio);
               this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
                   let respuesta = result;
-                  alert('Credito generado con Exito con el Legajo Numero: ');
-
-
-
+                  alert('Bien hecho!, Credito generado con éxito');
+                  this.router.navigate(['crudcreditos']);
                   console.log(respuesta);
               }, err => {
                   alert('Hubo un problema al registrar la solicitud de credito');
@@ -280,7 +293,7 @@ export class FormCreditoComponent implements OnInit {
           });
         } else {
           // Si no Existe el  Comercio, dar el alta antes de guardar credito--------------------
-          console.log('Lee de Form');
+          alert('Hubo un problema con el comercio, intente seleccionar un comercio correcto');
         }
     }, err => {
       alert('Hubo un problema al asignar una referencia al cliente');
@@ -324,7 +337,8 @@ export class FormCreditoComponent implements OnInit {
     this.referenciaComerciosElegidos.forEach(element => {
       if (element.referenciaCliente) {
         let valorItem: Object = {
-          item: element._id
+          item: element._id,
+          peso: element.peso
         };
         itemsReferenciaComercio.push(valorItem);
       }
@@ -445,6 +459,8 @@ export class FormCreditoComponent implements OnInit {
       this.tiposPlanes = response['respuesta'].tiposPlanes;
       // Tipo de Referencia: Buena - Mala - Regular
       this.tiposReferencias = response['respuesta'].tiposReferencias;
+
+
       // Carga de combos de referencias
       let referencias = response['respuesta'].itemsReferencia;
       for (let ref of referencias) {
@@ -499,8 +515,54 @@ export class FormCreditoComponent implements OnInit {
       this.referenciaComerciosElegidos[i].referenciaCliente = !this.referenciaComerciosElegidos[i].referenciaCliente;
       console.log(itemRTElegido);
       console.log(this.referenciaComerciosElegidos[i]);
-
     }
+
+    // Establecer Valor de Rerencia Atutomatica
+    let cantidadItemsReferenciaIniciales = this.referenciaComerciosElegidos.length;
+
+    // Calculo del peso de las respuestas
+    let refElegidasComercios = this.getItemsReferenciasComercio();
+    let positivos = 0;
+    refElegidasComercios.forEach(element => {
+      positivos = positivos + element.peso;
+    });
+
+    this.calificacionComercio = positivos / cantidadItemsReferenciaIniciales;
+    console.log('POSTIVOS:::::::::::', positivos , 'CALIFICACION:::: ', this.calificacionComercio);
+
+    let parte = 1 / this.tiposReferencias.length;
+
+    if (this.calificacionComercio >= 0 && this.calificacionComercio <= parte) {
+        this.tipoReferenciaComercio.setValue('5b684e87e4958a3e0cbfddc0'); // calificacion mala
+    } else {
+      if (this.calificacionComercio > parte && this.calificacionComercio <= 2 * parte){
+        this.tipoReferenciaComercio.setValue('5b684e87e4958a3e0cbfddbf'); // calificacion regular
+      } else {
+        if (this.calificacionComercio > 2 * parte && this.calificacionComercio <= 3 * parte){
+          this.tipoReferenciaComercio.setValue('5b684e87e4958a3e0cbfddbe'); // calificacion buena
+        }
+      }
+    }
+
+
+
+
+
+   /*  let valoresDeCalificacion = this.tiposReferencias.length;
+    // Ordeno el array de tipos referencias (bueno, regular, malo) por el campo orden DESCENDENTE
+    this.tiposReferencias.sort(function(a, b) {
+      return  a.orden - b.orden;
+    });
+    let rango = 1 / valoresDeCalificacion;
+    let o = (this.calificacionComercio / rango).toString();
+    // tslint:disable-next-line:radix
+    let orden = parseInt(o);
+    for (let i = 0; i < this.tiposReferencias.length; i++){
+      if (this.tiposReferencias[i].orden === orden){
+          console.log(' LA CALIFICACION FINAL ES XXXXXX :', this.tiposReferencias[i]);
+      }
+    } */
+
   }
 
   calcularPlanDePago() {
@@ -635,7 +697,7 @@ export class FormCreditoComponent implements OnInit {
 
   // TEST
   buscarCreditoPorID(){
-    this.creditosService.postGetCreditoPorId('5b83ea4631c08a43640dc8ca', this.session.token).subscribe( result => {
+    this.creditosService.postGetCreditoPorId('5b85266bec40c800143fc5e1', this.session.token).subscribe( result => {
         console.log(result['credito']);
     });
   }

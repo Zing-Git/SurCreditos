@@ -293,15 +293,7 @@
 
 
                                 <h4>Referencias del Comercio</h4>
-                                <!-- Campo 6: Combo Referencia Comercio -->
-                                <div class="form-group">
-                                    <label for="inputTipoReferenciaComercio">* Referencia del Comercio</label>
-                                    <select formControlName="tipoReferenciaComercio" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoReferenciaComercio">
-                                        <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
-                                                {{eReferencia.nombre}}
-                                        </option>
-                                    </select>
-                                </div>
+
 
 
                                 <div class="form-row text-left">
@@ -321,7 +313,18 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="badge badge-secondary">Calificacion: </label>
-                                        <label class="badge badge-warning"> {{calificacionComercio}} </label>
+                                        <p class="badge badge-warning"> {{ calificacionComercio | percent}}</p>
+
+                                        <!-- Campo 6: Combo Referencia Comercio -->
+                                        <div class="form-group">
+                                            <label for="inputTipoReferenciaComercio">* Referencia del Comercio</label>
+                                            <select formControlName="tipoReferenciaComercio" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoReferenciaComercio">
+                                                <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
+                                                        {{eReferencia.nombre}}
+                                                </option>
+                                            </select>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <!-- Campo 8: Comentario Referencias Comercio-->
@@ -384,7 +387,8 @@
 </div>
 
 
-<span class="btn btn-outline-primary" (click)="getReferenciaCliente()"> Ver Referencias</span>
+<span class="btn btn-outline-primary" (click)="getReferenciaCliente()"> Ver Referencias Cliente</span>
+<span class="btn btn-outline-primary" (click)="getReferenciaComercio()"> Ver Referencias Comercio</span>
 
 
 <!-- <button (click)="ngxSmartModalService.getModal( 'myModal').open() ">Open myModal</button>

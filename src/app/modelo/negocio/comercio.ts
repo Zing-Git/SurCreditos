@@ -6,7 +6,9 @@ export class Comercio{
     _id: string;
     cuit: string;
     razonSocial: string;
-    domicilio: Domicilio;
+    codigoActividad: string;   //agregado por pedro
+    descripcionActividad:string;  //agregado por pedro
+    domicilio: Domicilio; 
     fechaAlta: string;
     __v: number;
 }

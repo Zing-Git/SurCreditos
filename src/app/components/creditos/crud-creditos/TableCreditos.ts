@@ -24,6 +24,6 @@ export interface TableCreditos {
     estado: Estado;
     legajo: string; // Agregó Jorge
     fechaAlta: string;
-    rubro: string;
+    legajo_prefijo: string;  //agrego pedro
     __v: number;
 }

@@ -22,8 +22,10 @@ import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 })
 export class CrudCreditosComponent implements OnInit {
 
+  numFactura : string;
   message = '';
   characters: TableCreditos[];
+  character: TableCreditos;
   estadosCasa: EstadoCasa[];
   session = new Session();
   lineaDeCarro = 40;      // para reporte general
@@ -55,13 +57,11 @@ export class CrudCreditosComponent implements OnInit {
     columns: {
       legajo_prefijo:{
         title: 'Prefijo',
-        width: '8%',
-        valuePrepareFunction: (cell, row) => row.cliente.titular.legajo_prefijo
+        width: '8%'
       },
       legajo: {
         title: 'Legajo',
-        width: '8%',
-        valuePrepareFunction: (cell, row) => row.cliente.titular.legajo
+        width: '8%'
       },
       razonSocial: {
         title: 'Razon Social',
@@ -136,8 +136,9 @@ export class CrudCreditosComponent implements OnInit {
   ngOnInit() {
     this.session.token = this.loginService.getTokenDeSession();
     this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
-      this.characters = response['credito'];
+     this.characters = response['credito'];
     });
+    
     
     this.cargarControlesCombos();
    
@@ -162,6 +163,13 @@ export class CrudCreditosComponent implements OnInit {
     switch (evento) {
       case 'view': {
         //this.router.navigate(['formclienteviewedit', evento, dni]);
+        this.characters.forEach(element =>{
+          if(element._id === id){
+            this.character = element;
+          }
+        });
+
+        this.creditosService.Storage = this.character;
         this,this.router.navigate(['viewcredito', evento, id]);
         break;
       }
@@ -211,6 +219,7 @@ export class CrudCreditosComponent implements OnInit {
   imprimirPDF(id: string) {
     const doc = new jsPDF();
 
+    //agregar formato A-000009 0-000009 este ultimo manual  => agregar x cantidad de ceros segun el numero de legajo
     ///////////////////////////////////////////////////////////////////////////////////
     doc.setFontSize(18);
     doc.setTextColor(40);
@@ -413,6 +422,7 @@ export class CrudCreditosComponent implements OnInit {
       }
     });
 
+    console.log();
 
     doc.save('reporteIndividual.pdf');
     this.carroIndividual = 50;
@@ -427,10 +437,7 @@ export class CrudCreditosComponent implements OnInit {
       case 'cabecera':
         {
           dataArray.push({
-            legajo_prefijo:'Prefijo',
-            legajo:'Legajo',
             razonSocial: 'Razon Social',
-            rubro: 'Rubro',
             montoPedido: 'Monto Pedido',
             cantidadCuotas: 'Cant. Cuotas',
             valorCuota: 'Valor de Cuota',
@@ -446,10 +453,7 @@ export class CrudCreditosComponent implements OnInit {
         this.characters.forEach(element => {
           this.lineaDeCarro = this.lineaDeCarro + 10;
           dataArray.push({
-            legajo_prefijo: element.cliente.titular.legajo_prefijo,
-            legajo: element.legajo,
             razonSocial: element.comercio.razonSocial,
-            rubro: element.rubro,
             montoPedido: element.montoPedido,
             cantidadCuotas: element.cantidadCuotas,
 

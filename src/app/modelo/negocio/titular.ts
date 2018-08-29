@@ -3,8 +3,6 @@ import { Domicilio } from "./domicilio";
 
 export class Titular {
     _id: string;
-    legajo_prefijo: string;
-    legajo:string;
     tipoDni: TipoDni; 
     dni: string;
     apellidos: string;

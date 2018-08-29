@@ -14,6 +14,7 @@ import { TableCreditos } from './../../creditos/crud-creditos/TableCreditos';
 import * as moment from 'moment/moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 import { TableUsuarios } from '../../usuarios/crud-usuarios/TableUsuarios';
+import { Estado } from '../../../modelo/negocio/estado';
 
 @Component({
   selector: 'app-crud-creditos-admin',
@@ -26,6 +27,7 @@ export class CrudCreditosAdminComponent implements OnInit {
   characters: TableCreditos[];
   estadosCasa: EstadoCasa[];
   usuarios: TableUsuarios[];
+  estados: Estado[];
   session = new Session();
 
   lineaDeCarro = 40;      // para reporte general
@@ -112,9 +114,10 @@ export class CrudCreditosAdminComponent implements OnInit {
 
   ngOnInit() {
     this.session.token = this.loginService.getTokenDeSession();
-    this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
-      this.characters = response['credito'];
+    this.creditosService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
+      this.characters = response['creditos'];
     });
+    console.log(this.characters);
     this.cargarControlesCombos();
     this.getAllUsuarios();
 
@@ -125,6 +128,7 @@ export class CrudCreditosAdminComponent implements OnInit {
     this.clientesServices.postGetCombos().subscribe(result => {
       //this.provincias = result['respuesta'].provincias;
       this.estadosCasa = result['respuesta'].estadosCasa;
+      this.estados = result['respuesta'].estadosCredito;
     });
 
   }
@@ -187,11 +191,18 @@ export class CrudCreditosAdminComponent implements OnInit {
 
 // TODO: ESTA HARCODEADO ESTE METODO, SOLO PARA HACER EL APROBADO
   postAprobarRechazar(id:string, nuevoEstado: string){
+    let idNuevoEstado : string;
+    this.estados.forEach(element=>{
+      if(nuevoEstado == element.nombre){
+        idNuevoEstado= element._id;
+      }
+    });
+    console.log(idNuevoEstado);
     this.characters.forEach(element =>{
       if(element._id === id){
         let nuevoCredito = {
           idCredito: element._id,
-          estado: element.estado._id,   // '5b72b281708d0830d07f3562'        // element.estado._id
+          estado: idNuevoEstado,   // '5b72b281708d0830d07f3562'        // element.estado._id
           nombre_nuevo_estado: nuevoEstado,           // APROBADO RECHASADO OTRO,          
           cliente: element.cliente._id,
           monto: element.montoPedido,
@@ -430,7 +441,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         {
           dataArray.push({
             razonSocial: 'Razon Social',
-            rubro: 'Rubro',
+            
             montoPedido: 'Monto Pedido',
             cantidadCuotas: 'Cant. Cuotas',
             valorCuota: 'Valor de Cuota',
@@ -447,7 +458,7 @@ export class CrudCreditosAdminComponent implements OnInit {
           this.lineaDeCarro = this.lineaDeCarro + 10;
           dataArray.push({
             razonSocial: element.comercio.razonSocial,
-            rubro: element.rubro,
+            
             montoPedido: element.montoPedido,
             cantidadCuotas: element.cantidadCuotas,
 

@@ -3,6 +3,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Session } from '../../../modelo/util/session';
 import { Observable } from 'rxjs';
 import { NewSession } from '../../../modelo/util/newSession';
+import { TableCreditos } from '../../../components/creditos/crud-creditos/TableCreditos';
 
 
 const cudOptions = {
@@ -32,7 +33,7 @@ export class CreditosService {
    public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado/';
    public urlPostGetCreditoPorId = this.urlBase + '/credito/buscar_credito/';
 
-
+   public Storage : TableCreditos;
   constructor(public http: HttpClient) { }
 
   // POST: Obtiene todos los clientes

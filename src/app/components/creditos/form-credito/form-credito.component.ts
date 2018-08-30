@@ -270,9 +270,10 @@ export class FormCreditoComponent implements OnInit {
     this.creditoNuevo.idTipoPlan = identificadorTipoPlan._id;
     // ------
 
-
-
     this.getReferenciaCliente();
+
+    console.log(this.creditoNuevo);
+
     this.clientesService.postAgregarReferenciaCliente(this.referenciaCliente).subscribe( resultCliente => {
 
         if (this.comercio) {
@@ -280,28 +281,19 @@ export class FormCreditoComponent implements OnInit {
           this.creditoNuevo.comercio = this.comercio._id;
           console.log('ID de Comercio: ', this.creditoNuevo.comercio);
           // Agregar Referencia a Comercio
-
-          console.log('Referncia Comercio a GUARDAR: ', this.referenciaComercio);
-
-
           this.getReferenciaComercio();
           console.log('Referencia COmercio a GUARDAR: ', this.referenciaComercio);
           this.clientesService.postAgregarReferenciaComercio(this.referenciaComercio).subscribe( resultComercio => {
               // Alta de Credito
-              console.log(resultComercio);
-
-
+              console.log('Result de AgregarReferenciaA Comercio: ', resultComercio);
               this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
                   let respuesta = result;
+                  console.log('Result de Guardar Credito: ', respuesta);
                   alert('Bien hecho!, Credito generado con éxito');
                   this.router.navigate(['crudcreditos']);
-                  console.log(respuesta);
               }, err => {
                   alert('Hubo un problema al registrar la solicitud de credito');
               });
-
-
-
           }, err => {
               alert('Ocurrio un error al asignar la referencia al comercio');
           });
@@ -312,6 +304,10 @@ export class FormCreditoComponent implements OnInit {
     }, err => {
       alert('Hubo un problema al asignar una referencia al cliente');
     });
+
+
+
+
     console.log(this.creditoNuevo);
   }
 

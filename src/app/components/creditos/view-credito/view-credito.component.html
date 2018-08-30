@@ -27,7 +27,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <span class="btn btn-outline-primary" >Buscar</span>
+                                        <span class="btn btn-outline-primary">Buscar</span>
                                     </div>
 
                                     <!-- Dni error block -->
@@ -82,16 +82,28 @@
                                         <label for="inputMontoSolicitado">* Monto Solicitado</label>
                                         <input type="number" formControlName="montoSolicitado" class="form-control form-control-sm" id="inputMontoSolicitado" placeholder="10000">
                                     </div>
+
+
+
                                     <!-- Campo 2: Tipo de Plan -->
                                     <div class="form-group col-md-6">
-                                        <label for="inputTipoDePlan">* Tipo de Plan</label>
-                                        <select formControlName="tipoDePlan"  class="custom-control custom-select custom-control-inline form-control-sm w-100 ng-hide" id="inputTipoDePlan">
-                                      <!-- <option *ngFor="let eTipoDePlan of tiposPlanes" [value]="eTipoDePlan._id"> -->
-                                          <option *ngFor="let eTipoDePlan of tiposPlanes">
-                                            {{eTipoDePlan.nombre}}
-                                          </option>
-                                    </select>
+
+                                        <div class="form-group col-md-6">
+                                            <label for="inputTipoDePlan">* Tipo de Plan</label>
+                                            <input type="text" formControlName="tipoDePlan" class="form-control form-control-sm" id="inputTipoDePlan">
+                                        </div>
+
+
+                                        <!--    <label for="inputTipoDePlan">* Tipo de Plan</label>
+                                         <select formControlName="tipoDePlan" class="custom-control custom-select custom-control-inline form-control-sm w-100 ng-hide" id="inputTipoDePlan">
+                                              <option *ngFor="let eTipoDePlan of tiposPlanes">
+                                                {{eTipoDePlan.nombre}}
+                                              </option>
+                                        </select> -->
+
                                     </div>
+
+
                                     <!-- montoSolicitado error block -->
                                     <div *ngIf="montoSolicitado.invalid && montoSolicitado.touched" class="col-sm-6 text-danger">
                                         <div *ngIf="montoSolicitado.errors['required']">
@@ -101,26 +113,35 @@
                                 </div>
                                 <!-- Campo 3: Plan-->
                                 <div class="form-row align-items-cente ng-hide">
+
                                     <div class="form-group col-md-4">
                                         <label for="inputPlan">* Plan</label>
-                                        <select formControlName="plan"  class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputPlan">
+                                        <input type="text" formControlName="plan" class="form-control form-control-sm" id="inputPlan">
+                                    </div>
+
+                                    <!-- <div class="form-group col-md-4">
+                                        <label for="inputPlan">* Plan</label>
+                                        <select formControlName="plan" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputPlan">
                                       <option *ngFor="let fPlan of planes">
                                           {{fPlan.cantidadCuotas}}
                                       </option>
                                     </select>
-                                    </div>
+                                    </div> -->
+
+
+
                                     <div class="form-group col-md-4">
                                         <input formControlName="cobroDomicilio" type="checkbox" id="cobranzaDomicilio" value="cobroDomicilio"> <label for="cobranzaDomicilio">Cobranza en domicilio</label>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <span class="btn btn-outline-primary ng-hide" >Ver Plan de Pago</span>
+                                        <span class="btn btn-outline-primary ng-hide">Ver Plan de Pago</span>
                                     </div>
                                 </div>
 
-                               <div class="form-row text-center">
+                                <div class="form-row text-center">
                                     <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters"></ng2-smart-table>
                                 </div>
-                            
+
 
                                 <div class="form-row text-right">
                                     <div class="col-12">
@@ -145,7 +166,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <span class="btn btn-outline-primary ng-hide" >Buscar</span>
+                                        <span class="btn btn-outline-primary ng-hide">Buscar</span>
                                     </div>
 
                                     <!-- Dni error block -->
@@ -191,7 +212,7 @@
                                         <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20303003000">
                                     </div>
                                     <div class="col-md-6">
-                                        <span class="btn btn-outline-primary ng-hide" >Buscar</span>
+                                        <span class="btn btn-outline-primary ng-hide">Buscar</span>
                                     </div>
                                 </div>
 
@@ -243,44 +264,42 @@
 
 
 
-                                <!-- Campo 2:  Numero de Legajo-->
-                                <div class="form-group">
-                                    <label for="numeroLegajo">* Nro. Legajo</label>
-                                    <input type="text" formControlName="numeroLegajo" class="form-control form-control-sm" id="inputnumeroLegajo" placeholder="111">
-                                </div>
-
-
                                 <h4>Referencias del Titular</h4>
                                 <!-- Campo 3: Combo Referencia Titular -->
-                                <div class="form-group">
-                                    <label for="inputReferenciaTitular">* Referencia del Titular</label>
-                                    <select formControlName="tipoReferenciaTitular" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputReferenciaTitular">
-                                    <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
-                                        {{eReferencia.nombre}}
-                                      </option>
-                                    </select>
-                                </div>
+                                <div class="form-row text-left">
 
-                                <!-- Campo 4: Checkbox Referencias TItular -->
-                                <div class="form-group">
-                                    <div class="form-check" *ngFor="let tag of referenciaTitulares; let i=index;">
-                                        <label class="form-check-label" for="tag{{tag.item}}">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            id="tag{{tag._id}}"
-                                            name="tagOptionsReferenciaTitular"
-                                            (change)="changeCheckboxReferenciaTitular(i)"
-                                            >
-                                            {{tag.item}}
-                                        </label>
+
+                                    <!-- Campo 4: Checkbox Referencias TItular -->
+                                    <div class="form-group col-md-8">
+                                        <div class="form-check" *ngFor="let tag of referenciaTitulares; let i=index;">
+                                            <label class="form-check-label" for="tag{{tag.item}}">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                id="tag{{tag._id}}"
+                                                name="tagOptionsReferenciaTitular"
+                                                (change)="changeCheckboxReferenciaTitular(i)"
+                                                >
+                                                {{tag.item}}
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <label class="badge badge-secondary">Calificación: </label>
+                                        <p class="badge badge-warning"> {{ calificacionTitular | percent}}</p>
+
+                                        <div class="form-group">
+                                            <label for="inputReferenciaTitular"></label>
+                                            <select formControlName="tipoReferenciaTitular" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputReferenciaTitular">
+                                          <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
+                                              {{eReferencia.nombre}}
+                                            </option>
+                                          </select>
+                                        </div>
                                     </div>
                                 </div>
-
-
-
-
-
 
                                 <!-- Campo 5: TextArea Comentario Referencias Titular-->
                                 <div class="form-row text-left">
@@ -291,44 +310,41 @@
                                     </div>
                                 </div>
 
-
+                                <hr size="30">
 
                                 <h4>Referencias del Comercio</h4>
-                                <!-- Campo 6: Combo Referencia Comercio -->
-                                <div class="form-group">
-                                    <label for="inputTipoReferenciaComercio">* Referencia del Comercio</label>
-                                    <select formControlName="tipoReferenciaComercio" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoReferenciaComercio">
-                                        <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
-                                                {{eReferencia.nombre}}
-                                        </option>
-                                    </select>
-                                </div>
 
-                                <!-- Campo 7: Checkbox Referencias Comercio -->
-                                <!--   <div class="form-group">
-                                    <label formArrayName="itemsReferenciasGarante" *ngFor="let order of creditoForm.controls.documentaciones.controls; let i=i ndex">
-                                    <input type="checkbox" [formControlName]="i">
-                                    {{documentaciones[i].name}}
-                                    </label>
-                                </div> -->
+                                <div class="form-row text-left">
+                                    <div class="form-group col-md-8">
+                                        <div class="form-check" *ngFor="let tag of referenciaComercios; let i=index;">
+                                            <label class="form-check-label " for="tag{{tag.item}}">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                id="tag{{tag._id}}"
+                                                name="tagOptionsReferenciaComercios"
+                                                (change)="changeCheckboxReferenciaComercio(i)"
+                                                >
+                                                {{tag.item}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="badge badge-secondary">Calificación: </label>
+                                        <p class="badge badge-warning"> {{ calificacionComercio | percent}}</p>
 
-                                <div class="form-group">
-                                    <div class="form-check" *ngFor="let tag of referenciaComercios; let i=index;">
-                                        <label class="form-check-label " for="tag{{tag.item}}">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            id="tag{{tag._id}}"
-                                            name="tagOptionsReferenciaComercios"
-                                            (change)="changeCheckboxReferenciaComercio(i)"
-                                            >
-                                            {{tag.item}}
-                                        </label>
+                                        <!-- Campo 6: Combo Referencia Comercio -->
+                                        <div class="form-group">
+                                            <label for="inputTipoReferenciaComercio"></label>
+                                            <select formControlName="tipoReferenciaComercio" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoReferenciaComercio">
+                                                <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
+                                                        {{eReferencia.nombre}}
+                                                </option>
+                                            </select>
+                                        </div>
+
                                     </div>
                                 </div>
-
-
-
                                 <!-- Campo 8: Comentario Referencias Comercio-->
                                 <div class="form-row text-left">
                                     <div class="col-md-12">
@@ -337,6 +353,22 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <div class="form-row">
+                                    <!-- Campo 1:  Prefijo de Legajo-->
+                                    <div class="form-group col-md-6">
+                                        <label for="prefijoLegajo">Serie</label>
+                                        <input type="text" formControlName="prefijoLegajo" class="form-control form-control-sm" id="prefijoLegajo">
+                                    </div>
+                                    <!-- Campo 2:  Numero de Legajo-->
+                                    <div class="form-group col-md-6">
+                                        <label for="numeroLegajo">Nro. Legajo</label>
+                                        <input type="text" formControlName="numeroLegajo" class="form-control form-control-sm" id="inputnumeroLegajo" placeholder="111">
+                                    </div>
+                                </div>
+
+
                                 <!--- Buttons Block Solo envia si el form esta validado-->
                                 <div class="form-row text-right">
                                     <div class="col-12">
@@ -352,8 +384,6 @@
 
                                     </div>
                                 </div>
-
-
 
                             </ng-template>
                         </ngb-tab>
@@ -374,3 +404,5 @@
 
 <!-- <button (click)="ngxSmartModalService.getModal( 'myModal').open() ">Open myModal</button>
 <button (click)="ngxSmartModalService.getModal( 'clienteModal').open() ">Open myModal</button> -->
+
+<p>{{creditos | json}}</p>

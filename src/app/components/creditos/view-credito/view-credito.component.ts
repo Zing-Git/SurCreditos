@@ -83,7 +83,7 @@ export class ViewCreditoComponent implements OnInit {
   // plan elegido, cuotas segun el tipo del plan, cuotas de 6, 12, 16 pagos
   planElegido: any;
 
-  characters: TablePlanCuotas[];
+  characters = []; // contendra la informacion de cuotas
 
   thisCreditos: TableCreditos[];
   creditos : TableCreditos;
@@ -117,12 +117,9 @@ export class ViewCreditoComponent implements OnInit {
         title: 'Vencimiento',
         width: '15%',
         filter: false,
-        valuePrepareFunction: (date) => {
-          let raw = new Date(date);
-          let formatted = this.datePipe.transform(raw, 'dd/MM/yyyy');
-          return formatted;
-        }
+        valuePrepareFunction: (cell, row) => { return moment(row.vencimiento).format('DD-MM-YYYY') }
       },
+
       montoInteres: {
         title: 'Interes',
         width: '15%',
@@ -168,6 +165,10 @@ export class ViewCreditoComponent implements OnInit {
   ngOnInit() {
 
     this.creditos =  this.creditosService.Storage;
+    this.characters = this.creditos.planPagos.cuotas;
+
+    console.log(this.creditos);
+
     this.router.params.subscribe(params => {
       this.idDni = params['id'];
       //creditos = params['character'];
@@ -188,6 +189,9 @@ export class ViewCreditoComponent implements OnInit {
     console.log(this.creditos.cliente.titular.dni);
     console.log(this.creditos.cliente.titular.fechaNacimiento);
     this.cargarFormConDatos();
+
+
+
   }
 
   onFormSubmit() {
@@ -211,6 +215,7 @@ export class ViewCreditoComponent implements OnInit {
 
   /* get documentacion() {    return this.creditoForm.get('documentacion');  } */
   get numeroLegajo() { return this.creditoForm.get('numeroLegajo'); }
+  get prefijoLegajo() { return this.creditoForm.get('prefijoLegajo'); }
   get tipoReferenciaTitular() { return this.creditoForm.get('tipoReferenciaTitular'); }
   get itemsReferenciasTitular() { return this.creditoForm.get('itemsReferenciasTitular'); }
   get notaComentarioTitular() { return this.creditoForm.get('notaComentarioTitular'); }
@@ -241,7 +246,6 @@ export class ViewCreditoComponent implements OnInit {
 
           // array de checkbox dinamico
           documentaciones: new FormArray(this.controls),
-          numeroLegajo: new FormControl('', [Validators.required]),
           tipoReferenciaTitular: new FormControl('', [Validators.required]),
           itemsReferenciasTitular: new FormArray(this.controls),
           notaComentarioTitular: new FormControl('', [Validators.required]),
@@ -249,6 +253,8 @@ export class ViewCreditoComponent implements OnInit {
           tipoReferenciaComercio: new FormControl('', [Validators.required]),
           itemsReferenciasComercio: new FormArray(this.controls),
           notaComentarioComercio: new FormControl(''),
+          numeroLegajo: new FormControl('', [Validators.required]),
+          prefijoLegajo: new FormControl(''),
 
 
 
@@ -292,6 +298,7 @@ export class ViewCreditoComponent implements OnInit {
 
       //this.documentaciones.disable();
       this.numeroLegajo.disable();
+      this.prefijoLegajo.disable();
       this.tipoReferenciaTitular.disable();
       this.itemsReferenciasTitular.disable();
       this.notaComentarioTitular.disable();
@@ -314,71 +321,28 @@ export class ViewCreditoComponent implements OnInit {
 
     this.montoSolicitado.setValue( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+this.montoSolicitado));
 
+    this.tipoDePlan.setValue(this.creditos.planPagos.tipoPlan.nombre);
+    this.plan.setValue(this.creditos.planPagos.CantidadCuotas);
+    console.log('XXXXXX PLAN DE PAGO DEL CREDITO: ', this.creditos.planPagos);
+
     this.dniGarante.setValue(this.creditos.garante.titular.dni);
     this.apellidosGarante.setValue(this.creditos.garante.titular.apellidos);
     this.nombresGarante.setValue(this.creditos.garante.titular.nombres);
     this.fechaNacimientoGarante.setValue(this.utilidadesService.formateaDateAAAAMMDD(this.creditos.garante.titular.fechaNacimiento));
-
     this.cuit.setValue(this.creditos.comercio.cuit);
-
     this.razonSocial.setValue(this.creditos.comercio.razonSocial);
-
     this.documentosAPresentar = this.creditos.documentos;
-    this.numeroLegajo.setValue(this.creditos.legajo);
     this.referenciaTitulares = this.creditos.comercio.referencias;
     this.cobroDomicilio.setValue(this.creditos.tieneCobranzaADomicilio);
 
     this.tiposReferencias = this.creditos.comercio.referencias;
    // this.referenciaTitulares = this.creditos.cliente.titular;
+
+    this.numeroLegajo.setValue(this.creditos.legajo);
+    this.prefijoLegajo.setValue(this.creditos.legajo_prefijo);
+
+
   }
-
-    /*
-cargarUsuarioAControles(usuario: any){
-    // Persona
-    this.tipoDni.setValue(usuario.persona.tipoDni.nombre, {onlySelf: true});
-    this.dni.setValue(usuario.persona.dni);
-    this.apellidos.setValue(usuario.persona.apellidos);
-    this.nombres.setValue(usuario.persona.nombres);
-    this.fechaNacimiento.setValue(this.utilidadesService.formateaDateAAAAMMDD(usuario.persona.fechaNacimiento));
-    this.inicializarControlesUsandoGETServices(usuario);
-
-    // Domicilio:
-    this.pais.setValue(usuario.persona.domicilio.pais);
-    // Provincias y Localidades se cargan en el metodo cargarUsuarioAControles, por ser anidada la consulta al WService
-
-    this.barrio.setValue(usuario.persona.domicilio.barrio);
-    this.calle.setValue(usuario.persona.domicilio.calle);
-    this.numeroCasa.setValue(usuario.persona.domicilio.numeroCasa);
-    this.estadoCasa.setValue(usuario.persona.domicilio.estadoCasa.nombre, {onlySelf: true});
-    // this.usuarioForm.controls['estadoCasa'].setValue(usuario.persona.domicilio.estadoCasa.nombre, {onlySelf: true});
-    // Usuario:
-    this.nombreUsuario.setValue(usuario.nombreUsuario);
-    this.clave.setValue('');
-    this.rol.setValue(usuario.rol.nombre, {onlySelf: true});
-    // Contactos:
-    for (const contacto of usuario.contactos) {
-        switch (contacto._id) {
-          case '5b2bae57b44803001445c1d7': {
-            this.codigoPais1.setValue(contacto.codigoPais);
-            this.codigoArea1.setValue(contacto.codigoArea);
-            this.numero1.setValue(contacto.numeroCelular);
-            break;
-          }
-          case '5b2bae57b44803001445c1d9': {
-            this.codigoPais2.setValue(contacto.codigoPais);
-            this.codigoArea2.setValue(contacto.codigoArea);
-            this.numero2.setValue(contacto.numeroCelular);
-            break;
-          }
-          case '5b2bae57b44803001445c1db': {
-            this.email.setValue(contacto.email);
-            break;
-          }
-      }
-    }
-  }
-    */
-
 
   changeCheckboxDocumentacion(i) {
     if (this.documentosAPresentar) {

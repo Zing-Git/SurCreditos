@@ -203,8 +203,7 @@ export class CrudClientesComponent implements OnInit {
       case 'cabecera':
         {
           dataArray.push({
-            legajoLetra: 'Prefijo de Legajo',
-            legajo: 'Legajo',
+           
             id: 'Identificador',
             nombre: 'Nombre Cliente',
             dni: 'DNI'
@@ -214,9 +213,7 @@ export class CrudClientesComponent implements OnInit {
 
       case 'cuerpo': {
         this.characters.forEach(element => {
-          dataArray.push({
-            legajoLetra: element.titular.legajo_prefijo,
-            legajo: element.titular.legajo,
+          dataArray.push({          
             id: element._id,
             nombre: element.titular.apellidos + ', ' + element.titular.nombres,
             dni: element.titular.dni

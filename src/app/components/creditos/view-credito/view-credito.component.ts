@@ -19,6 +19,7 @@ import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.se
 import { UtilidadesService } from '../../../modules/servicios/utiles/utilidades.service';
 import { TableCreditos } from '../crud-creditos/TableCreditos';
 import { NewSession } from '../../../modelo/util/newSession';
+import * as moment from 'moment/moment';
 
 @Component({
   selector: 'app-view-credito',
@@ -83,7 +84,76 @@ export class ViewCreditoComponent implements OnInit {
   planElegido: any;
 
   characters: TablePlanCuotas[];
+
   thisCreditos: TableCreditos[];
+  creditos : TableCreditos;
+
+  settings = {
+
+    actions: {
+      columnTitle: '',
+      add: false,
+      delete: false,
+      edit: false,
+      imprimirPDF: false,
+      position: 'right',
+      custom: [],
+    },
+    columns: {
+      orden: {
+        title: 'Ord.',
+        width: '5%',
+        filter: false,
+      },
+      montoCapital: {
+        title: 'Capital',
+        width: '15%',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          return value === 'montoCapital' ? value : Intl.NumberFormat('es-AR', {style: 'currency', currency: 'ARS'}).format(value);
+        }
+      },
+      vencimiento: {
+        title: 'Vencimiento',
+        width: '15%',
+        filter: false,
+        valuePrepareFunction: (date) => {
+          let raw = new Date(date);
+          let formatted = this.datePipe.transform(raw, 'dd/MM/yyyy');
+          return formatted;
+        }
+      },
+      montoInteres: {
+        title: 'Interes',
+        width: '15%',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          return value === 'montoInteres' ? value : Intl.NumberFormat('es-AR', {style: 'currency', currency: 'ARS'}).format(value);
+        }
+      },
+      montoCobranzaADomicilio: {
+        title: 'Adic. cobro Domic.',
+        width: '20%',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          return value === 'montoCobranzaADomicilio' ? value : Intl.NumberFormat('es-AR', {style: 'currency', currency: 'ARS'}).format(value);
+        }
+      },
+      MontoTotalCuota: {
+        title: 'Total Cuota',
+        width: '30%',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          return value === 'MontoTotalCuota' ? value : Intl.NumberFormat('es-AR', {style: 'currency', currency: 'ARS'}).format(value);
+        }
+      }
+    },
+    pager: {
+      display: true,
+      perPage: 8
+    },
+  };
+
 
   constructor(private router: ActivatedRoute,
     private fb: FormBuilder,
@@ -96,53 +166,33 @@ export class ViewCreditoComponent implements OnInit {
     public ngxSmartModalService: NgxSmartModalService) { }
 
   ngOnInit() {
-    this.session.token = this.loginService.getTokenDeSession();
 
+    this.creditos =  this.creditosService.Storage;
     this.router.params.subscribe(params => {
       this.idDni = params['id'];
+      //creditos = params['character'];
 
+
+     //this.session.token = this.loginService.getTokenDeSession();
       //console.log(this.idDni);
       this.evento = params['evento'];
       console.log(this.evento);
 
       if (this.evento === 'view') { // si es view carga controles deshabilitados, si es edit, habilitados
         this.habilitarControles = false;
-
-
       } else {
         this.habilitarControles = true;
       }
-       });
-    /* this.cargarTablaCreditos();
+    });
     this.cargarformControls();
-
-
-    let creditos : TableCreditos;
-
-    this.thisCreditos.forEach(element =>{
-      creditos = element;
-    });
-    this.cargarFormConDatos(creditos); */
+    console.log(this.creditos.cliente.titular.dni);
+    console.log(this.creditos.cliente.titular.fechaNacimiento);
+    this.cargarFormConDatos();
   }
 
-  cargarTablaCreditos(){
-
-    this.newSession = ({
-      _id: this.idDni,
-      token: this.session.token
-    });
-
-    this.creditosService.postGetCreditoPorId(this.newSession._id,this.newSession.token).subscribe((response: TableCreditos[]) => {
-      this.thisCreditos = response['credito'];
-    });
-    this.thisCreditos.forEach(element=>{
-      element.estado.estadoTerminal;
-    });
-
-
-  }
   onFormSubmit() {
   }
+
   get dni() { return this.creditoForm.get('dni'); }
   get apellidos() { return this.creditoForm.get('apellidos'); }
   get nombres() { return this.creditoForm.get('nombres'); }
@@ -202,6 +252,7 @@ export class ViewCreditoComponent implements OnInit {
 
 
 
+
      // this.creditoForm = this.fb.group({
         // clase usuario
 
@@ -245,18 +296,42 @@ export class ViewCreditoComponent implements OnInit {
       this.itemsReferenciasTitular.disable();
       this.notaComentarioTitular.disable();
 
+
       //tipoReferenciaComercio: new FormControl('', [Validators.required]),
      // itemsReferenciasComercio: new FormArray(this.controls),
      // notaComentarioComercio: new FormControl(''),
 
     }
+
   }
 
-  cargarFormConDatos(datosCreditos: TableCreditos){
+  cargarFormConDatos(){
 
-    this.dni.setValue(datosCreditos.cliente.titular.dni);
-    this.apellidos.setValue(datosCreditos.cliente.titular.apellidos);
-    this.nombres.setValue(datosCreditos.cliente.titular.nombres);
+    this.dni.setValue(this.creditos.cliente.titular.dni);
+    this.apellidos.setValue(this.creditos.cliente.titular.apellidos);
+    this.nombres.setValue(this.creditos.cliente.titular.nombres);
+    this.fechaNacimiento.setValue(this.utilidadesService.formateaDateAAAAMMDD(this.creditos.cliente.titular.fechaNacimiento));
+
+    this.montoSolicitado.setValue( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+this.montoSolicitado));
+
+    this.dniGarante.setValue(this.creditos.garante.titular.dni);
+    this.apellidosGarante.setValue(this.creditos.garante.titular.apellidos);
+    this.nombresGarante.setValue(this.creditos.garante.titular.nombres);
+    this.fechaNacimientoGarante.setValue(this.utilidadesService.formateaDateAAAAMMDD(this.creditos.garante.titular.fechaNacimiento));
+
+    this.cuit.setValue(this.creditos.comercio.cuit);
+
+    this.razonSocial.setValue(this.creditos.comercio.razonSocial);
+
+    this.documentosAPresentar = this.creditos.documentos;
+    this.numeroLegajo.setValue(this.creditos.legajo);
+    this.referenciaTitulares = this.creditos.comercio.referencias;
+    this.cobroDomicilio.setValue(this.creditos.tieneCobranzaADomicilio);
+
+    this.tiposReferencias = this.creditos.comercio.referencias;
+   // this.referenciaTitulares = this.creditos.cliente.titular;
+  }
+
     /*
 cargarUsuarioAControles(usuario: any){
     // Persona
@@ -303,7 +378,6 @@ cargarUsuarioAControles(usuario: any){
     }
   }
     */
-  }
 
 
   changeCheckboxDocumentacion(i) {
@@ -343,180 +417,23 @@ cargarUsuarioAControles(usuario: any){
 
   calcularPlanDePago() {
 
-    this.planPago = {
-      montoSolicitado: this.montoSolicitado.value,
-      cobranzaEnDomicilio: this.cobroDomicilio.value,
-      cantidadCuotas: this.plan.value,
-      tasa: this.planElegido.tasa,
-      diasASumar: this.tipoPlanElegido.diasASumar,
-    };
+    let p : any[];
+    this.creditos.planPagos.cuotas.forEach(element =>{
 
+      this.planPago = {
+        montoSolicitado: element.montoCapital,
+        cobranzaEnDomicilio: this.creditos.tieneCobranzaADomicilio,
+        cantidadCuotas: this.creditos.cantidadCuotas,
+        tasa: +this.creditos.porcentajeInteres,
+        diasASumar: 0
+      };
 
-    this.creditosService.postGetPlanDePago(this.planPago).subscribe(response => {
-      let p = response['planPago'];
-      // Asignacion para cargar la tabla de datos
-      this.characters = p.planPagos;
-    });
+      p.push(this.planPago);
+    })
 
+    this.characters = p;
   }
 
-
-  onChangeTipoPlanes() {
-    this.tipoPlanElegido = this.tiposPlanes.find(x => x.nombre === this.creditoForm.get('tipoDePlan').value);
-    this.planes = this.tipoPlanElegido.plan;
-  }
-
-  onChangePlanes() {
-    let planCuotaElegido = parseInt(this.creditoForm.get('plan').value, 10);
-    this.planElegido = this.planes.find(x => x.cantidadCuotas === planCuotaElegido);
-  }
-
-  buscarClientePorDni() {
-    let dni = this.dni.value;
-    let tipoDeAlta: string;
-    let persona: any;
-    this.switchClienteGarante = 'CLIENTE';
-
-    // 1: si dni no es vacio
-    if (this.dni.value !== '') {
-      // 2: Si el Cliente existe:
-      this.clientesService.postGetClientePorDni(this.session, dni).subscribe(response => {
-        this.cliente = response['clientes'][0];
-        this.cargarClienteForm(this.cliente);
-        console.log('cliente._id: ', this.cliente._id);
-      }, err => {
-        // 3: Si no existe el cliente, puede ser una persona, entonces llenar datos de persona
-        this.usuariosService.postGetPersona(this.session.token, this.dni.value).subscribe(response => {
-          persona = response['personaDB'][0];
-          tipoDeAlta = 'ExistePersona';
-          this.hijo.recibePametros(persona, tipoDeAlta);
-          this.ngxSmartModalService.getModal('clienteModal').open();
-        }, err => {
-          // 4: Si no es persona, entonces hay que darle de alta con ID Persona 0
-          let resp = confirm('Cliente Inexistente, quiere darle de Alta?');
-          if (resp) {
-            tipoDeAlta = 'NoExistePersona';
-            persona = {
-              dni: this.dni.value,
-            };
-            this.hijo.recibePametros(persona, tipoDeAlta);
-            this.ngxSmartModalService.getModal('clienteModal').open();
-          }
-        });
-      });
-    } else {
-      alert('Debe ingresare un número de Dni');
-    }
-
-  }
-
-
-  cargarClienteForm(cliente: any) {
-    this.apellidos.setValue(cliente.titular.apellidos);
-    this.nombres.setValue(cliente.titular.nombres);
-
-    if (cliente.titular.fechaNacimiento !== null) {
-      this.fechaNacimiento.setValue(this.utilidadesService.formateaDateAAAAMMDD(cliente.titular.fechaNacimiento));
-    }
-  }
-
-  buscarComercioPorCuit() {
-    let cuit = this.cuit.value;
-    let tipoDeAlta: string;
-    let comercio: any;
-
-    // 1: si dni no es vacio
-    if (this.cuit.value !== '') {
-      // 2: Si el Comercio con Cuit existe:
-      this.clientesService.postGetComercioPorCuit(this.session, cuit).subscribe(response => {
-        this.comercio = response['comercio'][0];
-        console.log('Comercio Buscado: ', this.comercio);
-        this.cargarComercioForm(this.comercio);
-      }, err => {
-        // 3: Si no existe el comercio, hay que darle de alta
-        let resp = confirm('Comercio Inexistente, quiere darle de Alta?');
-        if (resp) {
-          tipoDeAlta = 'NoExisteComercio';
-          comercio = {
-            cuit: this.cuit.value,
-            idCliente: this.cliente._id
-          };
-          this.hijoComercio.recibePametros(comercio, tipoDeAlta);
-          this.ngxSmartModalService.getModal('comercioModal').open();
-        }
-      });
-    } else {
-      alert('Debe ingresare un número de Dni');
-    }
-  }
-
-  buscarGarantePorDni() {
-    let dni = this.dniGarante.value;
-    let tipoDeAlta: string;
-    let persona: any;
-    this.switchClienteGarante = 'GARANTE';
-
-
-    // 1: si dni no es vacio
-    if (this.dniGarante.value !== '') {
-      // 2: Si el Garante existe:
-      this.clientesService.postGetClientePorDni(this.session, dni).subscribe(response => {
-        this.garante = response['clientes'][0];
-        this.cargarGaranteForm(this.garante);
-      }, err => {
-        // 3: Si no existe el garante, puede ser una persona, entonces llenar datos de persona
-        this.usuariosService.postGetPersona(this.session.token, dni).subscribe(response => {
-          persona = response['personaDB'][0];
-          tipoDeAlta = 'ExistePersona';
-          this.hijo.recibePametros(persona, tipoDeAlta);
-          this.ngxSmartModalService.getModal('clienteModal').open();
-        }, err => {
-          // 4: Si no es persona, entonces hay que darle de alta con ID Persona 0
-          let resp = confirm('Garante Inexistente, quiere darle de Alta?');
-          if (resp) {
-            tipoDeAlta = 'NoExistePersona';
-            persona = {
-              dni: this.dniGarante.value,
-            };
-            this.hijo.recibePametros(persona, tipoDeAlta);
-            this.ngxSmartModalService.getModal('clienteModal').open();
-          }
-        });
-      });
-    } else {
-      alert('Debe ingresare un número de Dni');
-    }
-  }
-
-  cargarGaranteForm(garante: any) {
-    this.apellidosGarante.setValue(garante.titular.apellidos);
-    this.nombresGarante.setValue(garante.titular.nombres);
-    this.fechaNacimientoGarante.setValue(this.utilidadesService.formateaDateAAAAMMDD(garante.titular.fechaNacimiento));
-  }
-  cargarComercioForm(comercio: any) {
-    this.razonSocial.setValue(comercio.razonSocial);
-  }
-
-
-  // METODO QUE COMUNICA AL HIJO FormClienteCOmponent con este FOrm que es el PADRE
-  // ------------------------------------------------------------------------------
-  showCliente(event): void {
-    /*     console.log('CLIENTE GUARDADO: ', event.cliente);
-        console.log('CLIENTE RESULT: ', event.result);
-     */
-    switch (this.switchClienteGarante) {
-      case 'CLIENTE':
-        this.buscarClientePorDni();
-        break;
-      case 'GARANTE':
-        this.buscarGarantePorDni();
-        break;
-    }
-  }
-  showComercio(event): void {
-    this.buscarComercioPorCuit();
-    console.log('COMERCIO GUARDADO: ', event.comercio);
-  }
 
   getReferenciaCliente(){
 

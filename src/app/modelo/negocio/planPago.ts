@@ -1,12 +1,24 @@
 import { Cuota } from './cuota';
-import { TipoPlan } from './tipoPlan';
 
 export class PlanPago{
     cuotas: Cuota[];
     porcentajeCumplimiento: string;
-    finalizado:boolean;
-    _id:string;
-    CantidadCuotas:number;
-    tipoPlan: TipoPlan;
-    __v:number;
+    finalizado: boolean;
+    _id: string;
+    CantidadCuotas: number;
+    __v: number;
+
+    tipoPlan: {
+      plan: any [],
+      id: string,
+      nombre: string,
+      diasASumar: number,
+      orden: number,
+      __v: number
+    };
 }
+
+
+
+
+

@@ -204,7 +204,7 @@ export class FormCreditoComponent implements OnInit {
       itemsReferenciasComercio: new FormArray(this.controls),
       notaComentarioComercio: new FormControl(''),
       prefijoLegajo: new FormControl(''),
-      numeroLegajo:  new FormControl('', [Validators.required]),
+      numeroLegajo:  new FormControl(''),
 
     });
 
@@ -212,6 +212,7 @@ export class FormCreditoComponent implements OnInit {
     this.tipoReferenciaComercio.setValue('5b684e87e4958a3e0cbfddc0'); // calificacion mala
     this.tipoReferenciaComercio.disable();
     this.tipoReferenciaTitular.setValue('5b684e87e4958a3e0cbfddc0'); // calificacion mala
+    this.tipoReferenciaTitular.disable();
     // ----------------------------------
 
 
@@ -263,6 +264,14 @@ export class FormCreditoComponent implements OnInit {
     this.creditoNuevo.prefijoLegajo = this.prefijoLegajo.value;
 
 
+
+    // Agrega el idTipoPlan
+    let identificadorTipoPlan =  this.tiposPlanes.find(x => x.nombre === this.creditoForm.get('tipoDePlan').value);
+    this.creditoNuevo.idTipoPlan = identificadorTipoPlan._id;
+    // ------
+
+
+
     this.getReferenciaCliente();
     this.clientesService.postAgregarReferenciaCliente(this.referenciaCliente).subscribe( resultCliente => {
 
@@ -280,6 +289,8 @@ export class FormCreditoComponent implements OnInit {
           this.clientesService.postAgregarReferenciaComercio(this.referenciaComercio).subscribe( resultComercio => {
               // Alta de Credito
               console.log(resultComercio);
+
+
               this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
                   let respuesta = result;
                   alert('Bien hecho!, Credito generado con éxito');
@@ -288,6 +299,9 @@ export class FormCreditoComponent implements OnInit {
               }, err => {
                   alert('Hubo un problema al registrar la solicitud de credito');
               });
+
+
+
           }, err => {
               alert('Ocurrio un error al asignar la referencia al comercio');
           });
@@ -317,15 +331,18 @@ export class FormCreditoComponent implements OnInit {
   getItemsReferenciasCliente(): any[] {
     // Agrega Referencias al Titular  y Comercio ---------------------
     let itemsReferenciaCliente = [];
+
+
     this.referenciaTitularesElegidos.forEach(element => {
       if (element.referenciaCliente) {
         let valorItem: Object = {
-          item: element._id
+          item: element._id,
+          peso: element.peso
         };
         itemsReferenciaCliente.push(valorItem);
       }
     });
-    console.log('Items Cliente: ', itemsReferenciaCliente);
+    console.log('Items Cliente (Seleccionados): ', itemsReferenciaCliente);
     return itemsReferenciaCliente;
   }
 
@@ -343,7 +360,7 @@ export class FormCreditoComponent implements OnInit {
         itemsReferenciaComercio.push(valorItem);
       }
     });
-    console.log('Items Comercios: ', itemsReferenciaComercio);
+    console.log('Items Comercios (Seleccionados): ', itemsReferenciaComercio);
     return itemsReferenciaComercio;
   }
 
@@ -459,12 +476,15 @@ export class FormCreditoComponent implements OnInit {
       this.tiposPlanes = response['respuesta'].tiposPlanes;
       // Tipo de Referencia: Buena - Mala - Regular
       this.tiposReferencias = response['respuesta'].tiposReferencias;
+      this.prefijoLegajo.setValue('A');
+      this.numeroLegajo.disable();
 
 
       // Carga de combos de referencias
       let referencias = response['respuesta'].itemsReferencia;
       for (let ref of referencias) {
-        if (ref.referenciaCliente) { // si la "referenciaCliente": true es de un Titular
+        if (ref.referenciaCliente) { // si la "referenciaCliente": true es de un Titular, lo pongo en false para inicializar en false
+          ref.referenciaCliente = false;
           this.referenciaTitulares.push(ref);
         } else {                     // si la "referenciaCliente": false es de un comercio
           this.referenciaComercios.push(ref);
@@ -479,7 +499,6 @@ export class FormCreditoComponent implements OnInit {
      this.referenciaTitularesElegidos = JSON.parse(JSON.stringify(this.referenciaTitulares));
      this.referenciaComerciosElegidos = JSON.parse(JSON.stringify(this.referenciaComercios));
 
-
     });
 
   }
@@ -490,18 +509,53 @@ export class FormCreditoComponent implements OnInit {
     }
   }
 
+
   changeCheckboxReferenciaTitular(i) {
+    this.referenciaTitulares[i].referenciaCliente = !this.referenciaTitulares[i].referenciaCliente;
     if (this.referenciaTitulares) {
-      this.referenciaTitulares[i].referenciaCliente = !this.referenciaTitulares[i].referenciaCliente;
-      let itemRTElegido = {
+      /* let itemRTElegido = {
         item: this.referenciaTitulares[i].item,
-        checkboxElegido: !this.referenciaTitulares[i].referenciaCliente,
-      };
+        checkboxElegido: this.referenciaTitulares[i].referenciaCliente,
+      }; */
+      this.referenciaTitularesElegidos[i].referenciaCliente = !this.referenciaTitularesElegidos[i].referenciaCliente;
+     // this.referenciaTitularesElegidos[i].referenciaCliente = itemRTElegido.checkboxElegido;
 
-      this.referenciaTitularesElegidos[i].referenciaCliente = !this.referenciaTitulares[i].referenciaCliente;
-      console.log(itemRTElegido);
+      /* console.log(itemRTElegido); */
       console.log(this.referenciaTitularesElegidos[i]);
+    }
 
+
+
+    // Establecer Valor de Referencia Automatica
+    let cantidadItemsReferenciaIniciales = this.referenciaTitularesElegidos.length; // Entrega el total de items
+
+    console.log('ELEGIDOS: XXXX: ', this.referenciaTitularesElegidos);
+
+    // Calculo del peso de las respuestas
+    let refElegidasTitular = this.getItemsReferenciasCliente();
+
+    let positivos = 0;
+    refElegidasTitular.forEach(element => {
+      positivos = positivos + element.peso;
+    });
+
+    this.calificacionTitular = positivos / cantidadItemsReferenciaIniciales;
+    console.log('POSTIVOS:::::::::::', positivos , 'CALIFICACION:::: ', this.calificacionTitular);
+
+
+
+    let parte = 1 / this.tiposReferencias.length;
+
+    if (this.calificacionTitular >= 0 && this.calificacionTitular <= parte) {
+        this.tipoReferenciaTitular.setValue('5b684e87e4958a3e0cbfddc0'); // calificacion mala
+    } else {
+      if (this.calificacionTitular > parte && this.calificacionTitular <= 2 * parte){
+        this.tipoReferenciaTitular.setValue('5b684e87e4958a3e0cbfddbf'); // calificacion regular
+      } else {
+        if (this.calificacionTitular > 2 * parte && this.calificacionTitular <= 3 * parte){
+          this.tipoReferenciaTitular.setValue('5b684e87e4958a3e0cbfddbe'); // calificacion buena
+        }
+      }
     }
   }
 
@@ -517,7 +571,7 @@ export class FormCreditoComponent implements OnInit {
       console.log(this.referenciaComerciosElegidos[i]);
     }
 
-    // Establecer Valor de Rerencia Atutomatica
+    // Establecer Valor de Referencia Automatica
     let cantidadItemsReferenciaIniciales = this.referenciaComerciosElegidos.length;
 
     // Calculo del peso de las respuestas
@@ -672,6 +726,13 @@ export class FormCreditoComponent implements OnInit {
     this.razonSocial.setValue(comercio.razonSocial);
   }
 
+  changePrefijoLejago() {
+    if (this.prefijoLegajo.value === '0') {
+      this.numeroLegajo.enable();
+    } else {
+      this.numeroLegajo.disable();
+    }
+  }
 
   // METODO QUE COMUNICA AL HIJO FormClienteCOmponent con este FOrm que es el PADRE
   // ------------------------------------------------------------------------------

@@ -13,4 +13,5 @@ export class CreditoNuevo {
       documentos: DocumentoPresentado[];
       legajo: string;
       prefijoLegajo: string;
+      idTipoPlan: string;
 }

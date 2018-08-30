@@ -33,6 +33,7 @@ export class CrudCreditosComponent implements OnInit {
   cantidadTotal = 0;
   estadoCasa : EstadoCasa[];
   // tiposPlanes : Plan[];
+  numeroFactura : string;   
 
   settings = {
 
@@ -150,6 +151,7 @@ export class CrudCreditosComponent implements OnInit {
       //this.provincias = result['respuesta'].provincias;
       this.estadosCasa = result['respuesta'].estadosCasa;
       // this.tiposPlanes = result['respuesta'].tiposPlanes;
+      console.log(this.estadosCasa);
     });
 
   }
@@ -202,7 +204,7 @@ export class CrudCreditosComponent implements OnInit {
     // doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
     doc.text('Reporte General', 150, 10, 'center');
     doc.line(120, 13, 180, 13);   // 13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
-
+        
     doc.autoTable({
       head: this.getData('cabecera'),
       body: this.getData('cuerpo'),
@@ -214,6 +216,20 @@ export class CrudCreditosComponent implements OnInit {
     doc.text('Pagina 1', 150, 200, 'center');
 
     doc.save('reporte.pdf');
+  }
+
+   crearNumeroFactura(legajo_prefijo: string, legajo: string): string{
+    
+    let s = +legajo + "";
+    console.log(s);
+    while (s.length < 6) {
+
+      s = "0" + s
+      console.log(s);
+    };
+    this.numeroFactura = legajo_prefijo + '-' + s;
+
+    return this.numeroFactura;
   }
 
   imprimirPDF(id: string) {
@@ -246,7 +262,14 @@ export class CrudCreditosComponent implements OnInit {
     const today = Date.now();
     doc.setTextColor(0);
     doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
-    doc.text('Legajo Nº:  ' , 130, 30);
+
+    this.characters.forEach(element => {
+      if(element._id === id){
+        this.crearNumeroFactura(element.legajo_prefijo,element.legajo);
+      }
+      
+    });
+    doc.text('Legajo Nº:  ' + this.numeroFactura , 130, 30);
     doc.text('Estado: ', 130, 35);
 
     doc.setFillColor(52, 152, 219)
@@ -261,6 +284,7 @@ export class CrudCreditosComponent implements OnInit {
 
         doc.setTextColor(0);
         doc.text('Apellido y Nombre: ' + element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 20, 53);
+        //doc.text('ACtividad: ' + element.comercio.codigoActividad + ' - ' + element.comercio.descripcionActividad, 80, 53);
         doc.text('Fecha de Nacimiento: ' + moment(element.cliente.titular.fechaNacimiento).format('DD-MM-YYYY') + '              D.N.I.: ' + element.cliente.titular.dni, 20, 58);
       }
     });
@@ -282,7 +306,7 @@ export class CrudCreditosComponent implements OnInit {
         doc.text('Provincia: ' + element.cliente.titular.domicilio.provincia, 130, 80);
         let miEstado: string;
         this.estadosCasa.forEach(estadoC => {
-          if (element.cliente.titular.domicilio.estadoCasa._id == estadoC._id) {
+          if (element.cliente.titular.domicilio.estadoCasa == estadoC._id) {
             miEstado = estadoC.nombre;
           }
 

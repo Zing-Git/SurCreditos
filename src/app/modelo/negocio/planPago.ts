@@ -1,4 +1,5 @@
 import { Cuota } from './cuota';
+import { TipoPlan } from './tipoPlan';
 
 export class PlanPago{
     cuotas: Cuota[];
@@ -6,5 +7,6 @@ export class PlanPago{
     finalizado:boolean;
     _id:string;
     CantidadCuotas:number;
+    tipoPlan: TipoPlan;
     __v:number;
 }

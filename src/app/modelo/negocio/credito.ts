@@ -22,7 +22,9 @@ export class Credito {
     valorCuota: string;
 
     planPagos: PlanPago;
-
+    legajo_prefijo: string;
+    fechaAlta: string;
+    legajo: string;
     usuario: string;
     estado: Estado;
     __v: number;

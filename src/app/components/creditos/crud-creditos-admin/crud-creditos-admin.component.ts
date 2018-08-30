@@ -286,7 +286,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         doc.text('Provincia: ' + element.cliente.titular.domicilio.provincia, 130, 80);
         let miEstado: string;
         this.estadosCasa.forEach(estadoC => {
-          if (element.cliente.titular.domicilio.estadoCasa._id == estadoC._id) {
+          if (element.cliente.titular.domicilio.estadoCasa == estadoC._id) {
             miEstado = estadoC.nombre;
           }
 

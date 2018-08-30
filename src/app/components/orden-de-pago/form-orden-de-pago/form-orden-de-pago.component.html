@@ -21,12 +21,14 @@
                   El número de documento es requerido
               </div>
           </div>
-      </div>
+        </div>
       </form>
       
       
     </div>
-    <ng2-smart-table [settings]="settings" class="table table-hover" [source]="creditos" (custom)="onCustom($event)" #ordenDePagoForm1></ng2-smart-table>
-
+    <div>
+        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #ordenPagoForm></ng2-smart-table>
+    </div>
+    
   </div>
 </div>

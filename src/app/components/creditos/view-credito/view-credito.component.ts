@@ -62,6 +62,8 @@ export class ViewCreditoComponent implements OnInit {
   referenciaTitulares = [];
   referenciaTitularesElegidos = [];
   referenciaComerciosElegidos = [];
+  calificacionReferencia: string;
+  calificacionReferenciaComercio: string;
 
   controls = [];
 
@@ -74,6 +76,7 @@ export class ViewCreditoComponent implements OnInit {
 
   switchClienteGarante: string;
 
+  creditoReferencias: any; // cnotiene el credito que tiene las referencias del titular y del credito para mosgtrar
 
   // documentos que presenta el titular del credito
   documentosAPresentar: DocumentoPresentado[];
@@ -163,21 +166,37 @@ export class ViewCreditoComponent implements OnInit {
     public ngxSmartModalService: NgxSmartModalService) { }
 
   ngOnInit() {
+    // agregar  consulta de credito por id para leer los datos de la ultima pestaña, referencia de titular y comercio
+
 
     this.creditos =  this.creditosService.Storage;
     this.characters = this.creditos.planPagos.cuotas;
 
-    console.log(this.creditos);
+    this.session.token = this.loginService.getTokenDeSession();
+    this.creditosService.postGetCreditoPorId(this.creditos._id, this.session.token).subscribe( result => {
+          this.creditoReferencias = result['credito'][0];
+
+          this.referenciaTitulares = this.creditoReferencias.cliente.referencias.pop().itemsReferencia;
+          // console.log(this.referenciaTitulares);
+          this.calificacionReferencia = this.creditoReferencias.cliente.referencias.pop().tipoReferencia.nombre;
+          this.notaComentarioTitular.setValue(this.creditoReferencias.cliente.referencias.pop().comentario);
+
+          let array = this.creditoReferencias.comercio.referencias;
+          this.referenciaComercios = array[array.length - 1].itemsReferencia;
+
+          this.calificacionReferenciaComercio = array[array.length - 1].tipoReferencia.nombre;
+          this.notaComentarioComercio.setValue(array[array.length - 1].comentario);
+    });
 
     this.router.params.subscribe(params => {
       this.idDni = params['id'];
       //creditos = params['character'];
 
 
-     //this.session.token = this.loginService.getTokenDeSession();
+
       //console.log(this.idDni);
       this.evento = params['evento'];
-      console.log(this.evento);
+      /* console.log(this.evento); */
 
       if (this.evento === 'view') { // si es view carga controles deshabilitados, si es edit, habilitados
         this.habilitarControles = false;
@@ -186,8 +205,8 @@ export class ViewCreditoComponent implements OnInit {
       }
     });
     this.cargarformControls();
-    console.log(this.creditos.cliente.titular.dni);
-    console.log(this.creditos.cliente.titular.fechaNacimiento);
+   /*  console.log(this.creditos.cliente.titular.dni);
+    console.log(this.creditos.cliente.titular.fechaNacimiento); */
     this.cargarFormConDatos();
 
 
@@ -323,7 +342,7 @@ export class ViewCreditoComponent implements OnInit {
 
     this.tipoDePlan.setValue(this.creditos.planPagos.tipoPlan.nombre);
     this.plan.setValue(this.creditos.planPagos.CantidadCuotas);
-    console.log('XXXXXX PLAN DE PAGO DEL CREDITO: ', this.creditos.planPagos);
+    /* console.log('XXXXXX PLAN DE PAGO DEL CREDITO: ', this.creditos.planPagos); */
 
     this.dniGarante.setValue(this.creditos.garante.titular.dni);
     this.apellidosGarante.setValue(this.creditos.garante.titular.apellidos);
@@ -331,17 +350,17 @@ export class ViewCreditoComponent implements OnInit {
     this.fechaNacimientoGarante.setValue(this.utilidadesService.formateaDateAAAAMMDD(this.creditos.garante.titular.fechaNacimiento));
     this.cuit.setValue(this.creditos.comercio.cuit);
     this.razonSocial.setValue(this.creditos.comercio.razonSocial);
-    this.documentosAPresentar = this.creditos.documentos;
-    this.referenciaTitulares = this.creditos.comercio.referencias;
     this.cobroDomicilio.setValue(this.creditos.tieneCobranzaADomicilio);
 
-    this.tiposReferencias = this.creditos.comercio.referencias;
-   // this.referenciaTitulares = this.creditos.cliente.titular;
 
     this.numeroLegajo.setValue(this.creditos.legajo);
     this.prefijoLegajo.setValue(this.creditos.legajo_prefijo);
 
 
+    /* console.log('DOCUMENTOS XXX', this.creditos.documentos); */
+
+    this.documentosAPresentar = this.creditos.documentos;
+    this.tiposReferencias = this.creditos.comercio.referencias;
   }
 
   changeCheckboxDocumentacion(i) {
@@ -351,7 +370,7 @@ export class ViewCreditoComponent implements OnInit {
   }
 
   changeCheckboxReferenciaTitular(i) {
-    if (this.referenciaTitulares) {
+/*     if (this.referenciaTitulares) {
       this.referenciaTitulares[i].referenciaCliente = !this.referenciaTitulares[i].referenciaCliente;
       let itemRTElegido = {
         item: this.referenciaTitulares[i].item,
@@ -362,11 +381,11 @@ export class ViewCreditoComponent implements OnInit {
       console.log(itemRTElegido);
       console.log(this.referenciaTitularesElegidos[i]);
 
-    }
+    } */
   }
 
   changeCheckboxReferenciaComercio(i) {
-    this.referenciaComercios[i].referenciaCliente = !this.referenciaComercios[i].referenciaCliente;
+/*     this.referenciaComercios[i].referenciaCliente = !this.referenciaComercios[i].referenciaCliente;
     if (this.referenciaComercios) {
       let itemRTElegido = {
         item: this.referenciaComercios[i].item,
@@ -376,12 +395,12 @@ export class ViewCreditoComponent implements OnInit {
       console.log(itemRTElegido);
       console.log(this.referenciaComerciosElegidos[i]);
 
-    }
+    } */
   }
 
   calcularPlanDePago() {
 
-    let p : any[];
+/*     let p : any[];
     this.creditos.planPagos.cuotas.forEach(element =>{
 
       this.planPago = {
@@ -395,7 +414,7 @@ export class ViewCreditoComponent implements OnInit {
       p.push(this.planPago);
     })
 
-    this.characters = p;
+    this.characters = p; */
   }
 
 

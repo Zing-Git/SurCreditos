@@ -1,7 +1,7 @@
 export interface ReferenciaComercio {
   token: string;
   comercio: {
-      id: string,
+      _id: string,
       referencia: {
         _id: string,
         tipoReferencia: string,

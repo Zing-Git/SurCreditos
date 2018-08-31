@@ -176,6 +176,8 @@ export class ViewCreditoComponent implements OnInit {
     this.creditosService.postGetCreditoPorId(this.creditos._id, this.session.token).subscribe( result => {
           this.creditoReferencias = result['credito'][0];
 
+
+          // Vañidar cantidad de referencias de titulares y comercios
           this.referenciaTitulares = this.creditoReferencias.cliente.referencias.pop().itemsReferencia;
           // console.log(this.referenciaTitulares);
           this.calificacionReferencia = this.creditoReferencias.cliente.referencias.pop().tipoReferencia.nombre;
@@ -321,6 +323,7 @@ export class ViewCreditoComponent implements OnInit {
       this.tipoReferenciaTitular.disable();
       this.itemsReferenciasTitular.disable();
       this.notaComentarioTitular.disable();
+      this.notaComentarioComercio.disable();
 
 
       //tipoReferenciaComercio: new FormControl('', [Validators.required]),

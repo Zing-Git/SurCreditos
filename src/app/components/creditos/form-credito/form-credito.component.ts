@@ -382,7 +382,7 @@ export class FormCreditoComponent implements OnInit {
     this.referenciaComercio = {
       token: this.session.token,
       comercio: {
-        id: this.comercio._id,
+        _id: this.comercio._id, // Se cambio a _id, antes estaba con id sin guion, eso daba error al recuperar las referencias
         referencia: {
           _id: '0',
           tipoReferencia: this.tipoReferenciaComercio.value,

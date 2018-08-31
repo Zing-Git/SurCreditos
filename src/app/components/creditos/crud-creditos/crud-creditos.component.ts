@@ -151,7 +151,7 @@ export class CrudCreditosComponent implements OnInit {
       //this.provincias = result['respuesta'].provincias;
       this.estadosCasa = result['respuesta'].estadosCasa;
       // this.tiposPlanes = result['respuesta'].tiposPlanes;
-      console.log(this.estadosCasa);
+      // console.log(this.estadosCasa);
     });
 
   }
@@ -221,11 +221,11 @@ export class CrudCreditosComponent implements OnInit {
    crearNumeroFactura(legajo_prefijo: string, legajo: string): string{
 
     let s = +legajo + "";
-    console.log(s);
+    // console.log(s);
     while (s.length < 6) {
 
       s = "0" + s
-      console.log(s);
+      // console.log(s);
     };
     this.numeroFactura = legajo_prefijo + '-' + s;
 
@@ -446,7 +446,7 @@ export class CrudCreditosComponent implements OnInit {
       }
     });
 
-    console.log();
+
 
     doc.save('reporteIndividual.pdf');
     this.carroIndividual = 50;
@@ -524,7 +524,7 @@ export class CrudCreditosComponent implements OnInit {
                   .format(Number(p.MontoTotalCuota)).toString()
               });
               let numeroString = (+p.MontoTotalCuota).toFixed(2);
-              console.log(numeroString);
+              // console.log(numeroString);
               this.cantidadTotal = this.cantidadTotal + +(numeroString);    //+ se usa para convertir
             });
             dataArray.push({
@@ -537,7 +537,7 @@ export class CrudCreditosComponent implements OnInit {
                 .format(Number(this.cantidadTotal)).toString(),
             });
             this.carroIndividual = this.carroIndividual + 5;
-            console.log(this.carroIndividual);
+            // console.log(this.carroIndividual);
           }
         });
       }

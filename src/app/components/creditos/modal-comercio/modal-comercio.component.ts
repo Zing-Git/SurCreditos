@@ -136,13 +136,13 @@ constructor(private fb: FormBuilder,
 
   guardar(event) {
     let comercioC = this.capturarValoresDeFormulario();
-    console.log('A guardar: ', JSON.stringify(comercioC));
+    // console.log('A guardar: ', JSON.stringify(comercioC));
 
     this.clientesService.postGuardarComercio(comercioC).subscribe( result => {
       if (result) {
         this.clientesService.postGetComercioPorCuit(this.session, this.cuit.value).subscribe ( res => {
           let comercioEncontrado = res['comercio'][0];
-          console.log('Comercio Guardado y Encontrado: ', comercioEncontrado);
+          // console.log('Comercio Guardado y Encontrado: ', comercioEncontrado);
           this.pasameDatosDelComercio.emit({comercio: comercioEncontrado});
           alert('El Comercio se guardo con éxito');
         });

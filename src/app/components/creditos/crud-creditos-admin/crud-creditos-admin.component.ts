@@ -117,7 +117,7 @@ export class CrudCreditosAdminComponent implements OnInit {
     this.creditosService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
       this.characters = response['creditos'];
     });
-    console.log(this.characters);
+   /*  console.log(this.characters); */
     this.cargarControlesCombos();
     this.getAllUsuarios();
 
@@ -203,12 +203,12 @@ export class CrudCreditosAdminComponent implements OnInit {
         let nuevoCredito = {
           idCredito: element._id,
           estado: idNuevoEstado,   // '5b72b281708d0830d07f3562'        // element.estado._id
-          nombre_nuevo_estado: nuevoEstado,           // APROBADO RECHASADO OTRO,          
+          nombre_nuevo_estado: nuevoEstado,           // APROBADO RECHASADO OTRO,
           cliente: element.cliente._id,
           monto: element.montoPedido,
           nombre_estado_actual: element.estado.nombre,
-          token: this.session.token          
-        };       
+          token: this.session.token
+        };
 
         this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result=>{
           let respuesta = result;
@@ -441,7 +441,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         {
           dataArray.push({
             razonSocial: 'Razon Social',
-            
+
             montoPedido: 'Monto Pedido',
             cantidadCuotas: 'Cant. Cuotas',
             valorCuota: 'Valor de Cuota',
@@ -458,7 +458,7 @@ export class CrudCreditosAdminComponent implements OnInit {
           this.lineaDeCarro = this.lineaDeCarro + 10;
           dataArray.push({
             razonSocial: element.comercio.razonSocial,
-            
+
             montoPedido: element.montoPedido,
             cantidadCuotas: element.cantidadCuotas,
 

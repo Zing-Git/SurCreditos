@@ -33,7 +33,7 @@ export class CrudCreditosComponent implements OnInit {
   cantidadTotal = 0;
   estadoCasa : EstadoCasa[];
   // tiposPlanes : Plan[];
-  numeroFactura : string;   
+  numeroFactura : string;
 
   settings = {
 
@@ -139,10 +139,10 @@ export class CrudCreditosComponent implements OnInit {
     this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
      this.characters = response['credito'];
     });
-    
-    
+
+
     this.cargarControlesCombos();
-   
+
   }
 
   private cargarControlesCombos() {
@@ -161,7 +161,7 @@ export class CrudCreditosComponent implements OnInit {
     const evento = (`${event.action}`);
     const dni = (`${event.data.dni}`);
     const id = (`${event.data._id}`);
-    
+
     switch (evento) {
       case 'view': {
         //this.router.navigate(['formclienteviewedit', evento, dni]);
@@ -204,7 +204,7 @@ export class CrudCreditosComponent implements OnInit {
     // doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
     doc.text('Reporte General', 150, 10, 'center');
     doc.line(120, 13, 180, 13);   // 13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
-        
+
     doc.autoTable({
       head: this.getData('cabecera'),
       body: this.getData('cuerpo'),
@@ -219,7 +219,7 @@ export class CrudCreditosComponent implements OnInit {
   }
 
    crearNumeroFactura(legajo_prefijo: string, legajo: string): string{
-    
+
     let s = +legajo + "";
     console.log(s);
     while (s.length < 6) {
@@ -267,7 +267,7 @@ export class CrudCreditosComponent implements OnInit {
       if(element._id === id){
         this.crearNumeroFactura(element.legajo_prefijo,element.legajo);
       }
-      
+
     });
     doc.text('Legajo Nº:  ' + this.numeroFactura , 130, 30);
     doc.text('Estado: ', 130, 35);

@@ -27,8 +27,5 @@ export class Credito {
     legajo: string;
     usuario: string;
     estado: Estado;
-    legajo: string; // Agregó Jorge
-    fechaAlta: string;
-    legajo_prefijo: string;  //agrego pedro
     __v: number;
 }

@@ -270,7 +270,7 @@
 
 
                                     <!-- Campo 4: Checkbox Referencias TItular -->
-                                    <div class="form-group col-md-8">
+                                    <!--  <div class="form-group col-md-8">
                                         <div class="form-check" *ngFor="let tag of referenciaTitulares; let i=index;">
                                             <label class="form-check-label" for="tag{{tag.item}}">
                                             <input
@@ -283,10 +283,17 @@
                                                 {{tag.item}}
                                             </label>
                                         </div>
+                                    </div> -->
+
+                                    <div class="form-group col-md-8">
+                                        <ul>
+                                            <li *ngFor="let ref of referenciaTitulares">
+                                                {{ ref.item }}
+                                            </li>
+                                        </ul>
                                     </div>
 
-
-                                    <div class="col-md-4">
+                                    <!-- <div class="col-md-4">
                                         <label class="badge badge-secondary">Calificación: </label>
                                         <p class="badge badge-warning"> {{ calificacionTitular | percent}}</p>
 
@@ -298,7 +305,15 @@
                                             </option>
                                           </select>
                                         </div>
+                                    </div> -->
+
+
+
+                                    <div class="form-group col-md-4">
+                                        <label class="badge badge-secondary">Calificación</label>
+                                        <p class="badge badge-warning"> {{ calificacionReferencia}}</p>
                                     </div>
+
                                 </div>
 
                                 <!-- Campo 5: TextArea Comentario Referencias Titular-->
@@ -315,7 +330,7 @@
                                 <h4>Referencias del Comercio</h4>
 
                                 <div class="form-row text-left">
-                                    <div class="form-group col-md-8">
+                                    <!--     <div class="form-group col-md-8">
                                         <div class="form-check" *ngFor="let tag of referenciaComercios; let i=index;">
                                             <label class="form-check-label " for="tag{{tag.item}}">
                                             <input
@@ -328,23 +343,39 @@
                                                 {{tag.item}}
                                             </label>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="badge badge-secondary">Calificación: </label>
-                                        <p class="badge badge-warning"> {{ calificacionComercio | percent}}</p>
+                                    </div> -->
 
-                                        <!-- Campo 6: Combo Referencia Comercio -->
-                                        <div class="form-group">
+                                    <div class="form-group col-md-8">
+                                        <ul>
+                                            <li *ngFor="let ref of referenciaComercios">
+                                                {{ ref.item }}
+                                            </li>
+                                        </ul>
+                                    </div>
+
+
+                                    <!--             <div class="col-md-4">
+                                        <label class="badge badge-secondary">Calificación: </label>
+                                        <p class="badge badge-warning"> {{ calificacionComercio | percent}}</p> -->
+
+                                    <!-- Campo 6: Combo Referencia Comercio -->
+                                    <!--   <div class="form-group">
                                             <label for="inputTipoReferenciaComercio"></label>
                                             <select formControlName="tipoReferenciaComercio" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoReferenciaComercio">
                                                 <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
                                                         {{eReferencia.nombre}}
                                                 </option>
                                             </select>
-                                        </div>
+                                        </div> -->
+                                    <!--
+                                    </div> -->
 
+                                    <div class="form-group col-md-4">
+                                        <label class="badge badge-secondary">Calificación</label>
+                                        <p class="badge badge-warning"> {{ calificacionReferenciaComercio}}</p>
                                     </div>
                                 </div>
+
                                 <!-- Campo 8: Comentario Referencias Comercio-->
                                 <div class="form-row text-left">
                                     <div class="col-md-12">
@@ -399,10 +430,8 @@
 </div>
 
 
-<span class="btn btn-outline-primary" (click)="getReferenciaCliente()"> Ver Referencias</span>
+<!-- <span class="btn btn-outline-primary" (click)="getReferenciaCliente()"> Ver Referencias</span> -->
 
 
 <!-- <button (click)="ngxSmartModalService.getModal( 'myModal').open() ">Open myModal</button>
 <button (click)="ngxSmartModalService.getModal( 'clienteModal').open() ">Open myModal</button> -->
-
-<p>{{creditos | json}}</p>

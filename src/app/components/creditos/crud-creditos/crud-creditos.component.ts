@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Output } from '@angular/core';
 import { Router } from '@angular/router';
 // import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -13,7 +13,8 @@ import { TableCreditos } from './TableCreditos';
 import { ItemsReferencia } from '../../../modelo/negocio/itemsReferencia';
 import * as moment from 'moment/moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
-// import { Plan } from '../../../modelo/negocio/plan';
+import { ViewCreditoComponent } from '../view-credito/view-credito.component';
+import { EventEmitter } from 'protractor';
 
 @Component({
   selector: 'app-crud-creditos',
@@ -22,6 +23,8 @@ import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 })
 export class CrudCreditosComponent implements OnInit {
 
+  //@ViewChild('viewCredito') unCredito: ViewCreditoComponent;
+  //@Output() enviarCredito: EventEmitter<TableCreditos> =new  EventEmitter<TableCreditos>();
   numFactura : string;
   message = '';
   characters: TableCreditos[];
@@ -140,9 +143,7 @@ export class CrudCreditosComponent implements OnInit {
      this.characters = response['credito'];
     });
 
-
     this.cargarControlesCombos();
-
   }
 
   private cargarControlesCombos() {
@@ -151,7 +152,7 @@ export class CrudCreditosComponent implements OnInit {
       //this.provincias = result['respuesta'].provincias;
       this.estadosCasa = result['respuesta'].estadosCasa;
       // this.tiposPlanes = result['respuesta'].tiposPlanes;
-      // console.log(this.estadosCasa);
+      //console.log(this.estadosCasa);
     });
 
   }
@@ -170,9 +171,13 @@ export class CrudCreditosComponent implements OnInit {
             this.character = element;
           }
         });
-
+      
+        //this.enviarCredito.emitEvent.emit(this.character);   //aqui supuestamenbte le mando el credito al formulario que lo necesita
+        //this.unCredito.emitEvent.subscribe(x =>{
+         // console.log(x);
+       //})
         this.creditosService.Storage = this.character;
-        this,this.router.navigate(['viewcredito', evento, id]);
+        this.router.navigate(['viewcredito', evento, id]);
         break;
       }
       case 'edit': {
@@ -221,11 +226,11 @@ export class CrudCreditosComponent implements OnInit {
    crearNumeroFactura(legajo_prefijo: string, legajo: string): string{
 
     let s = +legajo + "";
-    // console.log(s);
+    //console.log(s);
     while (s.length < 6) {
 
       s = "0" + s
-      // console.log(s);
+      //console.log(s);
     };
     this.numeroFactura = legajo_prefijo + '-' + s;
 
@@ -446,7 +451,7 @@ export class CrudCreditosComponent implements OnInit {
       }
     });
 
-
+    console.log();
 
     doc.save('reporteIndividual.pdf');
     this.carroIndividual = 50;
@@ -524,7 +529,7 @@ export class CrudCreditosComponent implements OnInit {
                   .format(Number(p.MontoTotalCuota)).toString()
               });
               let numeroString = (+p.MontoTotalCuota).toFixed(2);
-              // console.log(numeroString);
+              console.log(numeroString);
               this.cantidadTotal = this.cantidadTotal + +(numeroString);    //+ se usa para convertir
             });
             dataArray.push({
@@ -537,7 +542,7 @@ export class CrudCreditosComponent implements OnInit {
                 .format(Number(this.cantidadTotal)).toString(),
             });
             this.carroIndividual = this.carroIndividual + 5;
-            // console.log(this.carroIndividual);
+            console.log(this.carroIndividual);
           }
         });
       }

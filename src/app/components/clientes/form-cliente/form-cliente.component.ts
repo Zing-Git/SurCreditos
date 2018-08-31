@@ -226,7 +226,7 @@ export class FormClienteComponent implements OnInit {
 
   guardar(event) {
     let clienteC = this.capturarValoresDeFormulario();
-    console.log('A guardar: ', JSON.stringify(clienteC));
+    // console.log('A guardar: ', JSON.stringify(clienteC));
 
     this.clientesService.postGuardarCliente(clienteC).subscribe( result => {
       let cliente = result['clienteDB'];

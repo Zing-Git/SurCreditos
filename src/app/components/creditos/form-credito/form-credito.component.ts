@@ -272,23 +272,23 @@ export class FormCreditoComponent implements OnInit {
 
     this.getReferenciaCliente();
 
-    console.log(this.creditoNuevo);
+    // console.log(this.creditoNuevo);
 
     this.clientesService.postAgregarReferenciaCliente(this.referenciaCliente).subscribe( resultCliente => {
 
         if (this.comercio) {
           // Si existe comercio
           this.creditoNuevo.comercio = this.comercio._id;
-          console.log('ID de Comercio: ', this.creditoNuevo.comercio);
+          // console.log('ID de Comercio: ', this.creditoNuevo.comercio);
           // Agregar Referencia a Comercio
           this.getReferenciaComercio();
-          console.log('Referencia COmercio a GUARDAR: ', this.referenciaComercio);
+          // console.log('Referencia COmercio a GUARDAR: ', this.referenciaComercio);
           this.clientesService.postAgregarReferenciaComercio(this.referenciaComercio).subscribe( resultComercio => {
               // Alta de Credito
-              console.log('Result de AgregarReferenciaA Comercio: ', resultComercio);
+              // console.log('Result de AgregarReferenciaA Comercio: ', resultComercio);
               this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
                   let respuesta = result;
-                  console.log('Result de Guardar Credito: ', respuesta);
+                  // console.log('Result de Guardar Credito: ', respuesta);
                   alert('Bien hecho!, Credito generado con éxito');
                   this.router.navigate(['crudcreditos']);
               }, err => {
@@ -308,7 +308,7 @@ export class FormCreditoComponent implements OnInit {
 
 
 
-    console.log(this.creditoNuevo);
+    // console.log(this.creditoNuevo);
   }
 
 
@@ -338,14 +338,14 @@ export class FormCreditoComponent implements OnInit {
         itemsReferenciaCliente.push(valorItem);
       }
     });
-    console.log('Items Cliente (Seleccionados): ', itemsReferenciaCliente);
+    // console.log('Items Cliente (Seleccionados): ', itemsReferenciaCliente);
     return itemsReferenciaCliente;
   }
 
   getItemsReferenciasComercio(): any[] {
     let itemsReferenciaComercio = [];
 
-    console.log(this.referenciaComerciosElegidos);
+    // console.log(this.referenciaComerciosElegidos);
 
     this.referenciaComerciosElegidos.forEach(element => {
       if (element.referenciaCliente) {
@@ -356,12 +356,12 @@ export class FormCreditoComponent implements OnInit {
         itemsReferenciaComercio.push(valorItem);
       }
     });
-    console.log('Items Comercios (Seleccionados): ', itemsReferenciaComercio);
+    // console.log('Items Comercios (Seleccionados): ', itemsReferenciaComercio);
     return itemsReferenciaComercio;
   }
 
   getReferenciaCliente() {
-    console.log('id de Clienteeee: ', this.cliente._id);
+    // console.log('id de Clienteeee: ', this.cliente._id);
     this.referenciaCliente = {
       token: this.session.token,
       cliente: {
@@ -378,7 +378,7 @@ export class FormCreditoComponent implements OnInit {
   }
 
   getReferenciaComercio() {
-    console.log('id de Comercio: ', this.comercio._id);
+    // console.log('id de Comercio: ', this.comercio._id);
     this.referenciaComercio = {
       token: this.session.token,
       comercio: {
@@ -391,7 +391,7 @@ export class FormCreditoComponent implements OnInit {
         }
       }
     };
-    console.log(this.referenciaComercio);
+    // console.log(this.referenciaComercio);
   }
 
 
@@ -428,7 +428,7 @@ export class FormCreditoComponent implements OnInit {
       this.clientesService.postGetClientePorDni(this.session, dni).subscribe( response => {
             this.cliente = response['clientes'][0];
             this.cargarClienteForm(this.cliente);
-            console.log('cliente._id: ', this.cliente._id);
+            // console.log('cliente._id: ', this.cliente._id);
       }, err => {
             // 3: Si no existe el cliente, puede ser una persona, entonces llenar datos de persona
             this.usuariosService.postGetPersona(this.session.token, this.dni.value).subscribe(response => {
@@ -517,7 +517,7 @@ export class FormCreditoComponent implements OnInit {
      // this.referenciaTitularesElegidos[i].referenciaCliente = itemRTElegido.checkboxElegido;
 
       /* console.log(itemRTElegido); */
-      console.log(this.referenciaTitularesElegidos[i]);
+      // console.log(this.referenciaTitularesElegidos[i]);
     }
 
 
@@ -525,7 +525,7 @@ export class FormCreditoComponent implements OnInit {
     // Establecer Valor de Referencia Automatica
     let cantidadItemsReferenciaIniciales = this.referenciaTitularesElegidos.length; // Entrega el total de items
 
-    console.log('ELEGIDOS: XXXX: ', this.referenciaTitularesElegidos);
+    // console.log('ELEGIDOS: XXXX: ', this.referenciaTitularesElegidos);
 
     // Calculo del peso de las respuestas
     let refElegidasTitular = this.getItemsReferenciasCliente();
@@ -536,7 +536,7 @@ export class FormCreditoComponent implements OnInit {
     });
 
     this.calificacionTitular = positivos / cantidadItemsReferenciaIniciales;
-    console.log('POSTIVOS:::::::::::', positivos , 'CALIFICACION:::: ', this.calificacionTitular);
+    // console.log('POSTIVOS:::::::::::', positivos , 'CALIFICACION:::: ', this.calificacionTitular);
 
 
 
@@ -563,8 +563,8 @@ export class FormCreditoComponent implements OnInit {
         checkboxElegido: this.referenciaComercios[i].referenciaCliente,
       };
       this.referenciaComerciosElegidos[i].referenciaCliente = !this.referenciaComerciosElegidos[i].referenciaCliente;
-      console.log(itemRTElegido);
-      console.log(this.referenciaComerciosElegidos[i]);
+      // console.log(itemRTElegido);
+      // console.log(this.referenciaComerciosElegidos[i]);
     }
 
     // Establecer Valor de Referencia Automatica
@@ -578,7 +578,7 @@ export class FormCreditoComponent implements OnInit {
     });
 
     this.calificacionComercio = positivos / cantidadItemsReferenciaIniciales;
-    console.log('POSTIVOS:::::::::::', positivos , 'CALIFICACION:::: ', this.calificacionComercio);
+    // console.log('POSTIVOS:::::::::::', positivos , 'CALIFICACION:::: ', this.calificacionComercio);
 
     let parte = 1 / this.tiposReferencias.length;
 
@@ -655,7 +655,7 @@ export class FormCreditoComponent implements OnInit {
         // 2: Si el Comercio con Cuit existe:
         this.clientesService.postGetComercioPorCuit(this.session, cuit).subscribe( response => {
               this.comercio = response['comercio'][0];
-              console.log('Comercio Buscado: ', this.comercio);
+              // console.log('Comercio Buscado: ', this.comercio);
               this.cargarComercioForm(this.comercio);
         }, err => {
               // 3: Si no existe el comercio, hay que darle de alta
@@ -747,7 +747,7 @@ export class FormCreditoComponent implements OnInit {
   }
   showComercio(event): void {
     this.buscarComercioPorCuit();
-    console.log('COMERCIO GUARDADO: ', event.comercio);
+    // console.log('COMERCIO GUARDADO: ', event.comercio);
   }
 
 

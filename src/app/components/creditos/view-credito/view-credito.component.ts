@@ -170,6 +170,7 @@ export class ViewCreditoComponent implements OnInit {
 
 
     this.creditos =  this.creditosService.Storage;
+    console.log('Var STORAGE: ', this.creditosService.Storage);
     this.characters = this.creditos.planPagos.cuotas;
 
     this.session.token = this.loginService.getTokenDeSession();
@@ -178,14 +179,14 @@ export class ViewCreditoComponent implements OnInit {
 
 
           // Vañidar cantidad de referencias de titulares y comercios
-          this.referenciaTitulares = this.creditoReferencias.cliente.referencias.pop().itemsReferencia;
-          // console.log(this.referenciaTitulares);
+          let arrayClientes = this.creditoReferencias.cliente.referencias;
+          // this.referenciaTitulares = this.creditoReferencias.cliente.referencias.pop().itemsReferencia;
+          this.referenciaTitulares = arrayClientes[arrayClientes.length - 1].itemsReferencia;
           this.calificacionReferencia = this.creditoReferencias.cliente.referencias.pop().tipoReferencia.nombre;
           this.notaComentarioTitular.setValue(this.creditoReferencias.cliente.referencias.pop().comentario);
 
           let array = this.creditoReferencias.comercio.referencias;
           this.referenciaComercios = array[array.length - 1].itemsReferencia;
-
           this.calificacionReferenciaComercio = array[array.length - 1].tipoReferencia.nombre;
           this.notaComentarioComercio.setValue(array[array.length - 1].comentario);
     });
@@ -193,13 +194,9 @@ export class ViewCreditoComponent implements OnInit {
     this.router.params.subscribe(params => {
       this.idDni = params['id'];
       //creditos = params['character'];
-
-
-
       //console.log(this.idDni);
       this.evento = params['evento'];
       /* console.log(this.evento); */
-
       if (this.evento === 'view') { // si es view carga controles deshabilitados, si es edit, habilitados
         this.habilitarControles = false;
       } else {
@@ -207,8 +204,6 @@ export class ViewCreditoComponent implements OnInit {
       }
     });
     this.cargarformControls();
-   /*  console.log(this.creditos.cliente.titular.dni);
-    console.log(this.creditos.cliente.titular.fechaNacimiento); */
     this.cargarFormConDatos();
 
 
@@ -234,7 +229,6 @@ export class ViewCreditoComponent implements OnInit {
   get razonSocial() { return this.creditoForm.get('razonSocial'); }
 
 
-  /* get documentacion() {    return this.creditoForm.get('documentacion');  } */
   get numeroLegajo() { return this.creditoForm.get('numeroLegajo'); }
   get prefijoLegajo() { return this.creditoForm.get('prefijoLegajo'); }
   get tipoReferenciaTitular() { return this.creditoForm.get('tipoReferenciaTitular'); }
@@ -245,7 +239,6 @@ export class ViewCreditoComponent implements OnInit {
   get notaComentarioComercio() { return this.creditoForm.get('notaComentarioComercio'); }
 
 
-  //1_ creo el formulario vacio
   cargarformControls() {
 
         this.creditoForm = this.fb.group({
@@ -278,19 +271,6 @@ export class ViewCreditoComponent implements OnInit {
           prefijoLegajo: new FormControl(''),
 
 
-
-
-     // this.creditoForm = this.fb.group({
-        // clase usuario
-
-        //dni: new FormControl('', [Validators.required]),
-        //apellidos: new FormControl('', [Validators.required]),
-       // nombres: new FormControl('', [Validators.required]),
-       // fechaNacimiento: new FormControl('', [Validators.required]),
-
-        // datos del credito
-
-
       });
 
 
@@ -317,21 +297,13 @@ export class ViewCreditoComponent implements OnInit {
       this.cuit.disable();
       this.razonSocial.disable();
 
-      //this.documentaciones.disable();
       this.numeroLegajo.disable();
       this.prefijoLegajo.disable();
       this.tipoReferenciaTitular.disable();
       this.itemsReferenciasTitular.disable();
       this.notaComentarioTitular.disable();
       this.notaComentarioComercio.disable();
-
-
-      //tipoReferenciaComercio: new FormControl('', [Validators.required]),
-     // itemsReferenciasComercio: new FormArray(this.controls),
-     // notaComentarioComercio: new FormControl(''),
-
     }
-
   }
 
   cargarFormConDatos(){
@@ -341,11 +313,11 @@ export class ViewCreditoComponent implements OnInit {
     this.nombres.setValue(this.creditos.cliente.titular.nombres);
     this.fechaNacimiento.setValue(this.utilidadesService.formateaDateAAAAMMDD(this.creditos.cliente.titular.fechaNacimiento));
 
-    this.montoSolicitado.setValue( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+this.montoSolicitado));
+    this.montoSolicitado.setValue( this.creditos.montoPedido);
 
     this.tipoDePlan.setValue(this.creditos.planPagos.tipoPlan.nombre);
     this.plan.setValue(this.creditos.planPagos.CantidadCuotas);
-    /* console.log('XXXXXX PLAN DE PAGO DEL CREDITO: ', this.creditos.planPagos); */
+
 
     this.dniGarante.setValue(this.creditos.garante.titular.dni);
     this.apellidosGarante.setValue(this.creditos.garante.titular.apellidos);
@@ -360,8 +332,6 @@ export class ViewCreditoComponent implements OnInit {
     this.prefijoLegajo.setValue(this.creditos.legajo_prefijo);
 
 
-    /* console.log('DOCUMENTOS XXX', this.creditos.documentos); */
-
     this.documentosAPresentar = this.creditos.documentos;
     this.tiposReferencias = this.creditos.comercio.referencias;
   }
@@ -373,51 +343,12 @@ export class ViewCreditoComponent implements OnInit {
   }
 
   changeCheckboxReferenciaTitular(i) {
-/*     if (this.referenciaTitulares) {
-      this.referenciaTitulares[i].referenciaCliente = !this.referenciaTitulares[i].referenciaCliente;
-      let itemRTElegido = {
-        item: this.referenciaTitulares[i].item,
-        checkboxElegido: !this.referenciaTitulares[i].referenciaCliente,
-      };
-
-      this.referenciaTitularesElegidos[i].referenciaCliente = !this.referenciaTitulares[i].referenciaCliente;
-      console.log(itemRTElegido);
-      console.log(this.referenciaTitularesElegidos[i]);
-
-    } */
   }
 
   changeCheckboxReferenciaComercio(i) {
-/*     this.referenciaComercios[i].referenciaCliente = !this.referenciaComercios[i].referenciaCliente;
-    if (this.referenciaComercios) {
-      let itemRTElegido = {
-        item: this.referenciaComercios[i].item,
-        checkboxElegido: this.referenciaComercios[i].referenciaCliente,
-      };
-      this.referenciaComerciosElegidos[i].referenciaCliente = !this.referenciaComerciosElegidos[i].referenciaCliente;
-      console.log(itemRTElegido);
-      console.log(this.referenciaComerciosElegidos[i]);
-
-    } */
   }
 
   calcularPlanDePago() {
-
-/*     let p : any[];
-    this.creditos.planPagos.cuotas.forEach(element =>{
-
-      this.planPago = {
-        montoSolicitado: element.montoCapital,
-        cobranzaEnDomicilio: this.creditos.tieneCobranzaADomicilio,
-        cantidadCuotas: this.creditos.cantidadCuotas,
-        tasa: +this.creditos.porcentajeInteres,
-        diasASumar: 0
-      };
-
-      p.push(this.planPago);
-    })
-
-    this.characters = p; */
   }
 
 

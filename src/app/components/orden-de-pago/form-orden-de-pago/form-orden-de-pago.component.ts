@@ -181,7 +181,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         doc.text('Fecha de Alta: ' , 10, 65);
         doc.text('Fecha de Cancelacion: ' , 80, 65);
         doc.text('Capital: ', 10, 70);
-        doc.text('Total a Pagar: ', 80, 70);
+        //doc.text('Total a Pagar: ', 80, 70);
         doc.text('Plan de Pago: ', 10, 75);
         doc.text('Cant. de Cuotas: ', 10, 80);
         doc.text('Total a pagar: .....................................................................................', 10, 90);      
@@ -204,7 +204,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         doc.text( this.datePipe.transform(element.fechaGeneracion, 'dd/MM/yyyy'), 50, 65);
         doc.text( this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 65);
         doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 50, 70);
-        doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 70);
+        //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 70);
         doc.text( element.credito.planPagos.tipoPlan.nombre, 50, 75);       
         doc.text( element.credito.planPagos.CantidadCuotas.toString(), 50, 80);
 
@@ -242,7 +242,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         doc.text('Fecha de Alta: ' , 10, 165);
         doc.text('Fecha de Cancelacion: ' , 80, 165);
         doc.text('Capital: ', 10, 170);
-        doc.text('Total a Pagar: ', 80, 170);
+        //doc.text('Total a Pagar: ', 80, 170);
         doc.text('Plan de Pago: ', 10, 175);
         doc.text('Cant. de Cuotas: ', 10, 180);
         doc.text('Total a pagar: .....................................................................................', 10, 190);      
@@ -269,7 +269,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         doc.text( this.datePipe.transform(element.fechaGeneracion, 'dd/MM/yyyy'), 50, 165);
         doc.text( this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 165);
         doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 50, 170);
-        doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 170);
+        //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 170);
         doc.text( element.credito.planPagos.tipoPlan.nombre, 50, 175);       
         doc.text( element.credito.planPagos.CantidadCuotas.toString(), 50, 180);
 

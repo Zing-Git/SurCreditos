@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Output } from '@angular/core';
 import { Router } from '@angular/router';
 // import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -13,7 +13,8 @@ import { TableCreditos } from './TableCreditos';
 import { ItemsReferencia } from '../../../modelo/negocio/itemsReferencia';
 import * as moment from 'moment/moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
-// import { Plan } from '../../../modelo/negocio/plan';
+import { ViewCreditoComponent } from '../view-credito/view-credito.component';
+import { EventEmitter } from 'protractor';
 
 @Component({
   selector: 'app-crud-creditos',
@@ -22,6 +23,8 @@ import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 })
 export class CrudCreditosComponent implements OnInit {
 
+  //@ViewChild('viewCredito') unCredito: ViewCreditoComponent;
+  //@Output() enviarCredito: EventEmitter<TableCreditos> =new  EventEmitter<TableCreditos>();
   numFactura : string;
   message = '';
   characters: TableCreditos[];
@@ -140,9 +143,7 @@ export class CrudCreditosComponent implements OnInit {
      this.characters = response['credito'];
     });
 
-
     this.cargarControlesCombos();
-
   }
 
   private cargarControlesCombos() {
@@ -151,7 +152,7 @@ export class CrudCreditosComponent implements OnInit {
       //this.provincias = result['respuesta'].provincias;
       this.estadosCasa = result['respuesta'].estadosCasa;
       // this.tiposPlanes = result['respuesta'].tiposPlanes;
-      console.log(this.estadosCasa);
+      //console.log(this.estadosCasa);
     });
 
   }
@@ -170,9 +171,13 @@ export class CrudCreditosComponent implements OnInit {
             this.character = element;
           }
         });
-
+      
+        //this.enviarCredito.emitEvent.emit(this.character);   //aqui supuestamenbte le mando el credito al formulario que lo necesita
+        //this.unCredito.emitEvent.subscribe(x =>{
+         // console.log(x);
+       //})
         this.creditosService.Storage = this.character;
-        this,this.router.navigate(['viewcredito', evento, id]);
+        this.router.navigate(['viewcredito', evento, id]);
         break;
       }
       case 'edit': {
@@ -221,11 +226,11 @@ export class CrudCreditosComponent implements OnInit {
    crearNumeroFactura(legajo_prefijo: string, legajo: string): string{
 
     let s = +legajo + "";
-    console.log(s);
+    //console.log(s);
     while (s.length < 6) {
 
       s = "0" + s
-      console.log(s);
+      //console.log(s);
     };
     this.numeroFactura = legajo_prefijo + '-' + s;
 
@@ -285,25 +290,13 @@ export class CrudCreditosComponent implements OnInit {
         doc.setTextColor(0);
         doc.text('Apellido y Nombre: ' + element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 20, 53);
         //doc.text('ACtividad: ' + element.comercio.codigoActividad + ' - ' + element.comercio.descripcionActividad, 80, 53);
-        doc.text('Fecha de Nacimiento: ' + moment(element.cliente.titular.fechaNacimiento).format('DD-MM-YYYY') + '              D.N.I.: ' + element.cliente.titular.dni, 20, 58);
-      }
-    });
-
-    doc.setFontSize(12);
-    doc.setFillColor(52, 152, 219)
-    doc.roundedRect(10, 60, 182, 8, 3, 3, 'FD')
-
-    doc.setTextColor(255);
-    doc.text('Domicilio Particular', 100, 65, 'center');
-
-    doc.setFontSize(10);
-    doc.setTextColor(0);
-    this.characters.forEach(element => {
-      if (element._id === id) {
-        doc.text('Calle: ' + element.cliente.titular.domicilio.calle, 20, 75);
-        doc.text('Barrio: ' + element.cliente.titular.domicilio.barrio, 130, 75);
-        doc.text('Localidad: ' + element.cliente.titular.domicilio.localidad, 20, 80);
-        doc.text('Provincia: ' + element.cliente.titular.domicilio.provincia, 130, 80);
+        doc.text('Fecha de Nacimiento: ' + moment(element.cliente.titular.fechaNacimiento).format('DD-MM-YYYY') ,20, 58);
+        doc.text('D.N.I.: ' + element.cliente.titular.dni, 130, 58 )
+        //Domicilio
+        doc.text('Calle: ' + element.cliente.titular.domicilio.calle, 20, 63);
+        doc.text('Barrio: ' + element.cliente.titular.domicilio.barrio, 130, 63);
+        doc.text('Localidad: ' + element.cliente.titular.domicilio.localidad, 20, 68);
+        doc.text('Provincia: ' + element.cliente.titular.domicilio.provincia, 130, 68);
         let miEstado: string;
         this.estadosCasa.forEach(estadoC => {
           if (element.cliente.titular.domicilio.estadoCasa == estadoC._id) {
@@ -311,55 +304,53 @@ export class CrudCreditosComponent implements OnInit {
           }
 
         });
-        doc.text('Situacion de la vivienda: ' + miEstado, 20, 85);
-      }
-    });
+        doc.text('Situacion de la vivienda: ' + miEstado, 20, 73);
 
-    doc.setFontSize(12);
-    doc.setFillColor(52, 152, 219)
-    doc.roundedRect(10, 90, 182, 8, 3, 3, 'FD')
+        //Datos de Comercio
 
-    doc.setTextColor(255);
-    doc.text('Domicilio Comercial', 100, 95, 'center');
+        doc.setFontSize(12);
+        doc.setFillColor(52, 152, 219)
+        doc.roundedRect(10, 78, 182, 8, 3, 3, 'FD')
+    
+        doc.setTextColor(255);
+        doc.text('Datos del Comercio', 100, 83, 'center');
+    
+        doc.setFontSize(10);
+        doc.setTextColor(0);
 
-    doc.setFontSize(10);
-    doc.setTextColor(0);
-    this.characters.forEach(element => {
-      if (element._id === id) {
         if (element.comercio.domicilio != null) {
-          doc.text('Calle: ' + element.comercio.domicilio.calle, 20, 105);
-          doc.text('Barrio:' + element.comercio.domicilio.barrio, 130, 105);
-          doc.text('Localidad: ' + element.comercio.domicilio.localidad, 20, 110);
-          doc.text('Provincia: ' + element.comercio.domicilio.provincia, 130, 110);
+          doc.text('Razon Social: ' + element.comercio.razonSocial, 20, 93)//93
+          doc.text('Descripcion: ' + element.comercio.descripcionActividad, 20, 98)//98
+          doc.text('Calle: ' + element.comercio.domicilio.calle, 20, 103);
+          doc.text('Barrio:' + element.comercio.domicilio.barrio, 130, 103);
+          doc.text('Localidad: ' + element.comercio.domicilio.localidad, 20, 108);
+          doc.text('Provincia: ' + element.comercio.domicilio.provincia, 130, 108);
 
-          doc.text('Celular: ', 20, 115);
-          doc.text('T. Fijo:', 80, 115)
-          doc.text('Mail:  ', 130, 115);
+          doc.text('Celular: ', 20, 113);
+          doc.text('T. Fijo:', 80, 113)
+          doc.text('Mail:  ', 130, 113);
         } else {
-          doc.text('Calle: ', 20, 105);
-          doc.text('Barrio:', 130, 105);
-          doc.text('Localidad: ', 20, 110);
-          doc.text('Provincia: ', 130, 110);
+          doc.text('Calle: ', 20, 103);
+          doc.text('Barrio:', 130, 103);
+          doc.text('Localidad: ', 20, 108);
+          doc.text('Provincia: ', 130, 108);
 
-          doc.text('Celular: ', 20, 115);
-          doc.text('T. Fijo:', 80, 115)
-          doc.text('Mail:  ', 130, 115);
+          doc.text('Celular: ', 20, 113);
+          doc.text('T. Fijo:', 80, 113)
+          doc.text('Mail:  ', 130, 113);
         }
-      }
-    });
 
-    doc.setFontSize(12);
-    doc.setFillColor(52, 152, 219)
-    doc.roundedRect(10, 120, 182, 8, 3, 3, 'FD')
+        //Datos de Garante
+        doc.setFontSize(12);
+        doc.setFillColor(52, 152, 219)
+        doc.roundedRect(10, 118, 182, 8, 3, 3, 'FD')
+    
+        doc.setTextColor(255);
+        doc.text('Datos del Garante', 100, 123, 'center');
+    
+        doc.setFontSize(10);
+        doc.setTextColor(0);
 
-    doc.setTextColor(255);
-    doc.text('Datos del Garante', 100, 125, 'center');
-
-    doc.setFontSize(10);
-    doc.setTextColor(0);
-
-    this.characters.forEach(element => {
-      if (element._id === id) {
         if (element.garante.titular != null) {
           doc.text('Apellido y Nombre: ' + element.garante.titular.apellidos + ', ' + element.garante.titular.nombres, 20, 135);
           doc.text('Fecha de Nacimiento: ' + moment(element.garante.titular.fechaNacimiento).format('DD-MM-YYYY'), 20, 140);
@@ -382,6 +373,7 @@ export class CrudCreditosComponent implements OnInit {
             doc.text('Mail:  ', 130, 155);
           }
         }
+
       }
     });
 

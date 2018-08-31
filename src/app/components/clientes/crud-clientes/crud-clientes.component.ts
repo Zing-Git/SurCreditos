@@ -6,11 +6,11 @@ import 'jspdf-autotable';
 import { Session } from '../../../modelo/util/session';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { ClientesService } from '../../../modules/servicios/clientes/clientes.service';
-import { Cliente } from '../../../modelo/negocio/cliente';
-import { observable, Observable } from 'rxjs';
 import { TableClientes } from './TableClientes';
 // Moment
 import * as moment from 'moment';
+import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
+import { elementEnd } from '@angular/core/src/render3/instructions';
 declare let jsPDF;
 
 
@@ -22,9 +22,9 @@ export class CrudClientesComponent implements OnInit {
 
   message = '';
 
-  characters: TableClientes[];
+  characters: any[];
   session = new Session();
-
+  estadosCasa: EstadoCasa[];
   settings = {
 
     actions: {
@@ -35,14 +35,6 @@ export class CrudClientesComponent implements OnInit {
       imprimirPDF: false,
       position: 'right',
       custom: [
-        {
-          name: 'view',
-          title: 'Ver/ ',
-        },
-       /*  {
-          name: 'edit',
-          title: 'Blanquear Clave/ ',
-        }, */
         {
           name: 'imprimirPDF',
           title: 'PDF'
@@ -100,6 +92,7 @@ export class CrudClientesComponent implements OnInit {
     this.clientesService.postGetClientes(this.session).subscribe((response: TableClientes[]) => {
       this.characters = response['clientes'];
     });
+    console.log(this.characters);
   }
 
   onCustom(event) {
@@ -153,44 +146,111 @@ export class CrudClientesComponent implements OnInit {
       },
     });
 
-    //pie de pagina
 
     doc.save('reporte.pdf');
   }
 
   imprimirPDF(id: string, dni: string) {
-    const doc = new jsPDF('l');
-
+    const doc = new jsPDF();
 
     doc.setFontSize(18);
     doc.setTextColor(40);
     doc.setFontStyle('normal');
-    //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
-    doc.text("Reporte de Cliente", 100, 10, 'center');
-    doc.line(70, 13, 130, 13);   //13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
+    const imgData = new Image();
 
+    doc.text('CrediSUR', 20, 15, 'center');
+    doc.setFontSize(7);
+    doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
+
+    doc.setFontSize(12);
+    doc.setTextColor(255);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
+    doc.setFillColor(1);
+
+    doc.text('FICHA DE CLIENTE', 72, 30, 'center');
+
+    doc.setFontSize(10);
+    doc.setTextColor(0)
+    const today = Date.now();
+    doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
+
+    doc.setFillColor(52, 152, 219)
+    doc.setTextColor(255);
+    doc.setFontSize(12);
+    doc.roundedRect(10, 38, 182, 8, 3, 3, 'FD')
+    doc.text('Datos del Titular', 100, 43, 'center');
+
+    doc.setFontSize(10);
     this.characters.forEach(element => {
-      if (element._id == id || element.titular.dni == dni) {
-        doc.setFontSize(24);
-        doc.text('Titular',30,40,'right');
-        doc.line(13, 43, 250, 43);   //13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
-        doc.setFontSize(12);
-        doc.text('Apellido y nombre:  ' + element.titular.apellidos + ', ' + element.titular.nombres, 30, 50);
-        doc.text('Fecha de Alta:  ' + moment(element.fechaAlta).format('DD-MM-YYYY'), 200,50);
-        doc.text('Localidad:  ' + element.titular.domicilio.localidad, 30, 60);
-        doc.text('Calle: ' + element.titular.domicilio.calle, 30, 70);
-        doc.text('Numero: ' + element.titular.domicilio.numeroCasa,30,80);
+      if (element._id === id) {
+
+        doc.setTextColor(0);
+        doc.text('Fecha Alta: ' + moment(element.titular.fechaAlta).format('DD-MM-YYYY'), 130, 25);
+
+        doc.setTextColor(0);
+        doc.text('Apellido y Nombre: ' + element.titular.apellidos + ', ' + element.titular.nombres, 20, 53);
+        //doc.text('ACtividad: ' + element.comercio.codigoActividad + ' - ' + element.comercio.descripcionActividad, 80, 53);
+        doc.text('Fecha de Nacimiento: ' + moment(element.titular.fechaNacimiento).format('DD-MM-YYYY'), 20, 58);
+        doc.text('D.N.I.: ' + element.titular.dni, 130, 58)
+        //Domicilio
+        doc.text('Calle: ' + element.titular.domicilio.calle, 20, 63);
+        doc.text('Barrio: ' + element.titular.domicilio.barrio, 130, 63);
+        doc.text('Localidad: ' + element.titular.domicilio.localidad, 20, 68);
+        doc.text('Provincia: ' + element.titular.domicilio.provincia, 130, 68);
+
+        doc.text('Situacion de la vivienda: ' + element.titular.domicilio.estadoCasa.nombre, 20, 73);
+
+        //Datos de Comercio
+
+        if (element.comercios != null) {
+          doc.setFontSize(12);
+          doc.setFillColor(52, 152, 219)
+          doc.roundedRect(10, 78, 182, 8, 3, 3, 'FD')
+
+          doc.setTextColor(255);
+          doc.text('Datos del Comercio', 100, 83, 'center');
+
+          doc.setFontSize(10);
+          doc.setTextColor(0);
+          let cont: number = 88;
+          element.comercios.forEach(x => {
+
+            cont = cont + 5;
+            doc.text('Razon Social: ' + x.razonSocial, 20, cont);//93
+            cont = cont + 5;
+            doc.text('Descripcion: ' + x.descripcionActividad, 20, cont);//98
+            if (x.domicilio != null) {
+              cont = cont + 5;
+              doc.text('Calle: ' + x.domicilio.calle, 20, cont);
+              doc.text('Barrio:' + x.domicilio.barrio, 130, cont);
+              cont = cont + 5;
+              doc.text('Localidad: ' + x.domicilio.localidad, 20, cont);
+              doc.text('Provincia: ' + x.domicilio.provincia, 130, cont);
+
+              cont = cont + 5;
+              doc.text('Celular: ', 20, cont);
+              doc.text('T. Fijo:', 80, cont)
+              doc.text('Mail:  ', 130, cont);
+            } else {
+              cont = cont + 5;
+              doc.text('Calle: ', 20, 103);
+              doc.text('Barrio:', 130, 103);
+              cont = cont + 5;
+              doc.text('Localidad: ', 20, 108);
+              doc.text('Provincia: ', 130, 108);
+              cont = cont + 5;
+              doc.text('Celular: ', 20, 113);
+              doc.text('T. Fijo:', 80, 113)
+              doc.text('Mail:  ', 130, 113);
+            }
+          });
+          cont = 0;
+
+        }
       }
+
     });
-
-    //doc.autoTable({
-    //  head: this.getData('cabecera'),
-    //  body: this.getData('filtro', id, dni),
-    //  margin: {
-    //    top: 20
-    //  }
-
-    //});
 
     doc.save('reporteIndividual.pdf');
 
@@ -203,7 +263,7 @@ export class CrudClientesComponent implements OnInit {
       case 'cabecera':
         {
           dataArray.push({
-           
+
             id: 'Identificador',
             nombre: 'Nombre Cliente',
             dni: 'DNI'
@@ -213,7 +273,7 @@ export class CrudClientesComponent implements OnInit {
 
       case 'cuerpo': {
         this.characters.forEach(element => {
-          dataArray.push({          
+          dataArray.push({
             id: element._id,
             nombre: element.titular.apellidos + ', ' + element.titular.nombres,
             dni: element.titular.dni

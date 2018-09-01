@@ -13,7 +13,7 @@ import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.se
 })
 export class FormClienteComponent implements OnInit {
   // Usamos el decorador Output para pasar datos al componente PADRE FormCreditoComponent
-  @Output() pasameDatosDelCliente = new EventEmitter();
+  
 
   session: Session;
   clienteForm: FormGroup;
@@ -230,7 +230,7 @@ export class FormClienteComponent implements OnInit {
 
     this.clientesService.postGuardarCliente(clienteC).subscribe( result => {
       let cliente = result['clienteDB'];
-      this.pasameDatosDelCliente.emit({cliente: clienteC, result: cliente});
+      
       alert('Se guardo correctamente...');
     }, err => {
       alert('Hubo un problema al guardar los datos!');

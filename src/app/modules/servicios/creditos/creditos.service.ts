@@ -7,7 +7,7 @@ import { TableCreditos } from '../../../components/creditos/crud-creditos/TableC
 
 
 const cudOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 const cudOptionsXWWForm = {
   headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded'})
@@ -22,7 +22,7 @@ const cudOptionsHtml = {
 })
 export class CreditosService {
   public urlBase = 'https://ws-sur-creditos.herokuapp.com';
-  
+
    // GET URLs
    public urlPostGetPlanDePago = this.urlBase + '/credito/calcular_plan_pago/';
 
@@ -32,6 +32,7 @@ export class CreditosService {
    public urlPostGuardarCredito = this.urlBase + '/credito/guardar/';
    public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado/';
    public urlPostGetCreditoPorId = this.urlBase + '/credito/buscar_credito/';
+   public urlPostGetAllCreditosTodosLosUsuarios = this.urlBase + '/credito/listar_todos/';
 
    public Storage : TableCreditos;
   constructor(public http: HttpClient) { }
@@ -42,15 +43,24 @@ export class CreditosService {
     return this.http.post<any[]>(this.urlPostGetPlanDePago, newSession, cudOptions);
   }
 
+  // Obtiene creditos que tiene el Admin para aprobar/rechazar
   postGetAllCreditos(session: Session): Observable<any[]> {
     const newSession = Object.assign({}, session);
     return this.http.post<any[]>(this.urlPostGetAllCreditos, newSession, cudOptions);
   }
 
+  // Pbtiene creditos de un usuario particular, solo los que genero el usuario
   postGetAllCreditos2(session: Session): Observable<any[]> {
     const newSession = Object.assign({}, session);
     return this.http.post<any[]>(this.urlPostGetAllCreditos2, newSession, cudOptions);
   }
+
+  // Obtiene todos los creditos generados por cualquier usuario, lo puede ver el admisnitrador o root
+    postGetAllCreditosTodosLosUsuarios(session: Session): Observable<any[]> {
+    const newSession = Object.assign({}, session);
+    return this.http.post<any[]>(this.urlPostGetAllCreditosTodosLosUsuarios, newSession, cudOptions);
+  }
+
 
   postGuardarCredito(credito: any): Observable<any[]> {
     const newSession = Object.assign({}, credito);

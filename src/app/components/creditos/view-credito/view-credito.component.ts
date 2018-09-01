@@ -76,7 +76,6 @@ export class ViewCreditoComponent implements OnInit {
 
   switchClienteGarante: string;
 
-  creditoReferencias: any; // cnotiene el credito que tiene las referencias del titular y del credito para mosgtrar
 
   // documentos que presenta el titular del credito
   documentosAPresentar: DocumentoPresentado[];
@@ -89,8 +88,8 @@ export class ViewCreditoComponent implements OnInit {
   characters = []; // contendra la informacion de cuotas
 
   thisCreditos: TableCreditos[];
-  creditos : TableCreditos;
-
+  //creditos : TableCreditos;
+  creditos: any;
   settings = {
 
     actions: {
@@ -170,33 +169,14 @@ export class ViewCreditoComponent implements OnInit {
 
 
     this.creditos =  this.creditosService.Storage;
+
     console.log('Var STORAGE: ', this.creditosService.Storage);
     this.characters = this.creditos.planPagos.cuotas;
 
     this.session.token = this.loginService.getTokenDeSession();
-    this.creditosService.postGetCreditoPorId(this.creditos._id, this.session.token).subscribe( result => {
-          this.creditoReferencias = result['credito'][0];
-
-
-          // Vañidar cantidad de referencias de titulares y comercios
-          let arrayClientes = this.creditoReferencias.cliente.referencias;
-          // this.referenciaTitulares = this.creditoReferencias.cliente.referencias.pop().itemsReferencia;
-          this.referenciaTitulares = arrayClientes[arrayClientes.length - 1].itemsReferencia;
-          this.calificacionReferencia = this.creditoReferencias.cliente.referencias.pop().tipoReferencia.nombre;
-          this.notaComentarioTitular.setValue(this.creditoReferencias.cliente.referencias.pop().comentario);
-
-          let array = this.creditoReferencias.comercio.referencias;
-          this.referenciaComercios = array[array.length - 1].itemsReferencia;
-          this.calificacionReferenciaComercio = array[array.length - 1].tipoReferencia.nombre;
-          this.notaComentarioComercio.setValue(array[array.length - 1].comentario);
-    });
-
     this.router.params.subscribe(params => {
       this.idDni = params['id'];
-      //creditos = params['character'];
-      //console.log(this.idDni);
       this.evento = params['evento'];
-      /* console.log(this.evento); */
       if (this.evento === 'view') { // si es view carga controles deshabilitados, si es edit, habilitados
         this.habilitarControles = false;
       } else {
@@ -205,9 +185,6 @@ export class ViewCreditoComponent implements OnInit {
     });
     this.cargarformControls();
     this.cargarFormConDatos();
-
-
-
   }
 
   onFormSubmit() {
@@ -262,7 +239,7 @@ export class ViewCreditoComponent implements OnInit {
           documentaciones: new FormArray(this.controls),
           tipoReferenciaTitular: new FormControl('', [Validators.required]),
           itemsReferenciasTitular: new FormArray(this.controls),
-          notaComentarioTitular: new FormControl('', [Validators.required]),
+          notaComentarioTitular: new FormControl(''),
 
           tipoReferenciaComercio: new FormControl('', [Validators.required]),
           itemsReferenciasComercio: new FormArray(this.controls),
@@ -334,6 +311,17 @@ export class ViewCreditoComponent implements OnInit {
 
     this.documentosAPresentar = this.creditos.documentos;
     this.tiposReferencias = this.creditos.comercio.referencias;
+
+    let arrayClientes = this.creditos.cliente.referencias;
+    this.referenciaTitulares = arrayClientes[arrayClientes.length - 1].itemsReferencia;
+    this.calificacionReferencia = arrayClientes[arrayClientes.length - 1].tipoReferencia.nombre;
+    this.notaComentarioTitular.setValue(arrayClientes[arrayClientes.length - 1].comentario);
+
+    let arrayComercios = this.creditos.comercio.referencias;
+    this.referenciaComercios = arrayComercios[arrayComercios.length - 1].itemsReferencia;
+    this.calificacionReferenciaComercio = arrayComercios[arrayComercios.length - 1].tipoReferencia.nombre;
+    this.notaComentarioComercio.setValue(arrayComercios[arrayComercios.length - 1].comentario);
+
   }
 
   changeCheckboxDocumentacion(i) {

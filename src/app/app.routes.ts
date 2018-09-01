@@ -15,6 +15,7 @@ import { CrudCreditosAdminComponent } from './components/creditos/crud-creditos-
 import { ModalComercioComponent } from './components/creditos/modal-comercio/modal-comercio.component';
 import { ViewCreditoComponent } from './components/creditos/view-credito/view-credito.component';
 import { FormOrdenDePagoComponent } from './components/orden-de-pago/form-orden-de-pago/form-orden-de-pago.component';
+import { CrudCreditosAdminTodosComponent } from './components/creditos/crud-creditos-admin-todos/crud-creditos-admin-todos.component';
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -29,12 +30,15 @@ export const appRoutes: Routes = [
 { path: 'crudclientes', component: CrudClientesComponent , canActivate: [LoginGuard]},
 { path: 'formcliente', component: FormClienteComponent , canActivate: [LoginGuard]},
 { path: 'crudcreditos', component: CrudCreditosComponent , canActivate: [LoginGuard]},
+
 { path: 'formcredito', component: FormCreditoComponent , canActivate: [LoginGuard]},
 
 { path: 'viewcredito/:evento/:id', component: ViewCreditoComponent, canActivate:[LoginGuard]},
 { path: 'info', component: InfoComponent , canActivate: [LoginGuard]},
 { path: 'login', component: LoginComponent , canActivate: [NoLoginGuard]},
 { path: 'crudcreditosadmin', component: CrudCreditosAdminComponent , canActivate: [NoLoginGuard]},
+{ path: 'crudcreditosadmintodos', component: CrudCreditosAdminTodosComponent , canActivate: [NoLoginGuard]},
+
 { path: 'formcomercio', component: ModalComercioComponent , canActivate: [LoginGuard]},
 { path: 'ordendepago', component: FormOrdenDePagoComponent , canActivate: [NoLoginGuard]},
 

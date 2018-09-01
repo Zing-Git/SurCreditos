@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 // import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -7,36 +7,37 @@ declare let jsPDF;
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { ClientesService } from '../../../modules/servicios/clientes/clientes.service';
 import { CreditosService } from '../../../modules/servicios/creditos/creditos.service';
+import { UsuariosService} from '../../../modules/servicios/usuarios/usuarios.service';
 
 import { Session } from '../../../modelo/util/session';
-import { TableCreditos } from './TableCreditos';
-import { ItemsReferencia } from '../../../modelo/negocio/itemsReferencia';
+import { TableCreditos } from './../../creditos/crud-creditos/TableCreditos';
 import * as moment from 'moment/moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
-import { ViewCreditoComponent } from '../view-credito/view-credito.component';
-import { EventEmitter } from 'protractor';
+import { TableUsuarios } from '../../usuarios/crud-usuarios/TableUsuarios';
+import { Estado } from '../../../modelo/negocio/estado';
+
 
 @Component({
-  selector: 'app-crud-creditos',
-  templateUrl: './crud-creditos.component.html',
-  styleUrls: ['./crud-creditos.component.css']
+  selector: 'app-crud-creditos-admin-todos',
+  templateUrl: './crud-creditos-admin-todos.component.html'
 })
-export class CrudCreditosComponent implements OnInit {
 
-  //@ViewChild('viewCredito') unCredito: ViewCreditoComponent;
-  //@Output() enviarCredito: EventEmitter<TableCreditos> =new  EventEmitter<TableCreditos>();
-  numFactura : string;
+
+
+export class CrudCreditosAdminTodosComponent implements OnInit {
+
   message = '';
   characters: TableCreditos[];
   character: TableCreditos;
+
   estadosCasa: EstadoCasa[];
+  usuarios: TableUsuarios[];
+  estados: Estado[];
   session = new Session();
+
   lineaDeCarro = 40;      // para reporte general
   carroIndividual = 50;    //para reporte individual
   cantidadTotal = 0;
-  estadoCasa : EstadoCasa[];
-  // tiposPlanes : Plan[];
-  numeroFactura : string;
 
   settings = {
 
@@ -53,7 +54,18 @@ export class CrudCreditosComponent implements OnInit {
           title: 'Ver/ ',
         },
         {
-          name: 'imprimirPDF',
+          name: 'aprobar',
+          title: 'Aprobar /',
+        },
+        {
+          name: 'rechazar',
+          title: 'Rechazar /'
+        },{
+          name: 'derivar',
+          title:'Derivar a Root /'
+        },
+        {
+          name: 'PDF',
           title: 'PDF'
         }
       ],
@@ -61,67 +73,42 @@ export class CrudCreditosComponent implements OnInit {
     columns: {
       legajo_prefijo:{
         title: 'Prefijo',
-        width: '8%'
+        width: '5%',
+
       },
       legajo: {
         title: 'Legajo',
-        width: '8%'
+        width: '10%',
+
       },
-      razonSocial: {
-        title: 'Razon Social',
-        width: '30%',
-        valuePrepareFunction: (cell, row) => row.comercio.razonSocial
+      cuit: {
+        title: 'CUIT',
+        width: '15%',
+        valuePrepareFunction: (cell, row) => row.comercio.cuit,
+
+
       },
-      rubro:{
-        title: 'Rubro',
-        width: '30%'
+      nombreApellido:{
+        title:'Titular',
+        width:'15%',
+        valuePrepareFunction :(cell, row) => (row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres),
       },
+      //usuario:{
+      //  title:'Vendedor',
+      //  width:'10%',
+      //  valuePrepareFunction: (value) => this.getUsuario(value)
+      //},
       montoPedido: {
-        title: 'Monto Pedido',
+        title: 'Monto Credito',
         width: '15%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
-        }
-      },
-      cantidadCuotas: {
-        title: 'NºCuotas',
-        width: '10%'
-      },
-      valorCuota: {
-        title: 'Valor Cuota',
-        width: '15%',
-        valuePrepareFunction: (value) => {
-          return value === 'valorCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
-        }
-      },
-      montoInteres: {
-        title: 'Interes',
-        width: '10%',
-        valuePrepareFunction: (value) => {
-          return value === 'montoInteres' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
-        }
-      },
-     /*  tieneCobranzaADomicilio: {
-        title: 'Cobro a Dom.',
-        width: '10%',
-        valuePrepareFunction: (value) => value === true ? 'Si' : 'NO',
-      }, */
-     /*  porcentajeCobranzaADomicilio: {
-        title: 'Cobro a Dom.%',
-        width: '10%'
-      }, */
-      montoCobranzaADomicilio: {
-        title: 'Cobro a Dom',
-        width: '15%',
-        valuePrepareFunction: (value) => {
-          // tslint:disable-next-line:max-line-length
-          return value === 'montoCobranzaADomicilio' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
-        }
+        },
       },
       estado: {
         title: 'Estado',
         width: '15%',
-        valuePrepareFunction: (cell, row) => row.estado.nombre
+        valuePrepareFunction: (cell, row) => row.estado.nombre,
       },
     },
     pager: {
@@ -134,28 +121,24 @@ export class CrudCreditosComponent implements OnInit {
     private router: Router,
     private creditosService: CreditosService,
     private loginService: LoginService,
-    private clientesServices: ClientesService
+    private clientesServices: ClientesService,
+    private usuariosServices: UsuariosService
   ) { }
 
   ngOnInit() {
     this.session.token = this.loginService.getTokenDeSession();
-    this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
-     this.characters = response['credito'];
+
+    // this.creditosService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
+    this.creditosService.postGetAllCreditosTodosLosUsuarios(this.session).subscribe((response: TableCreditos[]) => {
+      this.characters = response['credito'];
+      console.log('CREDITOS OBTENIDOS:  ', this.characters);
     });
 
-    this.cargarControlesCombos();
-  }
-
-  private cargarControlesCombos() {
-
-    this.clientesServices.postGetCombos().subscribe(result => {
-      //this.provincias = result['respuesta'].provincias;
-      this.estadosCasa = result['respuesta'].estadosCasa;
-      // this.tiposPlanes = result['respuesta'].tiposPlanes;
-      //console.log(this.estadosCasa);
-    });
 
   }
+
+
+
 
   onCustom(event) {
     //alert(`Custom event '${event.action}' fired on row №: ${event.data._id}`);
@@ -165,27 +148,33 @@ export class CrudCreditosComponent implements OnInit {
 
     switch (evento) {
       case 'view': {
-        //this.router.navigate(['formclienteviewedit', evento, dni]);
         this.characters.forEach(element =>{
           if(element._id === id){
             this.character = element;
           }
         });
-      
-        //this.enviarCredito.emitEvent.emit(this.character);   //aqui supuestamenbte le mando el credito al formulario que lo necesita
-        //this.unCredito.emitEvent.subscribe(x =>{
-         // console.log(x);
-       //})
         this.creditosService.Storage = this.character;
         this.router.navigate(['viewcredito', evento, id]);
         break;
       }
-      case 'edit': {
-
+      case 'aprobar': {
+       // this.router.navigate(['formclienteviewedit', evento, dni]);
+       this.postAprobarRechazar(id,"APROBADO");
         break;
       }
-
-      case 'imprimirPDF': {
+      case 'rechazar': {
+        this.postAprobarRechazar(id, "RECHAZADO");
+        break;
+      }
+      case 'derivar': {
+        this.postAprobarRechazar(id,"DERIVADO");
+        break;
+      }
+      case 'ver':{
+        this.router.navigate(['crudcreditos']);
+        break;
+      }
+      case 'PDF':{
         this.imprimirPDF(id);
         break;
       }
@@ -196,51 +185,41 @@ export class CrudCreditosComponent implements OnInit {
     }
   }
 
-  nuevoCredito() {
 
-  }
-
-  imprimirClientes() {
-    const doc = new jsPDF('l');
-
-    doc.setFontSize(18);
-    doc.setTextColor(40);
-    doc.setFontStyle('normal');
-    // doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
-    doc.text('Reporte General', 150, 10, 'center');
-    doc.line(120, 13, 180, 13);   // 13 es x1, 13 es y1, 250 es longitud x2, 13 es y2
-
-    doc.autoTable({
-      head: this.getData('cabecera'),
-      body: this.getData('cuerpo'),
-      margin: {
-        top: 35
-      },
+  postAprobarRechazar(id:string, nuevoEstado: string){
+    let idNuevoEstado : string;
+    this.estados.forEach(element=>{
+      if(nuevoEstado == element.nombre){
+        idNuevoEstado= element._id;
+      }
     });
+    console.log(idNuevoEstado);
+    this.characters.forEach(element =>{
+      if(element._id === id){
+        let nuevoCredito = {
+          idCredito: element._id,
+          estado: idNuevoEstado,   // '5b72b281708d0830d07f3562'        // element.estado._id
+          nombre_nuevo_estado: nuevoEstado,           // APROBADO RECHASADO OTRO,
+          cliente: element.cliente._id,
+          monto: element.montoPedido,
+          nombre_estado_actual: element.estado.nombre,
+          token: this.session.token
+        };
 
-    doc.text('Pagina 1', 150, 200, 'center');
-
-    doc.save('reporte.pdf');
-  }
-
-   crearNumeroFactura(legajo_prefijo: string, legajo: string): string{
-
-    let s = +legajo + "";
-    //console.log(s);
-    while (s.length < 6) {
-
-      s = "0" + s
-      //console.log(s);
-    };
-    this.numeroFactura = legajo_prefijo + '-' + s;
-
-    return this.numeroFactura;
+        this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result=>{
+          let respuesta = result;
+          alert('Se actualiso el estado de Credito');
+          console.log(respuesta);
+        }, err=>{
+          alert('Ocurrio un problema');
+        });
+      }
+    });
   }
 
   imprimirPDF(id: string) {
     const doc = new jsPDF();
 
-    //agregar formato A-000009 0-000009 este ultimo manual  => agregar x cantidad de ceros segun el numero de legajo
     ///////////////////////////////////////////////////////////////////////////////////
     doc.setFontSize(18);
     doc.setTextColor(40);
@@ -265,16 +244,9 @@ export class CrudCreditosComponent implements OnInit {
     doc.setTextColor(0)
     doc.text('Vendedor: ' + this.session.nombreUsuario, 130, 20);
     const today = Date.now();
-    doc.setTextColor(0);
+    doc.setTextColor(0)
     doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
-
-    this.characters.forEach(element => {
-      if(element._id === id){
-        this.crearNumeroFactura(element.legajo_prefijo,element.legajo);
-      }
-
-    });
-    doc.text('Legajo Nº:  ' + this.numeroFactura , 130, 30);
+    doc.text('Legajo Nº:  ', 130, 30)
     doc.text('Estado: ', 130, 35);
 
     doc.setFillColor(52, 152, 219)
@@ -289,14 +261,25 @@ export class CrudCreditosComponent implements OnInit {
 
         doc.setTextColor(0);
         doc.text('Apellido y Nombre: ' + element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 20, 53);
-        //doc.text('ACtividad: ' + element.comercio.codigoActividad + ' - ' + element.comercio.descripcionActividad, 80, 53);
-        doc.text('Fecha de Nacimiento: ' + moment(element.cliente.titular.fechaNacimiento).format('DD-MM-YYYY') ,20, 58);
-        doc.text('D.N.I.: ' + element.cliente.titular.dni, 130, 58 )
-        //Domicilio
-        doc.text('Calle: ' + element.cliente.titular.domicilio.calle, 20, 63);
-        doc.text('Barrio: ' + element.cliente.titular.domicilio.barrio, 130, 63);
-        doc.text('Localidad: ' + element.cliente.titular.domicilio.localidad, 20, 68);
-        doc.text('Provincia: ' + element.cliente.titular.domicilio.provincia, 130, 68);
+        doc.text('Fecha de Nacimiento: ' + moment(element.cliente.titular.fechaNacimiento).format('DD-MM-YYYY') + '              D.N.I.: ' + element.cliente.titular.dni, 20, 58);
+      }
+    });
+
+    doc.setFontSize(12);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(10, 60, 182, 8, 3, 3, 'FD')
+
+    doc.setTextColor(255);
+    doc.text('Domicilio Particular', 100, 65, 'center');
+
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    this.characters.forEach(element => {
+      if (element._id === id) {
+        doc.text('Calle: ' + element.cliente.titular.domicilio.calle, 20, 75);
+        doc.text('Barrio: ' + element.cliente.titular.domicilio.barrio, 130, 75);
+        doc.text('Localidad: ' + element.cliente.titular.domicilio.localidad, 20, 80);
+        doc.text('Provincia: ' + element.cliente.titular.domicilio.provincia, 130, 80);
         let miEstado: string;
         this.estadosCasa.forEach(estadoC => {
           if (element.cliente.titular.domicilio.estadoCasa == estadoC._id) {
@@ -304,53 +287,55 @@ export class CrudCreditosComponent implements OnInit {
           }
 
         });
-        doc.text('Situacion de la vivienda: ' + miEstado, 20, 73);
+        doc.text('Situacion de la vivienda: ' + miEstado, 20, 85);
+      }
+    });
 
-        //Datos de Comercio
+    doc.setFontSize(12);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(10, 90, 182, 8, 3, 3, 'FD')
 
-        doc.setFontSize(12);
-        doc.setFillColor(52, 152, 219)
-        doc.roundedRect(10, 78, 182, 8, 3, 3, 'FD')
-    
-        doc.setTextColor(255);
-        doc.text('Datos del Comercio', 100, 83, 'center');
-    
-        doc.setFontSize(10);
-        doc.setTextColor(0);
+    doc.setTextColor(255);
+    doc.text('Domicilio Comercial', 100, 95, 'center');
 
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    this.characters.forEach(element => {
+      if (element._id === id) {
         if (element.comercio.domicilio != null) {
-          doc.text('Razon Social: ' + element.comercio.razonSocial, 20, 93)//93
-          doc.text('Descripcion: ' + element.comercio.descripcionActividad, 20, 98)//98
-          doc.text('Calle: ' + element.comercio.domicilio.calle, 20, 103);
-          doc.text('Barrio:' + element.comercio.domicilio.barrio, 130, 103);
-          doc.text('Localidad: ' + element.comercio.domicilio.localidad, 20, 108);
-          doc.text('Provincia: ' + element.comercio.domicilio.provincia, 130, 108);
+          doc.text('Calle: ' + element.comercio.domicilio.calle, 20, 105);
+          doc.text('Barrio:' + element.comercio.domicilio.barrio, 130, 105);
+          doc.text('Localidad: ' + element.comercio.domicilio.localidad, 20, 110);
+          doc.text('Provincia: ' + element.comercio.domicilio.provincia, 130, 110);
 
-          doc.text('Celular: ', 20, 113);
-          doc.text('T. Fijo:', 80, 113)
-          doc.text('Mail:  ', 130, 113);
+          doc.text('Celular: ', 20, 115);
+          doc.text('T. Fijo:', 80, 115)
+          doc.text('Mail:  ', 130, 115);
         } else {
-          doc.text('Calle: ', 20, 103);
-          doc.text('Barrio:', 130, 103);
-          doc.text('Localidad: ', 20, 108);
-          doc.text('Provincia: ', 130, 108);
+          doc.text('Calle: ', 20, 105);
+          doc.text('Barrio:', 130, 105);
+          doc.text('Localidad: ', 20, 110);
+          doc.text('Provincia: ', 130, 110);
 
-          doc.text('Celular: ', 20, 113);
-          doc.text('T. Fijo:', 80, 113)
-          doc.text('Mail:  ', 130, 113);
+          doc.text('Celular: ', 20, 115);
+          doc.text('T. Fijo:', 80, 115)
+          doc.text('Mail:  ', 130, 115);
         }
+      }
+    });
 
-        //Datos de Garante
-        doc.setFontSize(12);
-        doc.setFillColor(52, 152, 219)
-        doc.roundedRect(10, 118, 182, 8, 3, 3, 'FD')
-    
-        doc.setTextColor(255);
-        doc.text('Datos del Garante', 100, 123, 'center');
-    
-        doc.setFontSize(10);
-        doc.setTextColor(0);
+    doc.setFontSize(12);
+    doc.setFillColor(52, 152, 219)
+    doc.roundedRect(10, 120, 182, 8, 3, 3, 'FD')
 
+    doc.setTextColor(255);
+    doc.text('Datos del Garante', 100, 125, 'center');
+
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+
+    this.characters.forEach(element => {
+      if (element._id === id) {
         if (element.garante.titular != null) {
           doc.text('Apellido y Nombre: ' + element.garante.titular.apellidos + ', ' + element.garante.titular.nombres, 20, 135);
           doc.text('Fecha de Nacimiento: ' + moment(element.garante.titular.fechaNacimiento).format('DD-MM-YYYY'), 20, 140);
@@ -373,7 +358,6 @@ export class CrudCreditosComponent implements OnInit {
             doc.text('Mail:  ', 130, 155);
           }
         }
-
       }
     });
 
@@ -438,7 +422,6 @@ export class CrudCreditosComponent implements OnInit {
       }
     });
 
-    console.log();
 
     doc.save('reporteIndividual.pdf');
     this.carroIndividual = 50;
@@ -446,7 +429,7 @@ export class CrudCreditosComponent implements OnInit {
   }
 
 
-  getData(tipo: string, id: string = null, dni: string = null, items: ItemsReferencia = null): Array<any> {
+  getData(tipo: string, id: string = null, dni: string = null): Array<any> {
     const dataArray = Array<any>();
 
     switch (tipo) {
@@ -454,6 +437,7 @@ export class CrudCreditosComponent implements OnInit {
         {
           dataArray.push({
             razonSocial: 'Razon Social',
+
             montoPedido: 'Monto Pedido',
             cantidadCuotas: 'Cant. Cuotas',
             valorCuota: 'Valor de Cuota',
@@ -470,6 +454,7 @@ export class CrudCreditosComponent implements OnInit {
           this.lineaDeCarro = this.lineaDeCarro + 10;
           dataArray.push({
             razonSocial: element.comercio.razonSocial,
+
             montoPedido: element.montoPedido,
             cantidadCuotas: element.cantidadCuotas,
 
@@ -623,4 +608,7 @@ export class CrudCreditosComponent implements OnInit {
     return Num2Text;
 
   }
+
+
 }
+

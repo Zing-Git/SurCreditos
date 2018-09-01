@@ -48,6 +48,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       edit: false,
       imprimirPDF: false,
       position: 'right',
+
       custom: [
         {
           name: 'view',

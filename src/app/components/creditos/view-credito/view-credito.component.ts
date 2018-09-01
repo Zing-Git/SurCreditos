@@ -344,4 +344,8 @@ export class ViewCreditoComponent implements OnInit {
   getReferenciaCliente(){
 
   }
+  showComercio($event){
+  }
+  showCliente($event){
+  }
 }

@@ -25,6 +25,7 @@ export class FormViewEditUsuarioComponent implements OnInit {
 
   usuarioForm: FormGroup;
   tokenizer = new TokenPost();
+  currentJustify = 'justified';
 
   public tiposDni: TipoDni[];
   public provincias: Provincia[];
@@ -259,6 +260,12 @@ export class FormViewEditUsuarioComponent implements OnInit {
   }
 
   guardar(){
+
+  }
+  onFormSubmit() {
+
+  }
+  resetForm(){
 
   }
 }

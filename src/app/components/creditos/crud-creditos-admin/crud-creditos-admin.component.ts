@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 // import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -232,7 +232,7 @@ export class CrudCreditosAdminComponent implements OnInit {
     // tslint:disable-next-line:max-line-length
     // imgData.src = 'https://npclhg.dm.files.1drv.com/y4m9GX1-ImqUAw21oHBc1AU0cXj8xJb_B4EW3Omo1lOtFGEwYTmTagcQHp6Zn7AjSsa84JUu_H2bNDa_rY8Ubsl2hkNV4xk5zmWlUaN2tz_0i1q39QOAfWe_FLpR-Jfg_J94rvvQpLHLNw5_aT2hWdWRsBclGuCgF9U1i5taliO9DWw7sc4EnxfgcWT_WamOy60jkpOdDzEQIINslKGINAR6A?width=558&height=299&cropmode=none' ;
     // doc.addImage(imgData, 50, 50);
-    doc.text('CrediSUR', 20, 15, 'center');
+    doc.text('Sur Creditos', 20, 15, 'center');
     doc.setFontSize(7);
     doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
 
@@ -400,7 +400,7 @@ export class CrudCreditosAdminComponent implements OnInit {
 
     doc.addPage();
 
-    doc.text('CrediSUR', 20, 15, 'center');
+    doc.text('Sur Creditos', 20, 15, 'center');
     doc.setFontSize(7);
     doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
 

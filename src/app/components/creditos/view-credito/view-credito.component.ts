@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { CreditosService } from '../../../modules/servicios/creditos/creditos.service';
 import { Session } from '../../../modelo/util/session';
@@ -31,8 +31,9 @@ export class ViewCreditoComponent implements OnInit {
   // -------------------------
   @ViewChild(FormClienteComponent) hijo: FormClienteComponent;
   @ViewChild(ModalComercioComponent) hijoComercio: ModalComercioComponent;
+  //@Output() emitEvent:EventEmitter<boolean> = new EventEmitter<boolean>();
   // --------------------------
-
+  character: TableCreditos;
   creditoForm: FormGroup;
   session = new Session();
   newSession = new NewSession();

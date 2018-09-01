@@ -158,7 +158,7 @@ export class CrudClientesComponent implements OnInit {
     doc.setFontStyle('normal');
     const imgData = new Image();
 
-    doc.text('CrediSUR', 20, 15, 'center');
+    doc.text('Sur Creditos', 20, 15, 'center');
     doc.setFontSize(7);
     doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
 
@@ -168,12 +168,12 @@ export class CrudClientesComponent implements OnInit {
     doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
     doc.setFillColor(1);
 
-    doc.text('FICHA DE CLIENTE', 72, 30, 'center');
+    doc.text('DATOS  DE CLIENTE', 72, 30, 'center');
 
     doc.setFontSize(10);
     doc.setTextColor(0)
-    const today = Date.now();
-    doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
+    //const today = Date.now();
+    //doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
 
     doc.setFillColor(52, 152, 219)
     doc.setTextColor(255);
@@ -202,14 +202,14 @@ export class CrudClientesComponent implements OnInit {
         doc.text('Situacion de la vivienda: ' + element.titular.domicilio.estadoCasa.nombre, 20, 73);
 
         //Datos de Comercio
-
+        //console.log(element.comercios);
         if (element.comercios != null) {
           doc.setFontSize(12);
           doc.setFillColor(52, 152, 219)
-          doc.roundedRect(10, 78, 182, 8, 3, 3, 'FD')
+         // doc.roundedRect(10, 78, 182, 8, 3, 3, 'FD')
 
           doc.setTextColor(255);
-          doc.text('Datos del Comercio', 100, 83, 'center');
+          //doc.text('Datos del Comercio', 100, 83, 'center');
 
           doc.setFontSize(10);
           doc.setTextColor(0);

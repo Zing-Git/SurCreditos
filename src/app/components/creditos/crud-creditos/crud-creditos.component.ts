@@ -13,8 +13,7 @@ import { TableCreditos } from './TableCreditos';
 import { ItemsReferencia } from '../../../modelo/negocio/itemsReferencia';
 import * as moment from 'moment/moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
-import { ViewCreditoComponent } from '../view-credito/view-credito.component';
-import { EventEmitter } from 'protractor';
+
 
 @Component({
   selector: 'app-crud-creditos',
@@ -202,7 +201,7 @@ export class CrudCreditosComponent implements OnInit {
 
   imprimirClientes() {
     const doc = new jsPDF('l');
-
+   
     doc.setFontSize(18);
     doc.setTextColor(40);
     doc.setFontStyle('normal');
@@ -245,11 +244,17 @@ export class CrudCreditosComponent implements OnInit {
     doc.setFontSize(18);
     doc.setTextColor(40);
     doc.setFontStyle('normal');
-    const imgData = new Image();
+    //let imagen = new Image;
+    //imagen.onload = function(){
+    //  doc.addImage(this,20,15);
+    
+    //imagen.crossOrigin = "";  
+
+    //imagen.src = "../crud-creditos/crediSur.jpg";
     // tslint:disable-next-line:max-line-length
     // imgData.src = 'https://npclhg.dm.files.1drv.com/y4m9GX1-ImqUAw21oHBc1AU0cXj8xJb_B4EW3Omo1lOtFGEwYTmTagcQHp6Zn7AjSsa84JUu_H2bNDa_rY8Ubsl2hkNV4xk5zmWlUaN2tz_0i1q39QOAfWe_FLpR-Jfg_J94rvvQpLHLNw5_aT2hWdWRsBclGuCgF9U1i5taliO9DWw7sc4EnxfgcWT_WamOy60jkpOdDzEQIINslKGINAR6A?width=558&height=299&cropmode=none' ;
     // doc.addImage(imgData, 50, 50);
-    doc.text('CrediSUR', 20, 15, 'center');
+    doc.text('Sur Creditos', 20, 15, 'center');
     doc.setFontSize(7);
     doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
 
@@ -262,8 +267,9 @@ export class CrudCreditosComponent implements OnInit {
     doc.text('NOTA DE PEDIDO', 72, 30, 'center');
 
     doc.setFontSize(10);
-    doc.setTextColor(0)
-    doc.text('Vendedor: ' + this.session.nombreUsuario, 130, 20);
+    doc.setTextColor(0);
+    let usuario = this.loginService.getDatosDeSession();
+    doc.text('Vendedor: ' + usuario.nombreUsuario, 130, 20);
     const today = Date.now();
     doc.setTextColor(0);
     doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);

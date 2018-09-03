@@ -18,7 +18,9 @@ const cudOptionsHtml = {
   providedIn: 'root'
 })
 export class OrdenPagoService {
-  public urlBase = 'https://ws-sur-creditos.herokuapp.com';
+  // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
+  public urlBase = 'http://18.223.146.82:3001';
+
   public urlPostBuscarOrdenPagoPorDni = this.urlBase + '/credito/buscar_orden_pago/';
   constructor(public http: HttpClient) { }
 

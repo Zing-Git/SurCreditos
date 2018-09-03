@@ -29,7 +29,6 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
   message = '';
   characters: TableCreditos[];
   character: TableCreditos;
-
   estadosCasa: EstadoCasa[];
   usuarios: TableUsuarios[];
   estados: Estado[];
@@ -48,7 +47,6 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       edit: false,
       imprimirPDF: false,
       position: 'right',
-
       custom: [
         {
           name: 'view',
@@ -75,24 +73,42 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       legajo_prefijo:{
         title: 'Prefijo',
         width: '5%',
+        filter: true,
+        sort: true
 
       },
       legajo: {
         title: 'Legajo',
         width: '10%',
+        filter: true,
+        sort: true
 
       },
       cuit: {
         title: 'CUIT',
         width: '15%',
+        filter: true,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.comercio.cuit,
-
 
       },
       nombreApellido:{
         title:'Titular',
         width:'15%',
+        filter: true,
+        sort: true,
         valuePrepareFunction :(cell, row) => (row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres),
+
+
+        filterFunction(cell?: any, search?: string): boolean {
+          if (cell >= search || search === '') {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
+
       },
       //usuario:{
       //  title:'Vendedor',
@@ -134,12 +150,40 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       this.characters = response['credito'];
       console.log('CREDITOS OBTENIDOS:  ', this.characters);
     });
+    this.cargarControlesCombos();
+    this.getAllUsuarios();
 
 
   }
 
+  private cargarControlesCombos() {
+
+    this.clientesServices.postGetCombos().subscribe(result => {
+      this.estadosCasa = result['respuesta'].estadosCasa;
+      this.estados = result['respuesta'].estadosCredito;
+    });
+
+  }
+  private getAllUsuarios(){
+
+    this.usuariosServices.postGetAllUsuarios(this.session).subscribe((response: TableUsuarios[]) => {
+      this.usuarios = response['respuesta'];
+    });
+
+  }
+  private getUsuario(id:string):string{
 
 
+    let miUsuario:string;
+    if(this.usuarios == null){ return this.session.nombreUsuario;}  // retorno si el listado esta vacio
+    this.usuarios.forEach(element =>{
+      if(element._id == id){
+        return element.nombreUsuario;
+      }
+     });
+     //console.log(miUsuario);
+     return miUsuario;
+  }
 
   onCustom(event) {
     //alert(`Custom event '${event.action}' fired on row №: ${event.data._id}`);

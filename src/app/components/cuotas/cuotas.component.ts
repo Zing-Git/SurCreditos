@@ -12,6 +12,7 @@ import { OrdenPagoService } from '../../modules/servicios/ordenPago/orden-pago.s
 import { TableOrdenDePago } from '../orden-de-pago/form-orden-de-pago/TableOrdenPago';
 import 'jspdf-autotable';
 import { TableCreditos } from '../creditos/crud-creditos/TableCreditos';
+import { Cuota } from '../../modelo/negocio/cuota';
 declare let jsPDF;
 
 @Component({
@@ -28,6 +29,7 @@ export class CuotasComponent implements OnInit {
   cliente: Cliente;
   numeroFactura: string;
   formas: any[];
+  cuotas: Cuota[];
 
   settings = {
 
@@ -149,8 +151,10 @@ export class CuotasComponent implements OnInit {
         this.characters = response['ordenDb'];
       });
     }
-    
-      console.log(this.characters);
+    this.characters.forEach(element =>{
+      this.cuotas= element.formaPago.cuotas;
+    })
+      console.log(this.cuotas);
     
   }
 

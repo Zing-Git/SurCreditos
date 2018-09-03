@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Session } from '../../../modelo/util/session';
-
-import { CreditosService } from '../../../modules/servicios/creditos/creditos.service';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { Router } from '@angular/router';
 import { ClientesService } from '../../../modules/servicios/clientes/clientes.service';
@@ -11,7 +9,6 @@ import { Cliente } from '../../../modelo/negocio/cliente';
 import { OrdenPagoService } from '../../../modules/servicios/ordenPago/orden-pago.service';
 import { TableOrdenDePago } from './TableOrdenPago';
 import 'jspdf-autotable';
-import { TableCreditos } from '../../creditos/crud-creditos/TableCreditos';
 declare let jsPDF;
 
 @Component({
@@ -284,7 +281,8 @@ export class FormOrdenDePagoComponent implements OnInit {
         
       }
     });
-    doc.save('CuponDePago.pdf');
+    //doc.save('CuponDePago.pdf');
+    doc.output('dataurlnewwindow');  
   }
 
   get dni() { return this.ordenDePagoForm.get('dni'); }

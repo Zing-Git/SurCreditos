@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Session } from '../../modelo/util/session';
-
-import { CreditosService } from '../../modules/servicios/creditos/creditos.service';
 import { LoginService } from '../../modules/servicios/login/login.service';
 import { Router } from '@angular/router';
 import { ClientesService } from '../../modules/servicios/clientes/clientes.service';
@@ -11,7 +9,6 @@ import { Cliente } from '../../modelo/negocio/cliente';
 import { OrdenPagoService } from '../../modules/servicios/ordenPago/orden-pago.service';
 import { TableOrdenDePago } from '../orden-de-pago/form-orden-de-pago/TableOrdenPago';
 import 'jspdf-autotable';
-import { TableCreditos } from '../creditos/crud-creditos/TableCreditos';
 import { Cuota } from '../../modelo/negocio/cuota';
 declare let jsPDF;
 
@@ -48,49 +45,37 @@ export class CuotasComponent implements OnInit {
       ],
     },
     columns: {
-      legajo_prefijo: {
+      orden: {
         title: 'Num. Orden',
-        width: '10%',
-        valuePrepareFunction: (cell, row) => row.numeroOrden
+        width: '10%'
       },
-      nombre: {
-        title: 'Nombre Completo',
-        width: '15%',
-        valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres
+      cuotaPagada: {
+        title: 'Estado de Cuota',
+        width: '15%'
       },
 
-      montoAPagar: {
-        title: 'Monto de Credito',
+      montoPendienteDePago: {
+        title: 'Monto a Pagar',
         width: '30%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
-      fechaGeneracion: {
-        title: 'Fecha Generación',
+      fechaVencimiento: {
+        title: 'Fecha Vencimiento',
         width: '15%',
         valuePrepareFunction: (date) => {
           let raw = new Date(date);
           let formatted = this.datePipe.transform(raw, 'dd/MM/yyyy');
           return formatted;
         }
-      },
-      fechaPago: {
-        title: 'Fecha de Alta',
-        width: '15%',
-        filter: false,
-        valuePrepareFunction: (date) => {
-          let raw = new Date(date);
-          let formatted = this.datePipe.transform(raw, 'dd/MM/yyyy');
-          return formatted;
-        }
-      },
+      }      
     },
     pager: {
       display: true,
       perPage: 10
     },
-    noDataMessage: 'El Cliente no tiene orden de Pago...'
+    noDataMessage: 'El Cliente no tiene Cuotas...'
   };
   constructor(private fb: FormBuilder,
     private clientesServices: ClientesService,

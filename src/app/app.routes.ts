@@ -43,5 +43,10 @@ export const appRoutes: Routes = [
 
 { path: 'formcomercio', component: ModalComercioComponent , canActivate: [LoginGuard]},
 { path: 'ordendepago', component: FormOrdenDePagoComponent , canActivate: [NoLoginGuard]},
-{path: 'cuotas', component: CuotasComponent , canActivate: [NoLoginGuard]}
+
+{ path: '', component: LoginComponent},
+/* { path: '', component: LoginComponent, canActivate: [NoLoginGuard] }, */
+// si es la raiz el login, sale el component de login al iniciar el menu
+
+
 ];

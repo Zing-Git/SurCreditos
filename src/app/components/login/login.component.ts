@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, DoCheck, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { UsuariosService } from '../../modules/servicios/usuarios/usuarios.service';
 import { LoginService } from '../../modules/servicios/login/login.service';
 import { Session } from '../../modelo/util/session';
 import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-login',
@@ -13,12 +14,13 @@ import { environment } from '../../../environments/environment';
 })
 export class LoginComponent implements OnInit {
   mensaje: String;
+  idRol: string;
 
   constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService) {}
 
   ngOnInit() {
-
   }
+
 
   login(form: NgForm) {
     let session: Session;

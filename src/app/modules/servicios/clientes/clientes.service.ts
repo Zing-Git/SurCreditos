@@ -21,7 +21,8 @@ const cudOptionsHtml = {
   providedIn: 'root'
 })
 export class ClientesService {
-  public urlBase = 'https://ws-sur-creditos.herokuapp.com';
+  // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
+  public urlBase = 'http://18.223.146.82:3001';
 
   // GET URLs
   public urlPostBuscarPorDni = this.urlBase + '/cliente/buscar_por_dni/';  ///credito/buscar_orden_pago/
@@ -32,7 +33,7 @@ export class ClientesService {
   public urlPostGuardarComercio = this.urlBase + '/cliente/agregar_comercio/';
   public urlPostAgregarReferenciaComercio = this.urlBase + '/comercio/agregar_referencia/';
   public urlPostAgregarReferenciaCliente = this.urlBase + '/cliente/agregar_referencia/';
- 
+
 
   constructor(public http: HttpClient) { }
 
@@ -83,6 +84,6 @@ export class ClientesService {
     return this.http.post<any[]>(this.urlPostAgregarReferenciaComercio, newSession, cudOptions);
   }
 
- 
+
 
 }

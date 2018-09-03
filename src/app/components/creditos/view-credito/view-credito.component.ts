@@ -345,7 +345,10 @@ export class ViewCreditoComponent implements OnInit {
 
   }
   showComercio($event){
+
   }
   showCliente($event){
+
   }
+
 }

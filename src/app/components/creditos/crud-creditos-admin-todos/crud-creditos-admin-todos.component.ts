@@ -253,7 +253,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
 
         this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result=>{
           let respuesta = result;
-          alert('Se actualiso el estado de Credito');
+          alert('Se actualizó el estado de Credito');
           console.log(respuesta);
         }, err=>{
           alert('Ocurrio un problema');

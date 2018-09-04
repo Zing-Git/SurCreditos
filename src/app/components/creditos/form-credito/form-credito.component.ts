@@ -202,7 +202,7 @@ export class FormCreditoComponent implements OnInit {
 
       tipoReferenciaComercio: new FormControl('', [Validators.required]),
       itemsReferenciasComercio: new FormArray(this.controls),
-      notaComentarioComercio: new FormControl(''),
+      notaComentarioComercio: new FormControl('', [Validators.required]),
       prefijoLegajo: new FormControl(''),
       numeroLegajo:  new FormControl(''),
 
@@ -374,7 +374,7 @@ export class FormCreditoComponent implements OnInit {
         }
       }
     };
-    console.log(this.referenciaCliente);
+    // console.log(this.referenciaCliente);
   }
 
   getReferenciaComercio() {
@@ -466,6 +466,8 @@ export class FormCreditoComponent implements OnInit {
 
   cargarControlesForm() {
     this.clientesService.postGetCombos().subscribe( response => {
+      this.inhabilitarControlesIniciales();
+
       let combos = response['respuesta'];
 
       // Carga de compos de Tipos de Planes
@@ -497,6 +499,17 @@ export class FormCreditoComponent implements OnInit {
 
     });
 
+  }
+  inhabilitarControlesIniciales(){
+    this.nombres.disable();
+    this.apellidos.disable();
+    this.fechaNacimiento.disable();
+
+    this.nombresGarante.disable();
+    this.apellidosGarante.disable();
+    this.fechaNacimientoGarante.disable();
+
+    this.razonSocial.disable();
   }
 
   changeCheckboxDocumentacion(i) {
@@ -748,6 +761,17 @@ export class FormCreditoComponent implements OnInit {
   showComercio(event): void {
     this.buscarComercioPorCuit();
     // console.log('COMERCIO GUARDADO: ', event.comercio);
+  }
+
+  // Validaciones
+  onEnterDniCliente() {
+    this.buscarClientePorDni();
+  }
+  onEnterDniGarante() {
+    this.buscarGarantePorDni();
+  }
+  onEnterCuitComercio(){
+    this.buscarComercioPorCuit();
   }
 
 

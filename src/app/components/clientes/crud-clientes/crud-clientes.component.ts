@@ -263,10 +263,10 @@ export class CrudClientesComponent implements OnInit {
       case 'cabecera':
         {
           dataArray.push({
-
-            id: 'Identificador',
+            dni: 'DNI',            
             nombre: 'Nombre Cliente',
-            dni: 'DNI'
+            fechaAlta: 'Fecha de Alta'
+           
           });
           break;
         }
@@ -274,9 +274,10 @@ export class CrudClientesComponent implements OnInit {
       case 'cuerpo': {
         this.characters.forEach(element => {
           dataArray.push({
-            id: element._id,
+            dni: element.titular.dni,
             nombre: element.titular.apellidos + ', ' + element.titular.nombres,
-            dni: element.titular.dni
+            fechaAlta: moment(element.titular.fechaAlta).format('DD-MM-YYYY')
+           
           });
         });
         break;

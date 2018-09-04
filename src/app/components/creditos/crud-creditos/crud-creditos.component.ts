@@ -476,14 +476,17 @@ export class CrudCreditosComponent implements OnInit {
           this.lineaDeCarro = this.lineaDeCarro + 10;
           dataArray.push({
             razonSocial: element.comercio.razonSocial,
-            montoPedido: element.montoPedido,
+            montoPedido: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+            .format(Number(element.montoPedido)).toString(),
             cantidadCuotas: element.cantidadCuotas,
 
             valorCuota: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
               .format(Number(element.valorCuota)).toString(),
-            montoInteres: element.montoInteres,
+            montoInteres: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+            .format(Number(element.montoInteres)).toString(),
             tieneCobranzaADomicilio: element.tieneCobranzaADomicilio,
-            montoCobranzaADomicilio: element.montoCobranzaADomicilio,
+            montoCobranzaADomicilio: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+            .format(Number(element.montoCobranzaADomicilio)).toString(),
             estado: element.estado.nombre
           });
         });

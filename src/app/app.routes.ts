@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { CrudUsuariosComponent } from './components/usuarios/crud-usuarios/crud-usuarios.component';
 import { FormUsuarioComponent } from './components/usuarios/form-usuario/form-usuario.component';
 import { CrudClientesComponent } from './components/clientes/crud-clientes/crud-clientes.component';
@@ -16,6 +16,8 @@ import { ModalComercioComponent } from './components/creditos/modal-comercio/mod
 import { ViewCreditoComponent } from './components/creditos/view-credito/view-credito.component';
 import { FormOrdenDePagoComponent } from './components/orden-de-pago/form-orden-de-pago/form-orden-de-pago.component';
 import { CrudCreditosAdminTodosComponent } from './components/creditos/crud-creditos-admin-todos/crud-creditos-admin-todos.component';
+import { CuotasComponent } from './components/cuotas/cuotas.component'
+
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -41,7 +43,7 @@ export const appRoutes: Routes = [
 
 { path: 'formcomercio', component: ModalComercioComponent , canActivate: [LoginGuard]},
 { path: 'ordendepago', component: FormOrdenDePagoComponent , canActivate: [NoLoginGuard]},
-
+{ path: 'cuotas', component: CuotasComponent , canActivate: [NoLoginGuard]},
 { path: '', component: LoginComponent},
 /* { path: '', component: LoginComponent, canActivate: [NoLoginGuard] }, */
 // si es la raiz el login, sale el component de login al iniciar el menu

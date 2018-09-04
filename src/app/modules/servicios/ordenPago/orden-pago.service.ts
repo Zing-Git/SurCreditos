@@ -33,4 +33,12 @@ export class OrdenPagoService {
     const newSession = Object.assign({}, parametros);
     return this.http.post<any[]>(this.urlPostBuscarOrdenPagoPorDni, newSession, cudOptions);
   }
+
+  postPagarCredito(idCredito: string, token: string){
+
+    const paramnetros ={
+      token: token,
+      _id: idCredito
+    };
+  }
 }

@@ -45,7 +45,7 @@ export class FormOrdenDePagoComponent implements OnInit {
       custom: [
         {
           name: 'imprimirPDF',
-          title: 'Generar Cupon / '
+          title: 'Generar Cupon/ '
         },
         {
           name: 'pagarOrdenDePago',

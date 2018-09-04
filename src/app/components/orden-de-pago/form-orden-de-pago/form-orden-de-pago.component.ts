@@ -38,6 +38,10 @@ export class FormOrdenDePagoComponent implements OnInit {
         {
           name: 'imprimirPDF',
           title: 'Generar Cupon'
+        },
+        {
+          name: 'pagarCredito',
+          title: 'Pagar Credito'
         }
       ],
     },
@@ -121,7 +125,10 @@ export class FormOrdenDePagoComponent implements OnInit {
 
         break;
       }
-
+      case 'pagarCredito':{
+        this.pagarCredito(id);
+        break;
+      }
       case 'imprimirPDF': {
         this.imprimirPDF(id);
         break;
@@ -167,122 +174,124 @@ export class FormOrdenDePagoComponent implements OnInit {
           });  //debo obtener el plan de pago
         });
         this.crearNumeroFactura(element.credito.legajo_prefijo, element.credito.legajo);
-
-        doc.setFontType("normal")
+        console.log(element._id);
         
-        doc.text('Legajo de Credito: ' , 10, 40);
-        doc.text('Titular: ' , 10, 50);
+        console.log();
+        doc.setFontType("normal")
+
+        doc.text('Legajo de Credito: ', 10, 40);
+        doc.text('Titular: ', 10, 50);
         doc.text('Domicilio: ', 10, 55);
-        doc.text('Dni: ' , 100, 50);
+        doc.text('Dni: ', 100, 50);
         doc.text('Telefono:     ', 10, 60);
-        doc.text('Fecha de Alta: ' , 10, 65);
-        doc.text('Fecha de Cancelacion: ' , 80, 65);
+        doc.text('Fecha de Alta: ', 10, 65);
+        doc.text('Fecha de Cancelacion: ', 80, 65);
         doc.text('Capital: ', 10, 70);
         //doc.text('Total a Pagar: ', 80, 70);
         doc.text('Plan de Pago: ', 10, 75);
         doc.text('Cant. de Cuotas: ', 10, 80);
-        doc.text('Total a pagar: .....................................................................................', 10, 90);      
-        doc.text('Forma de pago:  ',10, 95 ); 
+        doc.text('Total a pagar: .....................................................................................', 10, 90);
+        doc.text('Forma de pago:  ', 10, 95);
         doc.text('Fecha de Alta: ', 80, 105);
-        doc.text('Talón Cliente', 80,110);
+        doc.text('Talón Cliente', 80, 110);
 
         doc.setFontType("bold");
-       
-        doc.text( this.numeroFactura, 50, 40);        
-        doc.text( element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 50, 50);
-        
-        doc.text( element.cliente.titular.domicilio.calle + ' ' + element.cliente.titular.domicilio.numeroCasa + ' ' + element.cliente.titular.domicilio.localidad + ' - ' + element.cliente.titular.domicilio.provincia, 50, 55);
-        doc.text( element.cliente.titular.dni, 120, 50);
 
-        if (element.cliente.contactos.numeroCelular != null) {        
-          doc.text( element.cliente.contactos.numeroCelular, 50, 60);
+        doc.text(this.numeroFactura, 50, 40);
+        doc.text(element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 50, 50);
+
+        doc.text(element.cliente.titular.domicilio.calle + ' ' + element.cliente.titular.domicilio.numeroCasa + ' ' + element.cliente.titular.domicilio.localidad + ' - ' + element.cliente.titular.domicilio.provincia, 50, 55);
+        doc.text(element.cliente.titular.dni, 120, 50);
+
+        if (element.cliente.contactos.numeroCelular != null) {
+          doc.text(element.cliente.contactos.numeroCelular, 50, 60);
         }
 
-        doc.text( this.datePipe.transform(element.fechaGeneracion, 'dd/MM/yyyy'), 50, 65);
-        doc.text( this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 65);
-        doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 50, 70);
+        doc.text(this.datePipe.transform(element.fechaGeneracion, 'dd/MM/yyyy'), 50, 65);
+        doc.text(this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 65);
+        doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 50, 70);
         //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 70);
-        doc.text( element.credito.planPagos.tipoPlan.nombre, 50, 75);       
-        doc.text( element.credito.planPagos.CantidadCuotas.toString(), 50, 80);
+        doc.text(element.credito.planPagos.tipoPlan.nombre, 50, 75);
+        doc.text(element.credito.planPagos.CantidadCuotas.toString(), 50, 80);
 
-        doc.line(10, 85, 150, 85);   
+        doc.line(10, 85, 150, 85);
 
-        doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 120, 90);           
-        doc.text( this.formas[0].formaPago.toString() ,50, 95 );
-       
+        doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 120, 90);
+        doc.text(this.formas[0].formaPago.toString(), 50, 95);
+
         doc.line(10, 100, 150, 100);   //x, , largo , y
 
-        doc.text( this.datePipe.transform(element.fechaPago, 'dd/MM/yyyy'), 120, 105);
-        
+        doc.text(this.datePipe.transform(element.fechaPago, 'dd/MM/yyyy'), 120, 105);
+
 
         /*Talon para el Cliente*/
 
-        
+
         doc.setFontSize(12);
-        doc.line(10, 125, 150, 125); 
+        doc.line(10, 125, 150, 125);
         doc.setFontType("bold");
-    
+
         doc.text('ORDEN DE PAGO', 80, 130, 'center');
         doc.line(10, 135, 150, 135);   //x, , largo , y
         doc.setFontSize(8);
         doc.setTextColor(0)
-        
+
         this.crearNumeroFactura(element.credito.legajo_prefijo, element.credito.legajo);
 
         doc.setFontType("normal")
-        
-        doc.text('Legajo de Credito: ' , 10, 140);
-        doc.text('Titular: ' , 10, 150);
+
+        doc.text('Legajo de Credito: ', 10, 140);
+        doc.text('Titular: ', 10, 150);
         doc.text('Domicilio: ', 10, 155);
-        doc.text('Dni: ' , 100, 150);
+        doc.text('Dni: ', 100, 150);
         doc.text('Telefono:     ', 10, 160);
-        doc.text('Fecha de Alta: ' , 10, 165);
-        doc.text('Fecha de Cancelacion: ' , 80, 165);
+        doc.text('Fecha de Alta: ', 10, 165);
+        doc.text('Fecha de Cancelacion: ', 80, 165);
         doc.text('Capital: ', 10, 170);
         //doc.text('Total a Pagar: ', 80, 170);
         doc.text('Plan de Pago: ', 10, 175);
         doc.text('Cant. de Cuotas: ', 10, 180);
-        doc.text('Total a pagar: .....................................................................................', 10, 190);      
-        doc.text('Forma de pago:  ',10, 195 ); 
-        doc.text('Fecha de Alta: ', 80, 205);        
-        
-        doc.text('..............................................', 20, 210);
-        doc.text('Firma y aclaracion del titular', 20,215);
-        doc.text('Recibí conforme', 20, 220)
-        doc.text('Talón Cajero', 80,210);
-        
-        doc.setFontType("bold");
-       
-        doc.text( this.numeroFactura, 50, 140);        
-        doc.text( element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 50, 150);
-        
-        doc.text( element.cliente.titular.domicilio.calle + ' ' + element.cliente.titular.domicilio.numeroCasa + ' ' + element.cliente.titular.domicilio.localidad + ' - ' + element.cliente.titular.domicilio.provincia, 50, 155);
-        doc.text( element.cliente.titular.dni, 120, 150);
+        doc.text('Total a pagar: .....................................................................................', 10, 190);
+        doc.text('Forma de pago:  ', 10, 195);
+        doc.text('Fecha de Alta: ', 80, 205);
 
-        if (element.cliente.contactos.numeroCelular != null) {        
-          doc.text( element.cliente.contactos.numeroCelular, 50, 160);
+        doc.text('..............................................', 20, 210);
+        doc.text('Firma y aclaracion del titular', 20, 215);
+        doc.text('Recibí conforme', 20, 220)
+        doc.text('Talón Cajero', 80, 210);
+
+        doc.setFontType("bold");
+
+        doc.text(this.numeroFactura, 50, 140);
+        doc.text(element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 50, 150);
+
+        doc.text(element.cliente.titular.domicilio.calle + ' ' + element.cliente.titular.domicilio.numeroCasa + ' ' + element.cliente.titular.domicilio.localidad + ' - ' + element.cliente.titular.domicilio.provincia, 50, 155);
+        doc.text(element.cliente.titular.dni, 120, 150);
+
+        if (element.cliente.contactos.numeroCelular != null) {
+          doc.text(element.cliente.contactos.numeroCelular, 50, 160);
         }
 
-        doc.text( this.datePipe.transform(element.fechaGeneracion, 'dd/MM/yyyy'), 50, 165);
-        doc.text( this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 165);
-        doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 50, 170);
+        doc.text(this.datePipe.transform(element.fechaGeneracion, 'dd/MM/yyyy'), 50, 165);
+        doc.text(this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 165);
+        doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 50, 170);
         //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 170);
-        doc.text( element.credito.planPagos.tipoPlan.nombre, 50, 175);       
-        doc.text( element.credito.planPagos.CantidadCuotas.toString(), 50, 180);
+        doc.text(element.credito.planPagos.tipoPlan.nombre, 50, 175);
+        doc.text(element.credito.planPagos.CantidadCuotas.toString(), 50, 180);
 
-        doc.line(10, 185, 150, 185);   
+        doc.line(10, 185, 150, 185);
 
-        doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 120, 190);           
-        doc.text( this.formas[0].formaPago.toString() ,50, 195 );
-       
-        doc.line(10, 200, 150, 200);   
+        doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 120, 190);
+        doc.text(this.formas[0].formaPago.toString(), 50, 195);
 
-        doc.text( this.datePipe.transform(element.fechaPago, 'dd/MM/yyyy'), 120, 205);
-        
+        doc.line(10, 200, 150, 200);
+
+        doc.text(this.datePipe.transform(element.fechaPago, 'dd/MM/yyyy'), 120, 205);
+
       }
     });
-    //doc.save('CuponDePago.pdf');
-    doc.output('dataurlnewwindow');  
+    doc.save('CuponDePago.pdf');
+    //doc.output('dataurlnewwindow');  
   }
 
   get dni() { return this.ordenDePagoForm.get('dni'); }
@@ -295,6 +304,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         this.characters = response['ordenDb'];
       });
     }
+
   }
 
   private cargarControlesCombos() {
@@ -306,6 +316,11 @@ export class FormOrdenDePagoComponent implements OnInit {
       //console.log(this.formas[0].formaPago);
     });
 
+  }
+
+  private pagarCredito(idCredito: string){
+
+    this.ordenDePago.urlPostBuscarOrdenPagoPorDni
   }
 
 }

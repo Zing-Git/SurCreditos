@@ -7,7 +7,7 @@
         <div class="form-row">
           <!-- Campo 1:  Dni Garante-->
           <div class="form-group col-md-6">
-              <label for="inputDniGarante">* Número de Documento</label>
+              <label for="inputDni">* Número de Documento</label>
               <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDniCliente" placeholder="30300300">
           </div>
   
@@ -27,7 +27,7 @@
       
     </div>
     <div>
-        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="cuotas" (custom)="onCustom($event)" #cuotasForm></ng2-smart-table>
+        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters.credito.planPagos.cuotas" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
     </div>
     
   </div>

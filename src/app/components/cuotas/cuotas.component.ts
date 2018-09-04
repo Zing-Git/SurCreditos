@@ -10,6 +10,9 @@ import { OrdenPagoService } from '../../modules/servicios/ordenPago/orden-pago.s
 import { TableOrdenDePago } from '../orden-de-pago/form-orden-de-pago/TableOrdenPago';
 import 'jspdf-autotable';
 import { Cuota } from '../../modelo/negocio/cuota';
+import { CreditosService } from '../../modules/servicios/creditos/creditos.service';
+import { TableCreditos } from '../creditos/crud-creditos/TableCreditos';
+import { TableClientes } from '../clientes/crud-clientes/TableClientes';
 declare let jsPDF;
 
 @Component({
@@ -19,14 +22,11 @@ declare let jsPDF;
 })
 export class CuotasComponent implements OnInit {
 
-  ordenDePagoForm: FormGroup;
+  cuotasForm: FormGroup;
   session = new Session();
-  characters: any[];
-  characterAprobados: TableOrdenDePago[];
-  cliente: Cliente;
-  numeroFactura: string;
-  formas: any[];
-  cuotas: Cuota[];
+  characters: TableOrdenDePago;
+  clientes: any;
+  cuotas: any[];
 
   settings = {
 
@@ -78,20 +78,22 @@ export class CuotasComponent implements OnInit {
     noDataMessage: 'El Cliente no tiene Cuotas...'
   };
   constructor(private fb: FormBuilder,
-    private clientesServices: ClientesService,
+    private creditosServices: CreditosService,
     private loginService: LoginService,
     private router: Router,
     private datePipe: DatePipe,
-    private ordenDePago: OrdenPagoService) { }
+    private ordenDePago: OrdenPagoService,
+  private clientesServices : ClientesService) { }
 
   ngOnInit() {
 
     this.session.token = this.loginService.getTokenDeSession();
-    this.ordenDePagoForm = this.fb.group({
-      dni: new FormControl('', [Validators.required])
+        
+    this.cuotasForm = this.fb.group({
+      dni: new FormControl('')
     });
 
-    this.cargarControlesCombos();
+    //this.cargarControlesCombos();
   }
 
   onCustom(event) {
@@ -126,32 +128,19 @@ export class CuotasComponent implements OnInit {
 
   }
 
-  get dni() { return this.ordenDePagoForm.get('dni'); }
+  get dni() { return this.cuotasForm.get('dni'); }
 
   buscarCuotasPorDni() {
-    let dni = this.dni.value;
-
+    this.session.token = this.loginService.getTokenDeSession();
     if (this.dni.value !== '') {
-      this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
-        this.characters = response['ordenDb'];
+      this.ordenDePago.postGetOrdenPagoPorDni(this.session, this.dni.value).subscribe((response: TableOrdenDePago[]) => {
+        this.characters = response['ordenDb'][0];
+        //console.log(this.characters.credito);
+        
       });
     }
-    this.characters.forEach(element =>{
-      this.cuotas= element.formaPago.cuotas;
-    })
-      console.log(this.cuotas);
+    //this.cuotas = this.characters.credito.planPagos.cuotas;
     
-  }
-
-  private cargarControlesCombos() {
-
-    this.clientesServices.postGetCombos().subscribe(result => {
-      //this.provincias = result['respuesta'].provincias;
-      this.formas = result['respuesta'].formasPago;
-      // this.tiposPlanes = result['respuesta'].tiposPlanes;
-      //console.log(this.formas[0].formaPago);
-    });
-
   }
 
 }

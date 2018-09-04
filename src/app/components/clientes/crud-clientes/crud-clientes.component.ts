@@ -246,7 +246,6 @@ export class CrudClientesComponent implements OnInit {
             }
           });
           cont = 0;
-
         }
       }
 

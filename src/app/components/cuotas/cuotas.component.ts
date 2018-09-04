@@ -5,14 +5,11 @@ import { LoginService } from '../../modules/servicios/login/login.service';
 import { Router } from '@angular/router';
 import { ClientesService } from '../../modules/servicios/clientes/clientes.service';
 import { DatePipe } from '@angular/common';
-import { Cliente } from '../../modelo/negocio/cliente';
 import { OrdenPagoService } from '../../modules/servicios/ordenPago/orden-pago.service';
 import { TableOrdenDePago } from '../orden-de-pago/form-orden-de-pago/TableOrdenPago';
 import 'jspdf-autotable';
-import { Cuota } from '../../modelo/negocio/cuota';
 import { CreditosService } from '../../modules/servicios/creditos/creditos.service';
-import { TableCreditos } from '../creditos/crud-creditos/TableCreditos';
-import { TableClientes } from '../clientes/crud-clientes/TableClientes';
+
 declare let jsPDF;
 
 @Component({

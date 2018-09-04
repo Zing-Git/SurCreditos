@@ -51,7 +51,8 @@ export class CuotasComponent implements OnInit {
       },
       cuotaPagada: {
         title: 'Estado de Cuota',
-        width: '15%'
+        width: '15%',
+        valuePrepareFunction: (value) => { return value === true ? 'PAGADA' : 'IMPAGA' },
       },
 
       montoPendienteDePago: {
@@ -69,7 +70,7 @@ export class CuotasComponent implements OnInit {
           let formatted = this.datePipe.transform(raw, 'dd/MM/yyyy');
           return formatted;
         }
-      }      
+      }
     },
     pager: {
       display: true,
@@ -88,7 +89,7 @@ export class CuotasComponent implements OnInit {
   ngOnInit() {
 
     this.session.token = this.loginService.getTokenDeSession();
-        
+
     this.cuotasForm = this.fb.group({
       dni: new FormControl('')
     });
@@ -136,11 +137,11 @@ export class CuotasComponent implements OnInit {
       this.ordenDePago.postGetOrdenPagoPorDni(this.session, this.dni.value).subscribe((response: TableOrdenDePago[]) => {
         this.characters = response['ordenDb'][0];
         //console.log(this.characters.credito);
-        
+
       });
     }
     //this.cuotas = this.characters.credito.planPagos.cuotas;
-    
+
   }
 
 }

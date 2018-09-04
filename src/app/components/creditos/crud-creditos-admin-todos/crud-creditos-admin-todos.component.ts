@@ -47,7 +47,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       edit: false,
       imprimirPDF: false,
       position: 'right',
-      custom: [       
+      custom: [
         {
           name: 'view',
           title: 'Ver/ ',
@@ -79,18 +79,15 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       },
       legajo: {
         title: 'Legajo',
-        width: '10%',
+        width: '5%',
         filter: true,
         sort: true
 
       },
-      cuit: {
-        title: 'CUIT',
-        width: '15%',
-        filter: true,
-        sort: true,
-        valuePrepareFunction: (cell, row) => row.comercio.cuit,
-
+      dni: {
+        title: 'Dni',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => row.cliente.titular.dni
       },
       nombreApellido: {
         title: 'Titular',
@@ -107,8 +104,19 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
             return false;
           }
         }
+      },
+      cuit: {
+        title: 'Cuit',
+        width: '10%',
+        filter: true,
+        sort: true,
+        valuePrepareFunction: (cell, row) => row.comercio.cuit,
 
-
+      },
+      razonSocial: {
+        title: 'Comercio',
+        width: '15%',
+        valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       //usuario:{
       //  title:'Vendedor',
@@ -116,15 +124,15 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       //  valuePrepareFunction: (value) => this.getUsuario(value)
       //},
       montoPedido: {
-        title: 'Monto Credito',
-        width: '15%',
+        title: 'Credito',
+        width: '10%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         },
       },
       estado: {
         title: 'Estado',
-        width: '15%',
+        width: '10%',
         valuePrepareFunction: (cell, row) => row.estado.nombre,
       },
     },

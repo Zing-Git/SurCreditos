@@ -68,17 +68,27 @@ export class CrudCreditosAdminComponent implements OnInit {
       },
       legajo: {
         title: 'Legajo',
-        width: '10%'
+        width: '5%'
       },
-      cuit: {
-        title: 'CUIT',
-        width: '15%',
-        valuePrepareFunction: (cell, row) => row.comercio.cuit
-      },
+      dni: {
+        title: 'Dni',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => row.cliente.titular.dni
+      },      
       nombreApellido: {
         title: 'Titular',
         width: '15%',
         valuePrepareFunction: (cell, row) => (row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres)
+      },
+      cuit: {
+        title: 'CUIT',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => row.comercio.cuit
+      },
+      razonSocial: {
+        title: 'Comercio',
+        width: '15%',
+        valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       //usuario:{
       //  title:'Vendedor',
@@ -86,15 +96,15 @@ export class CrudCreditosAdminComponent implements OnInit {
       //  valuePrepareFunction: (value) => this.getUsuario(value)
       //},
       montoPedido: {
-        title: 'Monto Credito',
-        width: '15%',
+        title: 'Credito',
+        width: '10%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       estado: {
         title: 'Estado',
-        width: '15%',
+        width: '10%',
         valuePrepareFunction: (cell, row) => row.estado.nombre
       },
     },

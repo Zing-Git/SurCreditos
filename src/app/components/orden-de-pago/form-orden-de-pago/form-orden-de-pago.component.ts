@@ -188,7 +188,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         });
         this.crearNumeroFactura(element.credito.legajo_prefijo, element.credito.legajo);
         console.log(element._id);
-        
+
         console.log();
         doc.setFontType("normal")
 
@@ -304,7 +304,7 @@ export class FormOrdenDePagoComponent implements OnInit {
       }
     });
     doc.save('CuponDePago.pdf');
-    //doc.output('dataurlnewwindow');  
+    //doc.output('dataurlnewwindow');
   }
 
   get dni() { return this.ordenDePagoForm.get('dni'); }
@@ -338,15 +338,15 @@ export class FormOrdenDePagoComponent implements OnInit {
     this.ordenDePago.postPagarOrdenDePago(idOrden, this.session.token).subscribe(result =>{
       let respuesta = result;
       console.log(respuesta);
-      alert('Se actualiso el estado de Credito');
-      
+      alert('Se actualizó el estado de Credito');
+      this.buscarCreditoPorDni();
     });
-    
+
     this.postAprobarRechazar(idOrden,'PAGADO');
-    
+
   }
 
-  
+
   postAprobarRechazar(id: string, nuevoEstado: string) {
     let idNuevoEstado: string;
     this.estados.forEach(element => {
@@ -370,7 +370,7 @@ export class FormOrdenDePagoComponent implements OnInit {
 
           this.creditoService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
             let respuesta = result;
-            alert('Se actualiso el estado de Credito');
+            alert('Se actualizó el estado de Credito');
             console.log(respuesta);
           }, err => {
             alert('Ocurrio un problema');

@@ -59,6 +59,9 @@ export class LoginComponent implements OnInit {
         }
         this.loginService.registrarLogin(session);
         this.router.navigate(['/info']);
+      }, err => {
+          alert('Usuario o clave incorrecta!');
+          this.router.navigate(['/login']);
       });
   }
 }

@@ -145,6 +145,7 @@ constructor(private fb: FormBuilder,
           // console.log('Comercio Guardado y Encontrado: ', comercioEncontrado);
           this.pasameDatosDelComercio.emit({comercio: comercioEncontrado});
           alert('El Comercio se guardo con éxito');
+          this.ngxSmartModalService.close('comercioModal');
         });
       }
     }, err => {

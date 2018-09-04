@@ -7,9 +7,9 @@
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10">
-                <h4><strong>Nuevo Cliente</strong></h4>
+                <h4><strong>Nuevo</strong></h4>
                 <!-- FORMULARIO INICIO -->
-                <form class="" [formGroup]="clienteForm" (ngSubmit)="onFormSubmit()">
+                <form class="" [formGroup]="clienteForm" (ngSubmit)="guardar()">
                     <fieldset>
                         <ngb-tabset #t="ngbTabset" [justify]="currentJustify">
 
@@ -126,7 +126,7 @@
 
                                     <div class="form-row text-right">
                                         <div class="col-12">
-                                            <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+                                            <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')" id="btnTab1">Siguiente</button>
                                         </div>
                                     </div>
                                 </ng-template>
@@ -403,7 +403,8 @@
                                     <div class="form-row text-right">
                                         <div class="col-12">
                                             <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</button>
-                                            <button class="btn btn-outline-primary" (click)="guardar($event)">Guardar</button>
+                                            <!-- <button class="btn btn-outline-primary" (click)="guardar($event)">Guardar</button> -->
+                                            <button type="submit" [disabled]="!clienteForm.valid" class="btn btn-outline-primary">Guardar</button>
                                         </div>
                                     </div>
 

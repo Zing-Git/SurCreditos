@@ -240,8 +240,8 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     console.log(idNuevoEstado);
     this.characters.forEach(element => {
       if (element._id === id) {
-        if (element.estado.nombre === 'PENDIENTE DE REVISION' 
-            || element.estado.nombre === 'PENDIENTE DE APROBACION' 
+        if (element.estado.nombre === 'PENDIENTE DE REVISION'
+            || element.estado.nombre === 'PENDIENTE DE APROBACION'
             || element.estado.nombre === 'APROBADO') {
           let nuevoCredito = {
             idCredito: element._id,
@@ -255,7 +255,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
 
           this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
             let respuesta = result;
-            alert('Se actualiso el estado de Credito');
+            alert('Se actualizó el estado de Credito');
             console.log(respuesta);
           }, err => {
             alert('Ocurrio un problema');

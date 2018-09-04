@@ -215,7 +215,7 @@ export class CrudCreditosAdminComponent implements OnInit {
 
           this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
             let respuesta = result;
-            alert('Se actualiso el estado de Credito');
+            alert('Se actualizó el estado de Credito');
             console.log(respuesta);
           }, err => {
             alert('Ocurrio un problema');
@@ -436,7 +436,7 @@ export class CrudCreditosAdminComponent implements OnInit {
     //doc.save('reporteIndividual.pdf');
     //doc.save('CuponDePago.pdf');
     doc.output('datauristring');
-    //doc.output('dataurlnewwindow',{});  
+    //doc.output('dataurlnewwindow',{});
     this.carroIndividual = 50;
     this.cantidadTotal = 0;
   }

@@ -6,6 +6,7 @@ import { UtilidadesService } from '../../../modules/servicios/utiles/utilidades.
 import { Session } from '../../../modelo/util/session';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.service';
+import { NgbTabsetConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-form-cliente',
@@ -13,7 +14,7 @@ import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.se
 })
 export class FormClienteComponent implements OnInit {
   // Usamos el decorador Output para pasar datos al componente PADRE FormCreditoComponent
-  
+  @Output() pasameDatosDelCliente = new EventEmitter();
 
   session: Session;
   clienteForm: FormGroup;
@@ -23,6 +24,9 @@ export class FormClienteComponent implements OnInit {
   estadosCasa: any[];
   idPersona = '0';
   idDomicilio =  '0';
+
+
+  // element: HTMLElement;
 
   constructor(private fb: FormBuilder,
     private clientesService: ClientesService,
@@ -40,6 +44,8 @@ export class FormClienteComponent implements OnInit {
     this.session = new Session();
     this.session.token = this.loginService.getTokenDeSession();
 
+    // let element: HTMLElement = document.getElementsByClassName('btnTab1')[0] as HTMLElement;
+    // element.click();
 
 
     this.clienteForm = this.fb.group({
@@ -53,12 +59,12 @@ export class FormClienteComponent implements OnInit {
       rubro: new FormControl('', [Validators.required]),
       fechaActividad:  new FormControl('', [Validators.required]), */
 
-      provincia: new FormControl(),
-      localidad: new FormControl(),
+      provincia: new FormControl('', [Validators.required]),
+      localidad: new FormControl('', [Validators.required]),
       barrio: new FormControl('', [Validators.required]),
       calle: new FormControl('', [Validators.required]),
       numeroCasa: new FormControl('', [Validators.required]),
-      estadoCasa: new FormControl(),
+      estadoCasa: new FormControl('', [Validators.required]),
 
       tipoContacto1: new FormControl(),
       codigoPais1: new FormControl(),
@@ -224,16 +230,16 @@ export class FormClienteComponent implements OnInit {
 
 
 
-  guardar(event) {
+  guardar() {
     let clienteC = this.capturarValoresDeFormulario();
-    // console.log('A guardar: ', JSON.stringify(clienteC));
-
     this.clientesService.postGuardarCliente(clienteC).subscribe( result => {
-      let cliente = result['clienteDB'];
-      
-      alert('Se guardo correctamente...');
+        let cliente = result['clienteDB'];
+        alert('Se guardo correctamente...');
+        // this.pasameDatosDelCliente.emit({cliente: cliente});
+        this.pasameDatosDelCliente.emit({cliente: clienteC, result: cliente});
+        this.ngxSmartModalService.close('clienteModal');
     }, err => {
-      alert('Hubo un problema al guardar los datos!');
+         alert('Hubo un problema al guardar los datos!');
     });
   }
 

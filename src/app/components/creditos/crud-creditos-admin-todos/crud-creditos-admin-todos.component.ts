@@ -15,6 +15,7 @@ import * as moment from 'moment/moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 import { TableUsuarios } from '../../usuarios/crud-usuarios/TableUsuarios';
 import { Estado } from '../../../modelo/negocio/estado';
+import { element } from '@angular/core/src/render3/instructions';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
   usuarios: TableUsuarios[];
   estados: Estado[];
   session = new Session();
+  numeroFactura: string;
 
   lineaDeCarro = 40;      // para reporte general
   carroIndividual = 50;    //para reporte individual
@@ -249,8 +251,8 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     this.characters.forEach(element => {
       if (element._id === id) {
         if (element.estado.nombre === 'PENDIENTE DE REVISION'
-            || element.estado.nombre === 'PENDIENTE DE APROBACION'
-            || element.estado.nombre === 'APROBADO') {
+          || element.estado.nombre === 'PENDIENTE DE APROBACION'
+          || element.estado.nombre === 'APROBADO') {
           let nuevoCredito = {
             idCredito: element._id,
             estado: idNuevoEstado,   // '5b72b281708d0830d07f3562'        // element.estado._id
@@ -300,12 +302,21 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
 
     doc.setFontSize(10);
     doc.setTextColor(0)
-    doc.text('Vendedor: ' + this.session.nombreUsuario, 130, 20);
+    //doc.text('Vendedor: ' + this.session.nombreUsuario, 130, 20);
     const today = Date.now();
     doc.setTextColor(0)
     doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
-    doc.text('Legajo Nº:  ', 130, 30)
-    doc.text('Estado: ', 130, 35);
+
+
+    this.characters.forEach(x => {
+
+      if (x._id === id) {
+        this.crearNumeroFactura(x.legajo_prefijo, x.legajo);
+        doc.text('Legajo Nº:  ' + this.numeroFactura, 130, 30);
+        doc.text('Estado: ' + x.estado.nombre, 130, 35);
+      }
+    })
+
 
     doc.setFillColor(52, 152, 219)
     doc.setTextColor(255);
@@ -366,18 +377,18 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
           doc.text('Localidad: ' + element.comercio.domicilio.localidad, 20, 110);
           doc.text('Provincia: ' + element.comercio.domicilio.provincia, 130, 110);
 
-          doc.text('Celular: ', 20, 115);
-          doc.text('T. Fijo:', 80, 115)
-          doc.text('Mail:  ', 130, 115);
+          //doc.text('Celular: ', 20, 115);
+          //doc.text('T. Fijo:', 80, 115)
+         // doc.text('Mail:  ', 130, 115);
         } else {
           doc.text('Calle: ', 20, 105);
           doc.text('Barrio:', 130, 105);
           doc.text('Localidad: ', 20, 110);
           doc.text('Provincia: ', 130, 110);
 
-          doc.text('Celular: ', 20, 115);
-          doc.text('T. Fijo:', 80, 115)
-          doc.text('Mail:  ', 130, 115);
+          //doc.text('Celular: ', 20, 115);
+          //doc.text('T. Fijo:', 80, 115)
+          //doc.text('Mail:  ', 130, 115);
         }
       }
     });
@@ -668,5 +679,18 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
   }
 
 
+  crearNumeroFactura(legajo_prefijo: string, legajo: string): string {
+
+    let s = +legajo + "";
+    //console.log(s);
+    while (s.length < 6) {
+
+      s = "0" + s
+      //console.log(s);
+    };
+    this.numeroFactura = legajo_prefijo + '-' + s;
+
+    return this.numeroFactura;
+  }
 }
 

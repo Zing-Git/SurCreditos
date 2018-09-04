@@ -9,6 +9,10 @@ import { Cliente } from '../../../modelo/negocio/cliente';
 import { OrdenPagoService } from '../../../modules/servicios/ordenPago/orden-pago.service';
 import { TableOrdenDePago } from './TableOrdenPago';
 import 'jspdf-autotable';
+import { CreditosService } from '../../../modules/servicios/creditos/creditos.service';
+import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
+import { Estado } from '../../../modelo/negocio/estado';
+import { TableCreditos } from '../../creditos/crud-creditos/TableCreditos';
 declare let jsPDF;
 
 @Component({
@@ -21,10 +25,14 @@ export class FormOrdenDePagoComponent implements OnInit {
   ordenDePagoForm: FormGroup;
   session = new Session();
   characters: TableOrdenDePago[];
+  charactersCreditos: TableCreditos[];
   characterAprobados: TableOrdenDePago[];
   cliente: Cliente;
   numeroFactura: string;
   formas: any[];
+  estadosCasa: EstadoCasa[];
+  estados: Estado[];
+
   settings = {
 
     actions: {
@@ -37,11 +45,11 @@ export class FormOrdenDePagoComponent implements OnInit {
       custom: [
         {
           name: 'imprimirPDF',
-          title: 'Generar Cupon'
+          title: 'Generar Cupon / '
         },
         {
-          name: 'pagarCredito',
-          title: 'Pagar Credito'
+          name: 'pagarOrdenDePago',
+          title: 'Pagar Orden de Pago'
         }
       ],
     },
@@ -97,13 +105,18 @@ export class FormOrdenDePagoComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private datePipe: DatePipe,
-    private ordenDePago: OrdenPagoService) { }
+    private ordenDePago: OrdenPagoService,
+    private creditoService : CreditosService) { }
 
   ngOnInit() {
 
     this.session.token = this.loginService.getTokenDeSession();
     this.ordenDePagoForm = this.fb.group({
       dni: new FormControl('', [Validators.required])
+    });
+
+    this.creditoService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
+      this.charactersCreditos = response['creditos'];
     });
 
     this.cargarControlesCombos();
@@ -125,8 +138,8 @@ export class FormOrdenDePagoComponent implements OnInit {
 
         break;
       }
-      case 'pagarCredito':{
-        this.pagarCredito(id);
+      case 'pagarOrdenDePago':{
+        this.pagarOrdenDePago(id);
         break;
       }
       case 'imprimirPDF': {
@@ -314,13 +327,59 @@ export class FormOrdenDePagoComponent implements OnInit {
       this.formas = result['respuesta'].formasPago;
       // this.tiposPlanes = result['respuesta'].tiposPlanes;
       //console.log(this.formas[0].formaPago);
+      this.estadosCasa = result['respuesta'].estadosCasa;
+      this.estados = result['respuesta'].estadosCredito;
     });
 
   }
 
-  private pagarCredito(idCredito: string){
+  private pagarOrdenDePago(idOrden: string){
+    console.log(idOrden + ' / ' + this.session.token);
+    this.ordenDePago.postPagarOrdenDePago(idOrden, this.session.token).subscribe(result =>{
+      let respuesta = result;
+      console.log(respuesta);
+      alert('Se actualiso el estado de Credito');
+      
+    });
+    
+    this.postAprobarRechazar(idOrden,'PAGADO');
+    
+  }
 
-    this.ordenDePago.urlPostBuscarOrdenPagoPorDni
+  
+  postAprobarRechazar(id: string, nuevoEstado: string) {
+    let idNuevoEstado: string;
+    this.estados.forEach(element => {
+      if (nuevoEstado == element.nombre) {
+        idNuevoEstado = element._id;
+      }
+    });
+    console.log(idNuevoEstado);
+    this.charactersCreditos.forEach(element => {
+      if (element._id === id) {
+        if (element.estado.nombre === 'APROBADO') {
+          let nuevoCredito = {
+            idCredito: element._id,
+            estado: idNuevoEstado,   // '5b72b281708d0830d07f3562'        // element.estado._id
+            nombre_nuevo_estado: nuevoEstado,           // APROBADO RECHASADO OTRO,
+            cliente: element.cliente._id,
+            monto: element.montoPedido,
+            nombre_estado_actual: element.estado.nombre,
+            token: this.session.token
+          };
+
+          this.creditoService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
+            let respuesta = result;
+            alert('Se actualiso el estado de Credito');
+            console.log(respuesta);
+          }, err => {
+            alert('Ocurrio un problema');
+          });
+        } else {
+          alert('No se puede cambiar el estado');
+        }
+      }
+    });
   }
 
 }

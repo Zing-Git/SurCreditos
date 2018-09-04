@@ -20,8 +20,9 @@ const cudOptionsHtml = {
 export class OrdenPagoService {
   // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
   public urlBase = 'http://18.223.146.82:3001';
-
   public urlPostBuscarOrdenPagoPorDni = this.urlBase + '/credito/buscar_orden_pago/';
+  public urlPostPagarOrdenDePago = this.urlBase + '/credito/pagar_orden_pago/';
+
   constructor(public http: HttpClient) { }
 
   postGetOrdenPagoPorDni(session: Session, dni: string): Observable<any[]>{
@@ -34,11 +35,13 @@ export class OrdenPagoService {
     return this.http.post<any[]>(this.urlPostBuscarOrdenPagoPorDni, newSession, cudOptions);
   }
 
-  postPagarCredito(idCredito: string, token: string){
+  postPagarOrdenDePago(idOrden: string, token: string){
 
     const paramnetros ={
       token: token,
-      _id: idCredito
+      idOrden: idOrden
     };
+    const newSession = Object.assign({}, paramnetros);
+    return this.http.post<any[]>(this.urlPostPagarOrdenDePago, newSession, cudOptions);
   }
 }

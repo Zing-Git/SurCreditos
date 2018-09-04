@@ -47,7 +47,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       edit: false,
       imprimirPDF: false,
       position: 'right',
-      custom: [
+      custom: [       
         {
           name: 'view',
           title: 'Ver/ ',
@@ -229,7 +229,6 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       }
     }
   }
-
 
   postAprobarRechazar(id: string, nuevoEstado: string) {
     let idNuevoEstado: string;

@@ -1,6 +1,7 @@
 <div class="form-row text-right">
   <div class="col-12">
-      <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button>
+      <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+      <p class="bg-primary">Lista de Clientes</p>
   </div>
 </div>
 <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #usuarioForm></ng2-smart-table>

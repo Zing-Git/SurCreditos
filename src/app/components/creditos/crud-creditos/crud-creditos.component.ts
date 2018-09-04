@@ -13,6 +13,7 @@ import { TableCreditos } from './TableCreditos';
 import { ItemsReferencia } from '../../../modelo/negocio/itemsReferencia';
 import * as moment from 'moment/moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
+import { Titular } from '../../../modelo/negocio/titular';
 
 
 @Component({
@@ -66,28 +67,38 @@ export class CrudCreditosComponent implements OnInit {
         title: 'Legajo',
         width: '8%'
       },
+      dni: {
+        title: 'Dni',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => row.cliente.titular.dni
+      },
+      titular: {
+        title: 'Titular',
+        width: '25%',
+        valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres
+      },
       razonSocial: {
-        title: 'Razon Social',
-        width: '30%',
+        title: 'Comercio',
+        width: '25%',
         valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
-      rubro:{
+      /* rubro:{
         title: 'Rubro',
         width: '30%'
-      },
+      }, */
       montoPedido: {
-        title: 'Monto Pedido',
+        title: 'Credito',
         width: '15%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       cantidadCuotas: {
-        title: 'NºCuotas',
+        title: 'Cuotas',
         width: '10%'
       },
       valorCuota: {
-        title: 'Valor Cuota',
+        title: '$/Cuota',
         width: '15%',
         valuePrepareFunction: (value) => {
           return value === 'valorCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
@@ -110,7 +121,7 @@ export class CrudCreditosComponent implements OnInit {
         width: '10%'
       }, */
       montoCobranzaADomicilio: {
-        title: 'Cobro a Dom',
+        title: '$Domic.',
         width: '15%',
         valuePrepareFunction: (value) => {
           // tslint:disable-next-line:max-line-length

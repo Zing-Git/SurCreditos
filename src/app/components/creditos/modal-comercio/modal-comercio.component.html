@@ -1,13 +1,23 @@
 <ngx-smart-modal #comercioModal identifier="comercioModal" customClass="reveal">
+
+    <div class="form-row text-center">
+        <div class="col-12">
+            <p class="bg-primary">Nuevo Comercio</p>
+        </div>
+    </div>
+
+
     <div class="container">
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10">
-                <h4><strong>Nuevo Comercio</strong></h4>
+
                 <!-- FORMULARIO INICIO -->
                 <form class="" [formGroup]="comercioForm" (ngSubmit)="onFormSubmit()">
                     <fieldset>
                         <ngb-tabset #t="ngbTabset" [justify]="currentJustify">
+
+
 
                             <!--TABSET PARA EL PASO 1 -->
                             <ngb-tab id="tab-selectbyid1" title="1.Titular">

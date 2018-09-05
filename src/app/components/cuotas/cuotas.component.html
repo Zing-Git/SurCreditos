@@ -32,7 +32,7 @@
       
     </div>
     <div>
-        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters.credito.planPagos.cuotas" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
+        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters.credito.planPagos.cuotas" (rowSelect)="onRowSelect($event)" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
     </div>
     
   </div>

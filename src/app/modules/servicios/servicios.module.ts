@@ -6,6 +6,7 @@ import { UtilidadesService } from './utiles/utilidades.service';
 import { OrdenPagoService} from './ordenPago/orden-pago.service';
 import { ClientesService } from './clientes/clientes.service';
 import { CreditosService } from './creditos/creditos.service';
+import { CuotasService } from './cuotas/cuotas.service';
 
 
 @NgModule({
@@ -13,6 +14,6 @@ import { CreditosService } from './creditos/creditos.service';
     CommonModule
   ],
   declarations: [],
-  providers: [UsuariosService, LoginService, UtilidadesService, OrdenPagoService, ClientesService, CreditosService]
+  providers: [UsuariosService, LoginService, UtilidadesService, OrdenPagoService, ClientesService, CreditosService, CuotasService]
 })
 export class ServiciosModule { }

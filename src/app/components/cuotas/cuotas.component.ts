@@ -43,6 +43,10 @@ export class CuotasComponent implements OnInit {
       position: 'right',
       custom: [
         {
+          name: 'pagarCuotas',
+          title: 'Pagar Cuota'
+        },
+        {
           name: 'imprimirPDF',
           title: 'Generar Cupon'
         }
@@ -73,7 +77,7 @@ export class CuotasComponent implements OnInit {
           let formatted = this.datePipe.transform(raw, 'dd/MM/yyyy');
           return formatted;
         }
-      }      
+      }
     },
     pager: {
       display: true,
@@ -87,14 +91,14 @@ export class CuotasComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private ordenDePago: OrdenPagoService,
-  private clientesServices : ClientesService) { }
+    private clientesServices: ClientesService) { }
 
   get dni() { return this.cuotasForm.get('dni'); }
 
   ngOnInit() {
 
     this.session.token = this.loginService.getTokenDeSession();
-        
+
     this.cuotasForm = this.fb.group({
       dni: new FormControl('')
     });
@@ -114,8 +118,8 @@ export class CuotasComponent implements OnInit {
         this, this.router.navigate(['viewcredito', evento, id]);
         break;
       }
-      case 'edit': {
-
+      case 'pagarCuotas': {
+        this.pagarCuotas();
         break;
       }
 
@@ -130,20 +134,27 @@ export class CuotasComponent implements OnInit {
     }
   }
 
-  buscarCreditoPorDni(dni : string) {
+  buscarCreditoPorDni(dni: string) {
     //let dni = this.dni.value;
 
     if (this.dni.value !== '') {
       this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
         this.charactersOrdenPago = response['ordenDb'];
       });
+      console.log(this.charactersOrdenPago);
     }
 
   }
 
+  pagarCuotas() {
+    this.characters.credito.planPagos.cuotas.forEach(p => {
+
+    })
+  }
+
   imprimirPDF(id: string) {
     const doc = new jsPDF();
-    
+
     this.buscarCreditoPorDni(this.dni.value);
 
     doc.setFontSize(12);
@@ -168,7 +179,7 @@ export class CuotasComponent implements OnInit {
         });
         this.crearNumeroFactura(element.credito.legajo_prefijo, element.credito.legajo);
         //console.log(element._id);
-        
+
         //console.log();
         doc.setFontType("normal")
 
@@ -313,16 +324,21 @@ export class CuotasComponent implements OnInit {
   }
 
   buscarCuotasPorDni() {
+    let dni = this.dni.value;
     this.session.token = this.loginService.getTokenDeSession();
-    if (this.dni.value !== '') {
-      this.ordenDePago.postGetOrdenPagoPorDni(this.session, this.dni.value).subscribe((response: TableOrdenDePago[]) => {
+    if (dni !== '') {
+      this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
         this.characters = response['ordenDb'][0];
         //console.log(this.characters.credito);
-        
+
       });
     }
     //this.cuotas = this.characters.credito.planPagos.cuotas;
-    
+
+  }
+
+  onRowSelect(event) {
+    console.log(event);
   }
 
 }

@@ -200,7 +200,7 @@ export class CrudCreditosComponent implements OnInit {
         break;
       }
       default: {
-        console.log('Invalid choice');
+        // console.log('Invalid choice');
         break;
       }
     }
@@ -455,7 +455,7 @@ export class CrudCreditosComponent implements OnInit {
       }
     });
 
-    console.log();
+    // console.log();
 
     doc.save('reporteIndividual.pdf');
     this.carroIndividual = 50;
@@ -536,7 +536,7 @@ export class CrudCreditosComponent implements OnInit {
                   .format(Number(p.MontoTotalCuota)).toString()
               });
               let numeroString = (+p.MontoTotalCuota).toFixed(2);
-              console.log(numeroString);
+              // console.log(numeroString);
               this.cantidadTotal = this.cantidadTotal + +(numeroString);    //+ se usa para convertir
             });
             dataArray.push({
@@ -549,7 +549,7 @@ export class CrudCreditosComponent implements OnInit {
                 .format(Number(this.cantidadTotal)).toString(),
             });
             this.carroIndividual = this.carroIndividual + 5;
-            console.log(this.carroIndividual);
+            // console.log(this.carroIndividual);
           }
         });
         break;
@@ -565,7 +565,7 @@ export class CrudCreditosComponent implements OnInit {
         break;
       }
       default:
-        console.log('Invalid choice');
+        // console.log('Invalid choice');
         break;
     }
 

@@ -1,0 +1,49 @@
+<ngx-smart-modal #cuotaModal identifier="cuotaModal" customClass="reveal">
+
+  <div class="form-row text-center">
+    <div class="col-12">
+        <p class="bg-primary">Cobro de Cuotas</p>
+    </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <!-- <h2><strong>Buscar Creditos</strong></h2> -->
+      <form class="" [formGroup]="cuotasModalForm" >
+        <div class="form-row">
+          <!-- Campo 1:  Dni Garante-->
+          <div class="form-group col-md-6">
+              <label for="inputMonto">* Monto a Cobrar</label>
+              <input type="number" formControlName="monto" class="form-control form-control-sm" id="inputMonto" placeholder="10000">
+          </div>
+  
+          <div class="col-md-6">
+              <span class="btn btn-outline-primary" (click)="simularPago()">Simular Pago</span>
+          </div>
+  
+          <!-- Dni error block -->
+          <div *ngIf="monto.invalid && monto.touched" class="col-sm-6 text-danger">
+              <div *ngIf="monto.errors['required']">
+                  El monto es requerido
+              </div>
+          </div>
+        </div>
+      </form>
+      
+      
+    </div>
+    <div>
+        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="cuotas"  (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
+    </div>
+    <div class="col-md-6">
+      <span class="btn btn-outline-success" (click)="simularPago()">Confirmar Pago</span>
+    </div>
+    <div class="col-md-8">
+      <span class="btn btn-outline-danger" (click)="cuotaModal.close()">Cancelar</span>
+    </div>
+  </div>
+</div>
+
+</ngx-smart-modal>
+

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Session } from '../../../modelo/util/session';
 import { Observable } from 'rxjs';
-import { NewSession } from '../../../modelo/util/newSession';
 import { TableCreditos } from '../../../components/creditos/crud-creditos/TableCreditos';
 
 
@@ -34,6 +33,7 @@ export class CreditosService {
    public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado/';
    public urlPostGetCreditoPorId = this.urlBase + '/credito/buscar_credito/';
    public urlPostGetAllCreditosTodosLosUsuarios = this.urlBase + '/credito/listar_todos/';
+   private urlPostGetCreditoPorDni = this.urlBase + '/credito/buscar_credito_por_dni/';
 
    public Storage : TableCreditos;
   constructor(public http: HttpClient) { }
@@ -81,4 +81,12 @@ export class CreditosService {
     return this.http.post<any[]>(this.urlPostGetCreditoPorId, newSession, cudOptions);
   }
 
+  postGetCreditoPorDni(dni: string, token: string): Observable<any[]>{
+    let parameters = {
+      dni : dni,
+      token: token
+    };
+    const session= Object.assign({}, parameters);
+    return this.http.post<any[]>(this.urlPostGetCreditoPorDni, session, cudOptions);
+  }
 }

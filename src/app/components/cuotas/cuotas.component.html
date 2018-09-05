@@ -1,3 +1,4 @@
+<app-modal-cuotas (pasameCuotas)="showCuotas($event)"></app-modal-cuotas>
 <div class="form-row text-center">
     <div class="col-12">
         <p class="bg-primary">Cobro de Cuotas</p>
@@ -17,7 +18,7 @@
           </div>
   
           <div class="col-md-6">
-              <span class="btn btn-outline-primary" (click)="buscarCuotasPorDni()">Buscar</span>
+              <span class="btn btn-outline-primary" (click)="buscarCreditosPorDni()">Buscar</span>
           </div>
   
           <!-- Dni error block -->
@@ -32,7 +33,7 @@
       
     </div>
     <div>
-        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters.credito.planPagos.cuotas" (rowSelect)="onRowSelect($event)" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
+        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersOrdenPago"  (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
     </div>
     
   </div>

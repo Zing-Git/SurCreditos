@@ -59,7 +59,8 @@ export class CuotasComponent implements OnInit {
       },
       cuotaPagada: {
         title: 'Estado de Cuota',
-        width: '15%'
+        width: '15%',
+        valuePrepareFunction: (value) => { return value === true ? 'PAGADA' : 'IMPAGA' },
       },
 
       montoPendienteDePago: {
@@ -337,8 +338,7 @@ export class CuotasComponent implements OnInit {
 
   }
 
-  onRowSelect(event) {
+  onRowSelect(event){
     console.log(event);
   }
-
 }

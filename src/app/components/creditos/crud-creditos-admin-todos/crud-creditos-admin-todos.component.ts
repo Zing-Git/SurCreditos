@@ -81,18 +81,15 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       },
       legajo: {
         title: 'Legajo',
-        width: '10%',
+        width: '5%',
         filter: true,
         sort: true
 
       },
-      cuit: {
-        title: 'CUIT',
-        width: '15%',
-        filter: true,
-        sort: true,
-        valuePrepareFunction: (cell, row) => row.comercio.cuit,
-
+      dni: {
+        title: 'Dni',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => row.cliente.titular.dni
       },
       nombreApellido: {
         title: 'Titular',
@@ -109,8 +106,19 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
             return false;
           }
         }
+      },
+      cuit: {
+        title: 'Cuit',
+        width: '10%',
+        filter: true,
+        sort: true,
+        valuePrepareFunction: (cell, row) => row.comercio.cuit,
 
-
+      },
+      razonSocial: {
+        title: 'Comercio',
+        width: '15%',
+        valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       //usuario:{
       //  title:'Vendedor',
@@ -118,15 +126,15 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       //  valuePrepareFunction: (value) => this.getUsuario(value)
       //},
       montoPedido: {
-        title: 'Monto Credito',
-        width: '15%',
+        title: 'Credito',
+        width: '10%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         },
       },
       estado: {
         title: 'Estado',
-        width: '15%',
+        width: '10%',
         valuePrepareFunction: (cell, row) => row.estado.nombre,
       },
     },
@@ -150,7 +158,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     // this.creditosService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
     this.creditosService.postGetAllCreditosTodosLosUsuarios(this.session).subscribe((response: TableCreditos[]) => {
       this.characters = response['credito'];
-      console.log('CREDITOS OBTENIDOS:  ', this.characters);
+      // console.log('CREDITOS OBTENIDOS:  ', this.characters);
     });
     this.cargarControlesCombos();
     this.getAllUsuarios();
@@ -226,7 +234,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
         break;
       }
       default: {
-        console.log('Invalid choice');
+        // console.log('Invalid choice');
         break;
       }
     }
@@ -239,7 +247,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
         idNuevoEstado = element._id;
       }
     });
-    console.log(idNuevoEstado);
+    // console.log(idNuevoEstado);
     this.characters.forEach(element => {
       if (element._id === id) {
         if (element.estado.nombre === 'PENDIENTE DE REVISION'
@@ -258,7 +266,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
           this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
             let respuesta = result;
             alert('Se actualizó el estado de Credito');
-            console.log(respuesta);
+            // console.log(respuesta);
           }, err => {
             alert('Ocurrio un problema');
           });
@@ -562,7 +570,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
                   .format(Number(p.MontoTotalCuota)).toString()
               });
               let numeroString = (+p.MontoTotalCuota).toFixed(2);
-              console.log(numeroString);
+              // console.log(numeroString);
               this.cantidadTotal = this.cantidadTotal + +(numeroString);    //+ se usa para convertir
             });
             dataArray.push({
@@ -575,7 +583,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
                 .format(Number(this.cantidadTotal)).toString(),
             });
             this.carroIndividual = this.carroIndividual + 5;
-            console.log(this.carroIndividual);
+            // console.log(this.carroIndividual);
           }
         });
       }
@@ -590,7 +598,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
         break;
       }
       default:
-        console.log('Invalid choice');
+        // console.log('Invalid choice');
         break;
     }
 

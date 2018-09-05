@@ -68,17 +68,27 @@ export class CrudCreditosAdminComponent implements OnInit {
       },
       legajo: {
         title: 'Legajo',
-        width: '10%'
+        width: '5%'
       },
-      cuit: {
-        title: 'CUIT',
-        width: '15%',
-        valuePrepareFunction: (cell, row) => row.comercio.cuit
+      dni: {
+        title: 'Dni',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => row.cliente.titular.dni
       },
       nombreApellido: {
         title: 'Titular',
         width: '15%',
         valuePrepareFunction: (cell, row) => (row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres)
+      },
+      cuit: {
+        title: 'CUIT',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => row.comercio.cuit
+      },
+      razonSocial: {
+        title: 'Comercio',
+        width: '15%',
+        valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       //usuario:{
       //  title:'Vendedor',
@@ -86,15 +96,15 @@ export class CrudCreditosAdminComponent implements OnInit {
       //  valuePrepareFunction: (value) => this.getUsuario(value)
       //},
       montoPedido: {
-        title: 'Monto Credito',
-        width: '15%',
+        title: 'Credito',
+        width: '10%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       estado: {
         title: 'Estado',
-        width: '15%',
+        width: '10%',
         valuePrepareFunction: (cell, row) => row.estado.nombre
       },
     },
@@ -183,7 +193,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         break;
       }
       default: {
-        console.log('Invalid choice');
+        // console.log('Invalid choice');
         break;
       }
     }
@@ -197,7 +207,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         idNuevoEstado = element._id;
       }
     });
-    console.log(idNuevoEstado);
+    // console.log(idNuevoEstado);
     this.characters.forEach(element => {
       if (element._id === id) {
         if (element.estado.nombre === 'PENDIENTE DE REVISION'
@@ -216,7 +226,7 @@ export class CrudCreditosAdminComponent implements OnInit {
           this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
             let respuesta = result;
             alert('Se actualizó el estado de Credito');
-            console.log(respuesta);
+            // console.log(respuesta);
           }, err => {
             alert('Ocurrio un problema');
           });
@@ -514,7 +524,7 @@ export class CrudCreditosAdminComponent implements OnInit {
                   .format(Number(p.MontoTotalCuota)).toString()
               });
               let numeroString = (+p.MontoTotalCuota).toFixed(2);
-              console.log(numeroString);
+              // console.log(numeroString);
               this.cantidadTotal = this.cantidadTotal + +(numeroString);    //+ se usa para convertir
             });
             dataArray.push({
@@ -527,7 +537,7 @@ export class CrudCreditosAdminComponent implements OnInit {
                 .format(Number(this.cantidadTotal)).toString(),
             });
             this.carroIndividual = this.carroIndividual + 5;
-            console.log(this.carroIndividual);
+            // console.log(this.carroIndividual);
           }
         });
       }
@@ -542,7 +552,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         break;
       }
       default:
-        console.log('Invalid choice');
+        // console.log('Invalid choice');
         break;
     }
 

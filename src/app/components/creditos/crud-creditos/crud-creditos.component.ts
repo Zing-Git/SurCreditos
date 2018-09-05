@@ -60,12 +60,12 @@ export class CrudCreditosComponent implements OnInit {
     },
     columns: {
       legajo_prefijo:{
-        title: 'Prefijo',
-        width: '8%'
+        title: 'Serie',
+        width: '5%'
       },
       legajo: {
         title: 'Legajo',
-        width: '8%'
+        width: '5%'
       },
       dni: {
         title: 'Dni',
@@ -74,12 +74,12 @@ export class CrudCreditosComponent implements OnInit {
       },
       titular: {
         title: 'Titular',
-        width: '25%',
+        width: '20%',
         valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres
       },
       razonSocial: {
         title: 'Comercio',
-        width: '25%',
+        width: '20%',
         valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       /* rubro:{
@@ -88,25 +88,25 @@ export class CrudCreditosComponent implements OnInit {
       }, */
       montoPedido: {
         title: 'Credito',
-        width: '15%',
+        width: '13%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       cantidadCuotas: {
         title: 'Cuotas',
-        width: '10%'
+        width: '5%'
       },
       valorCuota: {
         title: '$/Cuota',
-        width: '15%',
+        width: '10%',
         valuePrepareFunction: (value) => {
           return value === 'valorCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       montoInteres: {
         title: 'Interes',
-        width: '10%',
+        width: '7%',
         valuePrepareFunction: (value) => {
           return value === 'montoInteres' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
@@ -200,7 +200,7 @@ export class CrudCreditosComponent implements OnInit {
         break;
       }
       default: {
-        console.log('Invalid choice');
+        // console.log('Invalid choice');
         break;
       }
     }
@@ -455,7 +455,7 @@ export class CrudCreditosComponent implements OnInit {
       }
     });
 
-    console.log();
+    // console.log();
 
     doc.save('reporteIndividual.pdf');
     this.carroIndividual = 50;
@@ -536,7 +536,7 @@ export class CrudCreditosComponent implements OnInit {
                   .format(Number(p.MontoTotalCuota)).toString()
               });
               let numeroString = (+p.MontoTotalCuota).toFixed(2);
-              console.log(numeroString);
+              // console.log(numeroString);
               this.cantidadTotal = this.cantidadTotal + +(numeroString);    //+ se usa para convertir
             });
             dataArray.push({
@@ -549,7 +549,7 @@ export class CrudCreditosComponent implements OnInit {
                 .format(Number(this.cantidadTotal)).toString(),
             });
             this.carroIndividual = this.carroIndividual + 5;
-            console.log(this.carroIndividual);
+            // console.log(this.carroIndividual);
           }
         });
         break;
@@ -565,7 +565,7 @@ export class CrudCreditosComponent implements OnInit {
         break;
       }
       default:
-        console.log('Invalid choice');
+        // console.log('Invalid choice');
         break;
     }
 

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
-
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from '../../../../modules/servicios/login/login.service';
 import { Session } from '../../../../modelo/util/session';
 import * as moment from 'moment';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableCuotas } from '../../modal-cuotas/TableCuotas';
+import { Pago } from './pago';
+import { CuotasService } from '../../../../modules/servicios/cuotas/cuotas.service';
 
 @Component({
   selector: 'app-simulador',
@@ -20,7 +21,8 @@ export class SimuladorComponent implements OnInit {
   cuotasSimuladas: any;
   ordenDePago: any;
   cuotas: any;
-  
+  cuotaAPagar: Pago;
+
   cuotasBackup: TableCuotas[];
   miOrdenDePago: any;
 
@@ -61,7 +63,7 @@ export class SimuladorComponent implements OnInit {
           return value === 'MontoTotalCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
-      
+
     },
     pager: {
       display: true,
@@ -69,68 +71,47 @@ export class SimuladorComponent implements OnInit {
     },
     noDataMessage: 'El Cliente no tiene Cuotas...'
   };
-  constructor() { }
+  constructor(public ngxSmartModalService: NgxSmartModalService,
+    public loginService: LoginService,
+    public cutaService: CuotasService) { }
 
   ngOnInit() {
     this.cuotas = this.cuotasSimuladas;
   }
 
-  simularPago(cuotas: any, monto : number) {
+  simularPago(cuotas: any, monto: number) {
     this.cuotasSimuladas = new Array();
     this.cuotasSimuladas.lenght = 0;
     this.cuotasSimuladas = cuotas;
     this.ngOnInit();
-   /* if(monto > 0){
 
-    console.log(cuotas);
-      this.cuotas = cuotas;
-      let contador = 0;
-      this.cuotasSimuladas = new Array();
-      let bandera = true;
-
-      this.cuotas.forEach(i => {
-        contador = monto;  //aqui  recuerdo el valor
-        monto = monto - i.MontoTotalCuota;
-        if (bandera === true) {
-          if (monto === 0) {
-            i.montoPagado.push(i.MontoTotalCuota.toString());
-            i.montoPendienteDePago = 0;    //montoPagado = total
-
-            i.comentarios.push('pago toda la cuota');
-            this.cuotasSimuladas.push(i);
-            bandera = false;
-            console.log('pasa por monto === 0');
-          }
-
-          if (monto < 0) {
-            i.montoPagado.push(contador.toString());
-            i.montoPendienteDePago = monto;
-            i.comentarios.push('pago parcial');
-            this.cuotasSimuladas.push(i);
-            bandera = false;
-            console.log('pasa por monto < 0');
-          }
-
-          if (monto > 0) {
-            i.montoPagado.push(i.MontoTotalCuota.toString());
-            i.montoPendienteDePago = 0;
-            i.comentarios.push('pago toda la cuota');
-            this.cuotasSimuladas.push(i);
-            console.log('pasa por monto > 0');
-          }
-          console.log(monto);
-          console.log(this.cuotasSimuladas);
-        }
-      })
-
-      //this.cuotas = this.cuotasSimuladas;
-      this.cuotasSimuladas = new Array();
-      //this.ngxSmartModalService.getModal('cuotaModal').open();
-    }else{
-
-    }
-    */
   }
-  
+  cerrarModal(event) {
+    this.cuotas.lenght = 0;
+    this.cuotasSimuladas.lenght = 0;
+    this.ngxSmartModalService.getModal('simuladorModal').close();
+  }
 
+  realizarPago() {
+    this.session.token = this.loginService.getTokenDeSession();
+    this.cuotaAPagar = new Pago();
+    this.cuotas.forEach(element => {
+      this.cuotaAPagar.token = this.session.token;
+      this.cuotaAPagar.cuota = element;
+
+    });
+
+    if (this.cuotaAPagar != null) {
+      //llamar al servicio para realizar el pago
+      this.cutaService.postPagarCuota(this.cuotaAPagar).subscribe(result => {
+        let respuesta = result;
+        console.log(respuesta);
+        console.log(result);
+        alert('Cuotas Pagadas!!!');
+      }, err => {
+        alert('Hubo un problema al registrar la solicitud de credito');
+
+      });
+    }
+  }
 }

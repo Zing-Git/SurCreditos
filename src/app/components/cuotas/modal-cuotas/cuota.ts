@@ -5,9 +5,11 @@ export class Cuota {
     montoPagado: number;
     porcentajeInteresPorMora: string;
     comentario: string;
-    montoPendienteDePago: number;
+   /* montoPendienteDePago: number;
     orden:number;
     cuotaPagada: boolean;
     MontoTotalCuota: number;
     fechaVencimiento: string;
+*/
+   
 }

@@ -7,8 +7,6 @@ import * as moment from 'moment';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SimuladorComponent } from '../modalCuotasSimuladas/simulador/simulador.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Cuota } from './cuota';
-
 
 @Component({
   selector: 'app-modal-cuotas',
@@ -106,6 +104,9 @@ export class ModalCuotasComponent implements OnInit {
   onCustom(event) {
 
   }
+  getDataFromCuotas(misCuotas: TableCuotas[]){
+    this.cuotas = misCuotas;
+  }
 
   simularPago() {
     let monto = this.getMonto.value;
@@ -118,33 +119,41 @@ export class ModalCuotasComponent implements OnInit {
       this.cuotas.forEach(i => {
         contador = monto;  //aqui  recuerdo el valor
         monto = monto - i.MontoTotalCuota;
-       
+        let nuevo : TableCuotas;
         if (bandera === true) {
           if (monto === 0) {
-                        
-            i.montoPendienteDePago = 0;
-            this.cuotasSimuladas.push(i);
+             
+             nuevo = JSON.parse(JSON.stringify(i));
+             nuevo.montoPendienteDePago = 0;           
+            //i.montoPendienteDePago = 0;
+            this.cuotasSimuladas.push(nuevo);
             bandera = false;
             console.log('pasa por monto === 0');
           }
 
           if (monto < 0) {
-            
-
-            i.montoPagado.push(contador.toString());
-            i.montoPendienteDePago = monto;
-            i.comentarios.push('pago parcial');
-            this.cuotasSimuladas.push(i);
+            nuevo = JSON.parse(JSON.stringify(i));
+            nuevo.montoPagado.push(contador.toString());
+            nuevo.montoPendienteDePago = monto;
+            nuevo.comentarios.push('pago parcial');
+            //i.montoPagado.push(contador.toString());
+            //i.montoPendienteDePago = monto;
+            //i.comentarios.push('pago parcial');
+            this.cuotasSimuladas.push(nuevo);
             bandera = false;
             console.log('pasa por monto < 0');
           }
 
           if (monto > 0) {
-            
-            i.montoPagado.push(i.MontoTotalCuota.toString());
-            i.montoPendienteDePago = 0;
-            i.comentarios.push('pago toda la cuota');
-            this.cuotasSimuladas.push(i);
+            nuevo = JSON.parse(JSON.stringify(i));
+            nuevo.montoPagado.push(i.MontoTotalCuota.toString());
+            nuevo.montoPendienteDePago = 0;
+            nuevo.comentarios.push('pago toda la cuota');
+
+            //i.montoPagado.push(i.MontoTotalCuota.toString());
+            //i.montoPendienteDePago = 0;
+            //i.comentarios.push('pago toda la cuota');
+            this.cuotasSimuladas.push(nuevo);
             console.log('pasa por monto > 0');
           }
           console.log(monto);

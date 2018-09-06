@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Session } from '../../modelo/util/session';
 import { LoginService } from '../../modules/servicios/login/login.service';
@@ -11,6 +11,8 @@ import 'jspdf-autotable';
 import { CreditosService } from '../../modules/servicios/creditos/creditos.service';
 import { EstadoCasa } from '../../modelo/negocio/estado-casa';
 import { Estado } from '../../modelo/negocio/estado';
+import { TableCreditos } from './tableCreditos';
+import { ModalCuotasComponent } from './modal-cuotas/modal-cuotas.component';
 
 declare let jsPDF;
 
@@ -21,17 +23,14 @@ declare let jsPDF;
 })
 export class CuotasComponent implements OnInit {
 
+  @ViewChild(ModalCuotasComponent) hijoModal: ModalCuotasComponent;
   cuotasForm: FormGroup;
   session = new Session();
-  characters: TableOrdenDePago;
+  charactersCreditos: TableCreditos[];
   clientes: any;
   cuotas: any[];
-  charactersOrdenPago: TableOrdenDePago[];
-  numeroFactura: string;
-  formas: any[];
-  estadosCasa: EstadoCasa[];
-  estados: Estado[];
-
+  charactersOrdenPago: any[];
+ 
   settings = {
 
     actions: {
@@ -43,41 +42,34 @@ export class CuotasComponent implements OnInit {
       position: 'right',
       custom: [
         {
-          name: 'pagarCuotas',
-          title: 'Pagar Cuota'
-        },
-        {
-          name: 'imprimirPDF',
-          title: 'Generar Cupon'
+          name: 'mostrarCuotas',
+          title: 'Seleccionar'
         }
       ],
     },
     columns: {
-      orden: {
-        title: 'Num. Orden',
-        width: '10%'
+      nuevoLegajo: {
+        title: 'Legajo',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => row.legajoPrefijo + ' - ' + row.legajo
+        
       },
-      cuotaPagada: {
-        title: 'Estado de Cuota',
+      titular: {
+        title: 'Nombre titular',
         width: '15%',
-        valuePrepareFunction: (value) => { return value === true ? 'PAGADA' : 'IMPAGA' },
+        valuePrepareFunction: (value) => { return value.titularApellidos + ', ' + value.titularNombres },
       },
 
-      montoPendienteDePago: {
+      totalAPagar: {
         title: 'Monto a Pagar',
         width: '30%',
         valuePrepareFunction: (value) => {
-          return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+          return value === 'totalAPagar' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
-      fechaVencimiento: {
-        title: 'Fecha Vencimiento',
-        width: '15%',
-        valuePrepareFunction: (date) => {
-          let raw = new Date(date);
-          let formatted = this.datePipe.transform(raw, 'dd/MM/yyyy');
-          return formatted;
-        }
+      tipoPlan: {
+        title: 'Tipo Plan',
+        width: '10%'
       }
     },
     pager: {
@@ -90,21 +82,17 @@ export class CuotasComponent implements OnInit {
     private creditosServices: CreditosService,
     private loginService: LoginService,
     private router: Router,
-    private datePipe: DatePipe,
-    private ordenDePago: OrdenPagoService,
-    private clientesServices: ClientesService) { }
+    private datePipe: DatePipe) { }
 
   get dni() { return this.cuotasForm.get('dni'); }
 
   ngOnInit() {
 
     this.session.token = this.loginService.getTokenDeSession();
-
     this.cuotasForm = this.fb.group({
       dni: new FormControl('')
     });
-
-    this.cargarControlesCombos();
+    
   }
 
   onCustom(event) {
@@ -119,8 +107,8 @@ export class CuotasComponent implements OnInit {
         this, this.router.navigate(['viewcredito', evento, id]);
         break;
       }
-      case 'pagarCuotas': {
-        this.pagarCuotas();
+      case 'mostrarCuotas': {
+        this.mostrarCuotas(id);
         break;
       }
 
@@ -135,28 +123,28 @@ export class CuotasComponent implements OnInit {
     }
   }
 
-  buscarCreditoPorDni(dni: string) {
-    //let dni = this.dni.value;
-
-    if (this.dni.value !== '') {
-      this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
-        this.charactersOrdenPago = response['ordenDb'];
+  buscarCreditoPorDni() {
+    let dni = this.dni.value;
+    console.log(dni)
+    if (dni !== '') {
+      this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe((response : TableCreditos[]) => {
+        this.charactersCreditos = response['creditos'];
+        console.log(response['creditos'])
       });
-      console.log(this.charactersOrdenPago);
+      console.log(this.charactersCreditos);
+     
     }
 
   }
 
   pagarCuotas() {
-    this.characters.credito.planPagos.cuotas.forEach(p => {
-
-    })
+   
   }
 
   imprimirPDF(id: string) {
-    const doc = new jsPDF();
+   /* const doc = new jsPDF();
 
-    this.buscarCreditoPorDni(this.dni.value);
+    //this.buscarCreditoPorDni(this.dni.value);
 
     doc.setFontSize(12);
 
@@ -229,7 +217,7 @@ export class CuotasComponent implements OnInit {
         doc.text(this.datePipe.transform(element.fechaPago, 'dd/MM/yyyy'), 120, 105);
 
 
-        /*Talon para el Cliente*/
+        /*Talon para el Cliente
 
 
         doc.setFontSize(12);
@@ -297,48 +285,19 @@ export class CuotasComponent implements OnInit {
     });
     doc.save('CuponDePago.pdf');
     //doc.output('dataurlnewwindow');  
+    */
   }
 
-
-  crearNumeroFactura(legajo_prefijo: string, legajo: string): string {
-
-    let s = +legajo + "";
-    while (s.length < 6) {
-      s = "0" + s
-    };
-    this.numeroFactura = legajo_prefijo + '-' + s;
-
-    return this.numeroFactura;
-  }
-
-  private cargarControlesCombos() {
-
-    this.clientesServices.postGetCombos().subscribe(result => {
-      //this.provincias = result['respuesta'].provincias;
-      this.formas = result['respuesta'].formasPago;
-      // this.tiposPlanes = result['respuesta'].tiposPlanes;
-      //console.log(this.formas[0].formaPago);
-      this.estadosCasa = result['respuesta'].estadosCasa;
-      this.estados = result['respuesta'].estadosCredito;
+  mostrarCuotas(idCredito: string){
+    this.charactersCreditos.forEach(x=>{
+      if(idCredito == x._id){
+        this.cuotas = JSON.parse(JSON.stringify(x.cuotas));        
+      }
+      
     });
+    console.log(this.cuotas);
 
+    this.hijoModal.getDataFromCuotas(this.cuotas);
   }
-
-  buscarCuotasPorDni() {
-    let dni = this.dni.value;
-    this.session.token = this.loginService.getTokenDeSession();
-    if (dni !== '') {
-      this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
-        this.characters = response['ordenDb'][0];
-        //console.log(this.characters.credito);
-
-      });
-    }
-    //this.cuotas = this.characters.credito.planPagos.cuotas;
-
-  }
-
-  onRowSelect(event){
-    console.log(event);
-  }
+  
 }

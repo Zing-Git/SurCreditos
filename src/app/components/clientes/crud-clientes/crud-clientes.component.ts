@@ -92,7 +92,7 @@ export class CrudClientesComponent implements OnInit {
     this.clientesService.postGetClientes(this.session).subscribe((response: TableClientes[]) => {
       this.characters = response['clientes'];
     });
-    console.log(this.characters);
+//    console.log(this.characters);
   }
 
   onCustom(event) {

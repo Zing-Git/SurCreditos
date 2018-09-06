@@ -14,6 +14,7 @@ const cudOptionsHtml = {
   providedIn: 'root'
 })
 export class CuotasService {
+  // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
   public urlBase = 'http://18.223.146.82:3001';
   public urlPagarCuota = this.urlBase + '/cuota/pagar/';
   constructor(public http: HttpClient) { }

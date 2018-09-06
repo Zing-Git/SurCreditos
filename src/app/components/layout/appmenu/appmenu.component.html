@@ -38,7 +38,7 @@
                         <!--FIN MENU CREDITOS -->
 
                         <!--MENU CREDITOS ADMINISTRADOR-->
-                        <ng-container *ngSwitchCase="rol=== 'ADMINISTRADOR'">
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT' || rol === 'INDEFINIDO' ">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-edit"></i><p>Creditos<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -51,7 +51,7 @@
 
 
                         <!--MENU CLIENTES -->
-                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'VENDEDOR'">
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'INDEFINIDO' || rol === 'VENDEDOR'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-users"></i><p>Clientes<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -80,7 +80,7 @@
 
 
                         <!--MENU ADMINISTRACION -->
-                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR'">
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT' || rol === 'INDEFINIDO'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-cog"></i><p>Administración<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">

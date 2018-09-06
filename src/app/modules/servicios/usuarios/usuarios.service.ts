@@ -141,4 +141,13 @@ export class UsuariosService {
     return this.http.post<any>(this.urlPostGetPersonaPorDni, newUsuario, cudOptions);
   }
 
+  getTest(): Observable<any> {
+    const parametros = {
+      parametro: 'hola',
+    };
+    const newParametro = Object.assign({}, parametros);
+    return this.http.post<any>('http://18.223.146.82:3001/test2/', newParametro, cudOptions);
+  }
+
+
 }

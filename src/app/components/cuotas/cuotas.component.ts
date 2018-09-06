@@ -28,7 +28,7 @@ export class CuotasComponent implements OnInit {
   cuotasForm: FormGroup;
   session = new Session();
   characters: TableOrdenDePago;
-  
+
   creditos : TableCreditos[];
   clientes: any;
   cuotas: any[];
@@ -53,7 +53,7 @@ export class CuotasComponent implements OnInit {
           name: 'seleccionarCredito',
           title: 'Seleccionar'
         }
-       
+
       ],
     },
     columns: {
@@ -79,7 +79,7 @@ export class CuotasComponent implements OnInit {
       tipoPlan: {
         title: 'Tipo de Plan',
         width: '10%'
-      }   
+      }
     },
     pager: {
       display: true,
@@ -139,16 +139,16 @@ export class CuotasComponent implements OnInit {
   get dni() { return this.cuotasForm.get('dni'); }
 
   buscarCreditosPorDni() {
-    
+
       let dni = this.dni.value;
 
       if (this.dni.value !== '') {
         this.ordenDePago.postGetOrdenPagoVigentePorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
           this.charactersOrdenPago = response['creditos'];
         });
-      } 
+      }
      console.log(this.charactersOrdenPago);
-     
+
 
   }
 
@@ -168,7 +168,7 @@ export class CuotasComponent implements OnInit {
   }
 
   imprimirPDF(id: string) {
-    const doc = new jsPDF();    
+    const doc = new jsPDF();
     doc.setFontSize(12);
 
     doc.setFontType("bold");
@@ -307,7 +307,7 @@ export class CuotasComponent implements OnInit {
       }
     });
     doc.save('CuponDePago.pdf');
-    //doc.output('dataurlnewwindow');  
+    //doc.output('dataurlnewwindow');
   }
 
 
@@ -357,6 +357,8 @@ export class CuotasComponent implements OnInit {
   onRowSelect(event){
     console.log(event);
   }
+  showCuotas(event) {
 
-  
+  }
+
 }

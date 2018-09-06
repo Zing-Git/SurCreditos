@@ -1,0 +1,22 @@
+<ngx-smart-modal #simuladorModal identifier="simuladorModal" customClass="reveal">
+
+  <div class="form-row text-center">
+    <div class="col-12">
+        <p class="bg-primary">Simulador de Cuotas</p>
+    </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-1"></div>
+    
+    <div>
+        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="cuotas"  #simuladorTableForm></ng2-smart-table>
+    </div>
+    
+    <div class="col-md-6">
+      <span class="btn btn-outline-danger" (click)="simuladorModal.close()">Cancelar</span>
+    </div>
+  </div>
+</div>
+
+</ngx-smart-modal>

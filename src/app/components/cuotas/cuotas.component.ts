@@ -11,8 +11,9 @@ import 'jspdf-autotable';
 import { CreditosService } from '../../modules/servicios/creditos/creditos.service';
 import { EstadoCasa } from '../../modelo/negocio/estado-casa';
 import { Estado } from '../../modelo/negocio/estado';
-import { TableCreditos } from './tableCreditos';
+import { TableCreditos } from '../creditos/crud-creditos/TableCreditos';
 import { ModalCuotasComponent } from './modal-cuotas/modal-cuotas.component';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 declare let jsPDF;
 
@@ -23,14 +24,21 @@ declare let jsPDF;
 })
 export class CuotasComponent implements OnInit {
 
-  @ViewChild(ModalCuotasComponent) hijoModal: ModalCuotasComponent;
+  @ViewChild(ModalCuotasComponent) hijo: ModalCuotasComponent;
   cuotasForm: FormGroup;
   session = new Session();
-  charactersCreditos: TableCreditos[];
+  characters: TableOrdenDePago;
+
+  creditos : TableCreditos[];
   clientes: any;
   cuotas: any[];
   charactersOrdenPago: any[];
- 
+  charactersOrdenAPagar: any;
+  numeroFactura: string;
+  formas: any[];
+  estadosCasa: EstadoCasa[];
+  estados: Estado[];
+
   settings = {
 
     actions: {
@@ -42,33 +50,34 @@ export class CuotasComponent implements OnInit {
       position: 'right',
       custom: [
         {
-          name: 'mostrarCuotas',
+          name: 'seleccionarCredito',
           title: 'Seleccionar'
         }
+
       ],
     },
     columns: {
-      nuevoLegajo: {
+      legajoPrefijo:{
+        title: 'Serie',
+        width: '5%'
+      },
+      legajo: {
         title: 'Legajo',
-        width: '10%',
-        valuePrepareFunction: (cell, row) => row.legajoPrefijo + ' - ' + row.legajo
-        
+        width: '5%'
       },
-      titular: {
-        title: 'Nombre titular',
-        width: '15%',
-        valuePrepareFunction: (value) => { return value.titularApellidos + ', ' + value.titularNombres },
-      },
-
-      totalAPagar: {
-        title: 'Monto a Pagar',
+      nombreCompleto: {
+        title: 'Titular',
         width: '30%',
+        valuePrepareFunction: (cell, row) => row.titularApellidos + ', ' + row.titularNombres
+      },totalAPagar: {
+        title: 'Total a Pagar',
+        width: '13%',
         valuePrepareFunction: (value) => {
           return value === 'totalAPagar' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       tipoPlan: {
-        title: 'Tipo Plan',
+        title: 'Tipo de Plan',
         width: '10%'
       }
     },
@@ -76,15 +85,17 @@ export class CuotasComponent implements OnInit {
       display: true,
       perPage: 10
     },
-    noDataMessage: 'El Cliente no tiene Cuotas...'
+    noDataMessage: 'El Cliente no tiene Creditos...'
   };
   constructor(private fb: FormBuilder,
     private creditosServices: CreditosService,
     private loginService: LoginService,
     private router: Router,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    public ordenDePago: OrdenPagoService,
+    private clientesServices: ClientesService,
+    public ngxSmartModalService: NgxSmartModalService) { }
 
-  get dni() { return this.cuotasForm.get('dni'); }
 
   ngOnInit() {
 
@@ -92,7 +103,8 @@ export class CuotasComponent implements OnInit {
     this.cuotasForm = this.fb.group({
       dni: new FormControl('')
     });
-    
+
+    //  this.cargarControlesCombos();
   }
 
   onCustom(event) {
@@ -107,8 +119,9 @@ export class CuotasComponent implements OnInit {
         this, this.router.navigate(['viewcredito', evento, id]);
         break;
       }
-      case 'mostrarCuotas': {
-        this.mostrarCuotas(id);
+      case 'seleccionarCredito': {
+        //cargar cuotas del credito
+        this.seleccionarOrdenDePago(id);
         break;
       }
 
@@ -123,29 +136,37 @@ export class CuotasComponent implements OnInit {
     }
   }
 
-  buscarCreditoPorDni() {
-    let dni = this.dni.value;
-    console.log(dni)
-    if (dni !== '') {
-      this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe((response : TableCreditos[]) => {
-        this.charactersCreditos = response['creditos'];
-        console.log(response['creditos'])
-      });
-      console.log(this.charactersCreditos);
-     
-    }
+  get dni() { return this.cuotasForm.get('dni'); }
+
+  buscarCreditosPorDni() {
+
+      let dni = this.dni.value;
+
+      if (this.dni.value !== '') {
+        this.ordenDePago.postGetOrdenPagoVigentePorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
+          this.charactersOrdenPago = response['creditos'];
+        });
+      }
+     console.log(this.charactersOrdenPago);
+
 
   }
 
+  seleccionarOrdenDePago(id: string){
+    this.charactersOrdenPago.forEach(p=>{
+      if(p._id === id){
+        this.charactersOrdenAPagar = p;
+        this.hijo.recibePametros(this.charactersOrdenAPagar);
+        this.ngxSmartModalService.getModal('cuotaModal').open();
+      }
+    })
+  }
   pagarCuotas() {
    
   }
 
   imprimirPDF(id: string) {
-   /* const doc = new jsPDF();
-
-    //this.buscarCreditoPorDni(this.dni.value);
-
+    const doc = new jsPDF();
     doc.setFontSize(12);
 
     doc.setFontType("bold");
@@ -284,8 +305,7 @@ export class CuotasComponent implements OnInit {
       }
     });
     doc.save('CuponDePago.pdf');
-    //doc.output('dataurlnewwindow');  
-    */
+    //doc.output('dataurlnewwindow');
   }
 
   mostrarCuotas(idCredito: string){
@@ -299,5 +319,31 @@ export class CuotasComponent implements OnInit {
 
     this.hijoModal.getDataFromCuotas(this.cuotas);
   }
-  
+
+  /*buscarCuotasPorDni() {
+    let dni = this.dni.value;
+    console.log(dni);
+    this.session.token = this.loginService.getTokenDeSession();
+    if (dni !== '') {
+      this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
+        this.characters = response['ordenDb'][0];
+        //console.log(this.characters.credito);
+
+      });
+    }
+    //this.cuotas = this.characters.credito.planPagos.cuotas;
+
+  }*/
+  buscarCuotas(){
+    //this.hijo.recibePametros(persona, tipoDeAlta);
+    //this.ngxSmartModalService.getModal('clienteModal').open();
+  }
+
+  onRowSelect(event){
+    console.log(event);
+  }
+  showCuotas(event) {
+
+  }
+
 }

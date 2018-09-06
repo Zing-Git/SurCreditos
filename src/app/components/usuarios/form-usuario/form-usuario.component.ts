@@ -23,7 +23,14 @@ import { TokenPost } from '../../../modelo/util/token';
 
 
 export class FormUsuarioComponent implements OnInit {
-  public tiposDni: TipoDni[];
+  // public tiposDni: TipoDni[];
+
+  public tiposDni = [{
+                        _id: "5b0d6a845b9d842646da57c9",
+                        nombre: "DNI",
+                        __v: 0
+                    }];
+
   public provincias: Provincia[];
   public estadosCasa: EstadoCasa[];
   public tiposContacto: TipoContacto[];
@@ -192,9 +199,9 @@ export class FormUsuarioComponent implements OnInit {
     }
 
     inicializarControlesUsandoGETServices() {
-        this.usuariosService.getAllTipoDni().subscribe(result => {
+        /* this.usuariosService.getAllTipoDni().subscribe(result => {
           this.tiposDni = result['tiposDni'];
-        });
+        }); */
         this.usuariosService.getAllEstadoCasa().subscribe(result => {
           this.estadosCasa = result['estadosCasaDB'];
         });

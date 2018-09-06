@@ -19,6 +19,11 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService) {}
 
   ngOnInit() {
+
+    /* this.usuariosService.getTest().subscribe(resp => {
+      console.log ('Servicio TEST: ', resp );
+    }); */    
+
   }
 
 

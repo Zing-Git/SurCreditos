@@ -1,7 +1,7 @@
 export class Cuota {
     cuotaPagada: boolean;
     montoPagado: string;
-    diasRetrado: number;
+    diasRetraso: number;
     comentarios: string[];
     _id: string;
     orden: number;
@@ -12,4 +12,6 @@ export class Cuota {
     fechaVencimiento: string;
     montoPendienteDePago: string;
     __v: number;
+
+    
 }

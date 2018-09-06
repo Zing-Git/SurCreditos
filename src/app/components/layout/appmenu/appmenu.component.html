@@ -26,7 +26,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                         <!--MENU CREDITOS -->
-                        <ng-container *ngSwitchCase="rol === 'VENDEDOR'">
+                        <ng-container *ngSwitchCase="rol === 'VENDEDOR' || rol === 'INDEFINIDO'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-edit"></i><p>Creditos<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -63,7 +63,7 @@
                         <!--FIN MENU CLIENTES -->
 
                         <!--MENU CAJA -->
-                        <ng-container *ngSwitchCase="rol === 'CAJERO'">
+                        <ng-container *ngSwitchCase="rol === 'CAJERO' || rol === 'INDEFINIDO'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-money"></i><p>Caja<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">

@@ -38,10 +38,6 @@ export class UsuariosService {
   // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
   public urlBase = 'http://18.223.146.82:3001';
 
-/*   public postNuevaPersonaUrl = this.urlBase + '/nueva_persona';
-  public postNuevaDomicilioUrl = this.urlBase + '/log/nuevo';
-  public postNuevoContactoUrl = this.urlBase + '/nuevo_contacto'; */
-
   // GET URLs
   public urlPostGetPersonaPorDni = this.urlBase + '/persona/obtener_persona/';
   public urlGetTiposDni = this.urlBase + '/persona/tipos_dni';

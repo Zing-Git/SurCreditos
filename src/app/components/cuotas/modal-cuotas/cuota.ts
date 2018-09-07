@@ -5,6 +5,7 @@ export class Cuota {
     montoPagado: number;
     porcentajeInteresPorMora: string;
     comentario: string;
+    orden: number;
    /* montoPendienteDePago: number;
     orden:number;
     cuotaPagada: boolean;

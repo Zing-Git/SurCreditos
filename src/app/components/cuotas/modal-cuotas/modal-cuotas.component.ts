@@ -119,7 +119,7 @@ export class ModalCuotasComponent implements OnInit {
     let monto = this.getMonto.value;
     
     this.cuotasSimuladas = new Array();
-    console.log('OBJETO CLONADO....' + this.cuotasSimuladas);
+    //console.log('OBJETO CLONADO....' + this.cuotasSimuladas);
     if (monto > 0) {
 
       let contador = 0;
@@ -128,7 +128,7 @@ export class ModalCuotasComponent implements OnInit {
 
       this.cuotas.forEach(i => {
         contador = monto;  //aqui  recuerdo el valor
-        console.log('OBTENGO DEL PADRE ' + i.MontoTotalCuota);
+        //console.log('OBTENGO DEL PADRE ' + i.MontoTotalCuota);
         monto = monto - i.MontoTotalCuota;
         let nuevo: TableCuotas;
         if (bandera === true) {
@@ -139,7 +139,7 @@ export class ModalCuotasComponent implements OnInit {
             //i.montoPendienteDePago = 0;
             this.cuotasSimuladas.push(nuevo);
             bandera = false;
-            console.log('pasa por monto === 0');
+            //console.log('pasa por monto === 0');
           }
 
           if (monto < 0) {
@@ -152,7 +152,7 @@ export class ModalCuotasComponent implements OnInit {
             //i.comentarios.push('pago parcial');
             this.cuotasSimuladas.push(nuevo);
             bandera = false;
-            console.log('pasa por monto < 0');
+            //console.log('pasa por monto < 0');
           }
 
           if (monto > 0) {
@@ -165,19 +165,19 @@ export class ModalCuotasComponent implements OnInit {
             //i.montoPendienteDePago = 0;
             //i.comentarios.push('pago toda la cuota');
             this.cuotasSimuladas.push(nuevo);
-            console.log('pasa por monto > 0');
+            //console.log('pasa por monto > 0');
           }
-          console.log(monto);
+          //console.log(monto);
           //console.log(this.cuotasSimuladas);
         }
       })
       
-      console.log(this.cuotasSimuladas);
+      //console.log(this.cuotasSimuladas);
       this.hijo.simularPago(this.cuotasSimuladas, this.creditos, this.idCredito);
       this.ngxSmartModalService.getModal('simuladorModal').open();
       //this.ngxSmartModalService.resetModalData('simuladorModal');
       //this.cuotasSimuladas.length = 0;   //limpiamos el array
-      console.log('Aqui salgo del modal' + this.cuotasSimuladas);
+      //console.log('Aqui salgo del modal' + this.cuotasSimuladas);
       monto = 0;
     } else {
 

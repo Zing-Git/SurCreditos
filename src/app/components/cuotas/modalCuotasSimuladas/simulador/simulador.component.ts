@@ -5,7 +5,7 @@ import { LoginService } from '../../../../modules/servicios/login/login.service'
 import { Session } from '../../../../modelo/util/session';
 import * as moment from 'moment';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { TableCuotas } from '../../modal-cuotas/TableCuotas';
+//import { TableCuotas } from '../../modal-cuotas/TableCuotas';
 import { Pago } from './pago';
 import { CuotasService } from '../../../../modules/servicios/cuotas/cuotas.service';
 import 'jspdf-autotable';
@@ -13,6 +13,7 @@ import { TableCreditos } from '../../tableCreditos';
 import { UtilidadesService } from '../../../../modules/servicios/utiles/utilidades.service';
 import { DatePipe } from '@angular/common';
 import { ClientesService } from '../../../../modules/servicios/clientes/clientes.service';
+import { TableCuotas } from '../../tableCuotas';
 declare let jsPDF;
 
 @Component({
@@ -94,6 +95,8 @@ export class SimuladorComponent implements OnInit {
     this.creditos = misCreditos;
     this.idCredito = idCredito;
     console.log(this.cuotasSimuladas);
+    console.log(this.creditos);
+    console.log(this.idCredito);
 
   }
   cerrarModal(event) {
@@ -104,14 +107,23 @@ export class SimuladorComponent implements OnInit {
 
   realizarPago() {
     this.session.token = this.loginService.getTokenDeSession();
+
     this.cuotaAPagar = new Pago();
-    this.cuotas.forEach(element => {
-      this.cuotaAPagar.token = this.session.token;
-      this.cuotaAPagar.cuota = element;
-
+    this.cuotaAPagar.token = this.session.token;
+    let miCuota : any[] = new Array();
+    this.cuotasSimuladas.forEach(element => {
+      
+      miCuota.push(element);
+      console.log('NUMERO DE ORDEN DE CUOTAS ------->' +element.orden);
     });
-
-    if (this.cuotaAPagar != null) {
+    this.cuotaAPagar.cuota = miCuota;
+    
+    if(this.cuotaAPagar != null){
+      alert('Cuotas Pagadas!!!' + this.cuotaAPagar);
+    }else{
+      alert('Hubo un problema al registrar la solicitud de credito');
+    }
+    /*if (this.cuotaAPagar != null) {
       //llamar al servicio para realizar el pago
       this.cutaService.postPagarCuota(this.cuotaAPagar).subscribe(result => {
         let respuesta = result;
@@ -123,10 +135,10 @@ export class SimuladorComponent implements OnInit {
         alert('Hubo un problema al registrar la solicitud de credito');
 
       });
-    }
+    }*/
   }
 
-  imprimirPDF(id: string) {
+  imprimirPDF() {
      const doc = new jsPDF();
     let numeroFactura: string;
  
@@ -167,15 +179,19 @@ export class SimuladorComponent implements OnInit {
           doc.text('Fecha de Alta: ', 10, 65);
           doc.text('Fecha de Cancelacion: ', 80, 65);
           doc.text('Capital: ', 10, 70);
-          //doc.text('Total a Pagar: ', 80, 70);
+          doc.text('Total a Pagar: ', 80, 70);
           doc.text('Plan de Pago: ', 10, 75);
+          doc.text('Cant. de Cuotas: ', 80, 75);
+          doc.line(10, 80, 150, 80);
+          //datos de la cuota usamos x
           
-          doc.text('Total a pagar: ', 10, 90);
-          doc.text('Forma de pago:  ', 10, 95);
-          doc.text('Cant. de Cuotas: ', 80, 105);
-          doc.text('Fecha de Alta: ', 80, 105);
-          doc.text('Talón Cliente', 80, 110);
-  
+          doc.text('Nº Cuota: ' , 40, 90);
+          doc.text('Valor de Cuota:', 40, 95);
+          doc.text('Dias mora: ', 40, 100);
+          doc.text('Total a Pagar: ', 40, 105);
+          doc.text('Pagado: ', 40, 110);
+          doc.text('Saldo por cuota: (adeudado):', 40, 115);
+
           doc.setFontType("bold");
   
           doc.text(numeroFactura, 50, 40);
@@ -193,21 +209,22 @@ export class SimuladorComponent implements OnInit {
           doc.text(element.tipoPlan, 50, 75);  //plan de pago es el tipo de plan(semanal, quincenal, etc...)
           doc.text(cantidadCuota, 120, 75);   //cantidad de cuotas es el ultimo orden
   
-          doc.line(10, 85, 150, 85);
-  
-     
-         
-  
-          doc.line(10, 100, 150, 100);   //x, , largo , y
+          doc.text(element.cuotas.find(t=>t._id === x._id).orden.toString(), 120, 90);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t=>t._id === x._id).montoCapital),120, 95);
+          let diasRetraso = String(element.cuotas.find(t=>t._id === x._id).diasRetraso);
+          doc.text(diasRetraso, 120, 100);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t=>t._id === x._id).MontoTotalCuota),120, 105);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 110);
+          //doc.line(10, 100, 150, 100);   //x, , largo , y
           const today = Date.now();
-          doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 105);
+          //doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 105);
 
           //parte de la cuota
           doc.setFontSize(12);
           doc.line(10, 125, 150, 125);
           doc.setFontType("bold");
 
-          doc.text()
+          //doc.text()
           
    /*
   
@@ -278,7 +295,7 @@ export class SimuladorComponent implements OnInit {
 
 
 
-
+      doc.addPage();
     })
      
      doc.save('CuponDePago.pdf');
@@ -297,5 +314,10 @@ export class SimuladorComponent implements OnInit {
       //this.estados = result['respuesta'].estadosCredito;
     });
 
+  }
+
+  pagar(){
+    this.realizarPago();   
+    this.imprimirPDF();
   }
 }

@@ -12,9 +12,11 @@
     <div>
         <ng2-smart-table [settings]="settings" class="table table-hover" [source]="cuotasSimuladas"  #simuladorTableForm></ng2-smart-table>
     </div>
-    
     <div class="col-md-6">
-      <span class="btn btn-outline-danger" (click)="simuladorModal.close()">Cancelar</span>
+      <span class="btn btn-outline-success" (click)="pagar()">Confirmar Pago</span>
+    </div>
+    <div class="col-md-6">
+      <span class="btn btn-outline-danger" (click)="simuladorModal.close()">Cerrar</span>
     </div>
   </div>
 </div>

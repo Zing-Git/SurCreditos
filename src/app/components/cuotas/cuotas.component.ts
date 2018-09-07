@@ -13,6 +13,7 @@ import { EstadoCasa } from '../../modelo/negocio/estado-casa';
 import { Estado } from '../../modelo/negocio/estado';
 import { TableCreditos } from './tableCreditos';
 import { ModalCuotasComponent } from './modal-cuotas/modal-cuotas.component';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 declare let jsPDF;
 
@@ -57,7 +58,7 @@ export class CuotasComponent implements OnInit {
       titular: {
         title: 'Nombre titular',
         width: '15%',
-        valuePrepareFunction: (value) => { return value.titularApellidos + ', ' + value.titularNombres },
+        valuePrepareFunction: (cell, row) => row.titularApellidos + ', ' + row.titularNombres
       },
 
       totalAPagar: {
@@ -82,7 +83,8 @@ export class CuotasComponent implements OnInit {
     private creditosServices: CreditosService,
     private loginService: LoginService,
     private router: Router,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private ngxSmartModalService: NgxSmartModalService) { }
 
   get dni() { return this.cuotasForm.get('dni'); }
 
@@ -123,31 +125,29 @@ export class CuotasComponent implements OnInit {
     console.log(dni)
     if (dni !== '') {
       this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe(response => {
-        this.charactersCreditos = response['creditos'];
-        console.log(response['creditos'])
+        let charactersCreditos = response['creditos'];        
+        this.charactersCreditos = JSON.parse(JSON.stringify(charactersCreditos));
       });
-      console.log(this.charactersCreditos);
-     
+      
     }
-
   }
 
   pagarCuotas() {
    
-  }
-
-  
+  } 
 
   mostrarCuotas(idCredito: string){
+    console.log('id de credito.........' + idCredito);
     this.charactersCreditos.forEach(x=>{
       if(idCredito == x._id){
-        this.cuotas = JSON.parse(JSON.stringify(x.cuotas));        
-      }
-      
+        this.cuotas = x.cuotas;  
+              
+      }      
     });
-    console.log(this.cuotas);
+    console.log('CUOTAS PARA ENVIAR A --->' + this.cuotas);
 
     this.hijoModal.getDataFromCuotas(this.cuotas, this.charactersCreditos, idCredito);
+    this.ngxSmartModalService.getModal('cuotaModal').open();
   }
   
 }

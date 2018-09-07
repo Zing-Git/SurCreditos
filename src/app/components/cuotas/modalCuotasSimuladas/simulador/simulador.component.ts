@@ -24,7 +24,7 @@ export class SimuladorComponent implements OnInit {
 
   cuotasModalForm: FormGroup;
   session = new Session();
-  cuotasSimuladas: any;
+  cuotasSimuladas: TableCuotas[];
   
   cuotas: any;
   creditos: TableCreditos[];
@@ -84,19 +84,21 @@ export class SimuladorComponent implements OnInit {
     public utilidades: UtilidadesService, private datePipe: DatePipe, private clientesServices: ClientesService) { }
 
   ngOnInit() {
-    this.cuotas = this.cuotasSimuladas;
+    //this.cuotas = this.cuotasSimuladas;
   }
 
-  simularPago(misCuotas: any, misCreditos: TableCreditos[], idCredito: string) {
-    this.cuotasSimuladas = new Array();
-    this.cuotasSimuladas.lenght = 0;
+  simularPago(misCuotas: TableCuotas[], misCreditos: any[], idCredito: string) {
+    
+    //this.cuotasSimuladas.lenght = 0;
     this.cuotasSimuladas = misCuotas;
-    this.ngOnInit();
+    this.creditos = misCreditos;
+    this.idCredito = idCredito;
+    console.log(this.cuotasSimuladas);
 
   }
   cerrarModal(event) {
     this.cuotas.lenght = 0;
-    this.cuotasSimuladas.lenght = 0;
+    //this.cuotasSimuladas.lenght = 0;
     this.ngxSmartModalService.getModal('simuladorModal').close();
   }
 

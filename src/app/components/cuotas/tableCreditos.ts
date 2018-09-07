@@ -16,4 +16,6 @@ export class TableCreditos {
     titularLocalidad: string;
     titularProvincia: string;
     datosContacto: string[];
+
+    
 }

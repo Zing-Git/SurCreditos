@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TableCuotas } from './TableCuotas';
+import { TableCuotas } from '../TableCuotas';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from '../../../modules/servicios/login/login.service';
 import { Session } from '../../../modelo/util/session';
@@ -8,6 +8,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SimuladorComponent } from '../modalCuotasSimuladas/simulador/simulador.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TableCreditos } from '../tableCreditos';
+
 
 @Component({
   selector: 'app-modal-cuotas',
@@ -21,7 +22,7 @@ export class ModalCuotasComponent implements OnInit {
   session = new Session();
 
   //ordenDePago: any;
-  cuotas: TableCuotas[];
+  cuotas: any[];
   cuotasSimuladas: TableCuotas[];
   cuotasBackup: TableCuotas[];
   miOrdenDePago: any;
@@ -107,29 +108,34 @@ export class ModalCuotasComponent implements OnInit {
   onCustom(event) {
 
   }
-  getDataFromCuotas(misCuotas: TableCuotas[], misCreditos: TableCreditos[], idCredito: string){
+  getDataFromCuotas(misCuotas: any[], misCreditos: TableCreditos[], idCredito: string) {
     this.cuotas = misCuotas;
     this.creditos = misCreditos;
     this.idCredito = idCredito;
+    
   }
 
   simularPago() {
     let monto = this.getMonto.value;
+    
+    this.cuotasSimuladas = new Array();
+    console.log('OBJETO CLONADO....' + this.cuotasSimuladas);
     if (monto > 0) {
 
       let contador = 0;
-      this.cuotasSimuladas = new Array();
+
       let bandera = true;
 
       this.cuotas.forEach(i => {
         contador = monto;  //aqui  recuerdo el valor
+        console.log('OBTENGO DEL PADRE ' + i.MontoTotalCuota);
         monto = monto - i.MontoTotalCuota;
-        let nuevo : TableCuotas;
+        let nuevo: TableCuotas;
         if (bandera === true) {
           if (monto === 0) {
-             
-             nuevo = JSON.parse(JSON.stringify(i));
-             nuevo.montoPendienteDePago = 0;           
+
+            nuevo = JSON.parse(JSON.stringify(i));
+            nuevo.montoPendienteDePago = 0;
             //i.montoPendienteDePago = 0;
             this.cuotasSimuladas.push(nuevo);
             bandera = false;
@@ -165,8 +171,8 @@ export class ModalCuotasComponent implements OnInit {
           //console.log(this.cuotasSimuladas);
         }
       })
-     
-
+      
+      console.log(this.cuotasSimuladas);
       this.hijo.simularPago(this.cuotasSimuladas, this.creditos, this.idCredito);
       this.ngxSmartModalService.getModal('simuladorModal').open();
       //this.ngxSmartModalService.resetModalData('simuladorModal');
@@ -177,7 +183,7 @@ export class ModalCuotasComponent implements OnInit {
 
     }
   }
-  
+
   onCerrarSimulacion() {
     //this.cuotas = this.cuotasBackup;
     //this.recibePametros(this.miOrdenDePago);

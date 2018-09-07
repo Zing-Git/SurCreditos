@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TableCuotas } from './TableCuotas';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
@@ -8,14 +7,7 @@ import * as moment from 'moment';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SimuladorComponent } from '../modalCuotasSimuladas/simulador/simulador.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-=======
-import { Component, OnInit } from '@angular/core';
-import { TableCuotas } from './TableCuotas';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { LoginService } from '../../../modules/servicios/login/login.service';
-import { Session } from '../../../modelo/util/session';
-import * as moment from 'moment';
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
+import { TableCreditos } from '../tableCreditos';
 
 @Component({
   selector: 'app-modal-cuotas',
@@ -24,24 +16,18 @@ import * as moment from 'moment';
 })
 export class ModalCuotasComponent implements OnInit {
 
-<<<<<<< HEAD
   @ViewChild(SimuladorComponent) hijo: SimuladorComponent;
   cuotasModalForm: FormGroup;
   session = new Session();
 
-  ordenDePago: any;
+  //ordenDePago: any;
   cuotas: TableCuotas[];
   cuotasSimuladas: TableCuotas[];
   cuotasBackup: TableCuotas[];
   miOrdenDePago: any;
+  creditos: TableCreditos[];
+  idCredito: string;
 
-=======
-  cuotasModalForm: FormGroup;
-  session = new Session();
-  
-  ordenDePago : any;
-  cuotas: TableCuotas[];
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
   settings = {
 
     actions: {
@@ -51,7 +37,6 @@ export class ModalCuotasComponent implements OnInit {
       edit: false,
       imprimirPDF: false,
       position: 'right',
-<<<<<<< HEAD
 
     },
     columns: {
@@ -83,50 +68,15 @@ export class ModalCuotasComponent implements OnInit {
       MontoTotalCuota: {
         title: 'Total a pagar',
         width: '8%',
-=======
-      custom: [
-        {
-          name: 'seleccionarCredito',
-          title: 'Seleccionar'
-        }
-       
-      ],
-    },
-    columns: {
-      orden:{
-        title: 'Orden',
-        width: '5%'
-      },
-      cuotaPagada:{
-        title: 'Estado',
-        width: '10%',
-        valuePrepareFunction: (value) =>{
-          return value === true ? 'PAGADO': 'IMPAGA';
-        }        
-      },
-      montoPagado: {
-        title: 'Montos Pagados',
-        width: '10%'
-      },
-      MontoTotalCuota: {
-        title: 'Total a pagar',
-        width: '15%',
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
         valuePrepareFunction: (value) => {
           return value === 'MontoTotalCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       fechaVencimiento: {
         title: 'Vencimiento',
-<<<<<<< HEAD
         width: '8%',
         valuePrepareFunction: (cell, row) => { return moment(row.fechaVencimiento).format('DD-MM-YYYY') }
       }
-=======
-        width: '15%',
-        valuePrepareFunction: (cell, row) => { return moment(row.fechaVencimiento).format('DD-MM-YYYY') }
-      }   
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
     },
     pager: {
       display: true,
@@ -135,24 +85,16 @@ export class ModalCuotasComponent implements OnInit {
     noDataMessage: 'El Cliente no tiene Cuotas...'
   };
 
-<<<<<<< HEAD
   constructor(private fb: FormBuilder, private loginService: LoginService, public ngxSmartModalService: NgxSmartModalService, private modalService: NgbModal) {
     this.session.token = this.loginService.getTokenDeSession();
     this.cuotasModalForm = this.fb.group({
       monto: new FormControl('', [Validators.required])
-=======
-  constructor(private fb: FormBuilder, private loginService: LoginService) { 
-    this.session.token = this.loginService.getTokenDeSession();
-    this.cuotasModalForm = this.fb.group({
-      monto: new FormControl('')
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
     });
   }
 
   ngOnInit() {
   }
 
-<<<<<<< HEAD
   get getMonto() { return this.cuotasModalForm.get('monto'); }
   //estoes enviado desde el padre
   recibePametros(ordenDePago: any) {
@@ -165,8 +107,10 @@ export class ModalCuotasComponent implements OnInit {
   onCustom(event) {
 
   }
-  getDataFromCuotas(misCuotas: TableCuotas[]){
+  getDataFromCuotas(misCuotas: TableCuotas[], misCreditos: TableCreditos[], idCredito: string){
     this.cuotas = misCuotas;
+    this.creditos = misCreditos;
+    this.idCredito = idCredito;
   }
 
   simularPago() {
@@ -223,7 +167,7 @@ export class ModalCuotasComponent implements OnInit {
       })
      
 
-      this.hijo.simularPago(this.cuotasSimuladas, monto);
+      this.hijo.simularPago(this.cuotasSimuladas, this.creditos, this.idCredito);
       this.ngxSmartModalService.getModal('simuladorModal').open();
       //this.ngxSmartModalService.resetModalData('simuladorModal');
       //this.cuotasSimuladas.length = 0;   //limpiamos el array
@@ -245,21 +189,4 @@ export class ModalCuotasComponent implements OnInit {
   }
 
 
-=======
-  get monto() { return this.cuotasModalForm.get('monto'); }
-  //estoes enviado desde el padre
-  recibePametros(ordenDePago: any) {
-    console.log(ordenDePago);
-    this.cuotas = ordenDePago.cuotas;
-  }
-  
-  onCustom(event){
-
-  }
-
-  simularPago(){
-    let miMonto = this.monto.value;
-    console.log(this.monto + '  /   ' + miMonto);
-  }
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
 }

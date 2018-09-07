@@ -16,10 +16,6 @@ export interface TableCuotas{
     montoCobranzaADomicilio:number;
     MontoTotalCuota: number;
     fechaVencimiento: string;
-<<<<<<< HEAD
    
     __v: number;
-=======
-    __v: 0
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
 }

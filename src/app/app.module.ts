@@ -49,10 +49,7 @@ import { FormOrdenDePagoComponent } from './components/orden-de-pago/form-orden-
 import { CrudCreditosAdminTodosComponent } from './components/creditos/crud-creditos-admin-todos/crud-creditos-admin-todos.component';
 import { CuotasComponent } from './components/cuotas/cuotas.component';
 import { ModalCuotasComponent } from './components/cuotas/modal-cuotas/modal-cuotas.component';
-<<<<<<< HEAD
 import { SimuladorComponent } from './components/cuotas/modalCuotasSimuladas/simulador/simulador.component';
-=======
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
 
 @NgModule({
   declarations: [
@@ -78,12 +75,8 @@ import { SimuladorComponent } from './components/cuotas/modalCuotasSimuladas/sim
     FormOrdenDePagoComponent,
     CrudCreditosAdminTodosComponent,
     CuotasComponent,
-<<<<<<< HEAD
     ModalCuotasComponent,
     SimuladorComponent
-=======
-    ModalCuotasComponent
->>>>>>> f66bc5f4eea99c3100fb852a290d48813c20bef9
   ],
   imports: [
     BrowserModule,

@@ -16,6 +16,22 @@ export class UtilidadesService {
     return (d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2));
   }
 
+  // CONCATENA LEGAJO 
+  
+  crearNumeroFactura(legajo_prefijo: string, legajo: string): string{
+    let numeroFactura: string;
+    let s = +legajo + "";
+    //console.log(s);
+    while (s.length < 6) {
+
+      s = "0" + s
+      //console.log(s);
+    };
+    numeroFactura = legajo_prefijo + '-' + s;
+
+    return numeroFactura;
+  }
+
   /*
 
   //SEGUN BOLEANDO OBIENE SI O NO
@@ -27,20 +43,7 @@ export class UtilidadesService {
     }
   }
 
-  // CONCATENA LEGAJO 
-   crearNumeroFactura(legajo_prefijo: string, legajo: string): string{
-
-    let s = +legajo + "";
-    //console.log(s);
-    while (s.length < 6) {
-
-      s = "0" + s
-      //console.log(s);
-    };
-    this.numeroFactura = legajo_prefijo + '-' + s;
-
-    return this.numeroFactura;
-  }
+  
 
   // PARA GENERAR EL MONTO EN LETRAS
   private toText(numero: number): string {

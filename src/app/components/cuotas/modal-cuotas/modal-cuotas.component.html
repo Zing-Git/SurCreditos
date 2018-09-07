@@ -1,3 +1,6 @@
+<app-simulador></app-simulador>
+
+
 <ngx-smart-modal #cuotaModal identifier="cuotaModal" customClass="reveal">
 
   <div class="form-row text-center">
@@ -20,27 +23,19 @@
   
           <div class="col-md-6">
               <span class="btn btn-outline-primary" (click)="simularPago()">Simular Pago</span>
-          </div>
-  
-          <!-- Dni error block -->
-          <div *ngIf="monto.invalid && monto.touched" class="col-sm-6 text-danger">
-              <div *ngIf="monto.errors['required']">
-                  El monto es requerido
-              </div>
-          </div>
+          </div>         
         </div>
-      </form>
-      
+      </form>      
       
     </div>
     <div>
         <ng2-smart-table [settings]="settings" class="table table-hover" [source]="cuotas"  (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
     </div>
     <div class="col-md-6">
-      <span class="btn btn-outline-success" (click)="simularPago()">Confirmar Pago</span>
+      <span class="btn btn-outline-success" (click)="confirmarPago()">Confirmar Pago</span>
     </div>
-    <div class="col-md-8">
-      <span class="btn btn-outline-danger" (click)="cuotaModal.close()">Cancelar</span>
+    <div class="col-md-6">
+      <span class="btn btn-outline-danger" (click)="onCerrarSimulacion()">Cancelar</span>
     </div>
   </div>
 </div>

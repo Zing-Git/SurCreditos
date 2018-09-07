@@ -1,21 +1,20 @@
-export interface TableCuotas{
+export class TableCuotas {
     cuotaPagada: boolean;
     montoPagado: string[];
     montoPendienteDePago: number;
     diasRetraso: number;
     comentarios: string[];
     montoInteresPorMora: number;
-    cuotaVencida: boolean,
+    cuotaVencida: boolean;
     fechaPago: string[];
     usuarioCobrador: string[];
-    pagoInteres: boolean,
+    pagoInteres: boolean;
     _id: string;
     orden: number;
-    montoCapital:number;
+    montoCapital: number;
     montoInteres: number;
-    montoCobranzaADomicilio:number;
+    montoCobranzaADomicilio: number;
     MontoTotalCuota: number;
     fechaVencimiento: string;
-   
     __v: number;
 }

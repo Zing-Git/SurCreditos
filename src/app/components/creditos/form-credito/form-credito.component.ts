@@ -275,6 +275,7 @@ export class FormCreditoComponent implements OnInit {
     // console.log(this.creditoNuevo);
 
     this.clientesService.postAgregarReferenciaCliente(this.referenciaCliente).subscribe( resultCliente => {
+      
 
         if (this.comercio) {
           // Si existe comercio

@@ -33,7 +33,7 @@ export class CreditosService {
    public urlPostCambiarEstadoCredito = this.urlBase + '/credito/cambiar_estado/';
    public urlPostGetCreditoPorId = this.urlBase + '/credito/buscar_credito/';
    public urlPostGetAllCreditosTodosLosUsuarios = this.urlBase + '/credito/listar_todos/';
-   private urlPostGetCreditoPorDni = this.urlBase + '/credito/buscar_credito_por_dni/';
+   public urlPostGetCreditoVitenge = this.urlBase + '/credito/consultar_plan_pago_vigente/';
 
    public Storage : TableCreditos;
   constructor(public http: HttpClient) { }
@@ -81,12 +81,13 @@ export class CreditosService {
     return this.http.post<any[]>(this.urlPostGetCreditoPorId, newSession, cudOptions);
   }
 
-  postGetCreditoPorDni(dni: string, token: string): Observable<any[]>{
+  postGetCreditosVigentes(session : Session, dni : string): Observable<any[]>{
     let parameters = {
-      dni : dni,
-      token: token
+      token : session.token,
+      dni : dni
     };
-    const session= Object.assign({}, parameters);
-    return this.http.post<any[]>(this.urlPostGetCreditoPorDni, session, cudOptions);
+
+    const newSessio = Object.assign({},parameters);
+    return this.http.post<any[]>(this.urlPostGetCreditoVitenge,newSessio,cudOptions);
   }
 }

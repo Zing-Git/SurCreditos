@@ -26,7 +26,7 @@ export class CuotasComponent implements OnInit {
   @ViewChild(ModalCuotasComponent) hijoModal: ModalCuotasComponent;
   cuotasForm: FormGroup;
   session = new Session();
-  charactersCreditos: TableCreditos[];
+  charactersCreditos: any[];
   clientes: any;
   cuotas: any[];
   //charactersOrdenPago: any[];
@@ -122,7 +122,7 @@ export class CuotasComponent implements OnInit {
     let dni = this.dni.value;
     console.log(dni)
     if (dni !== '') {
-      this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe((response : TableCreditos[]) => {
+      this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe(response => {
         this.charactersCreditos = response['creditos'];
         console.log(response['creditos'])
       });

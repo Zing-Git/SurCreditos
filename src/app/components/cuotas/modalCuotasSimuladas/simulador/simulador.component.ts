@@ -167,9 +167,10 @@ export class SimuladorComponent implements OnInit {
           doc.text('Capital: ', 10, 70);
           //doc.text('Total a Pagar: ', 80, 70);
           doc.text('Plan de Pago: ', 10, 75);
-          doc.text('Cant. de Cuotas: ', 10, 80);
+          
           doc.text('Total a pagar: ', 10, 90);
           doc.text('Forma de pago:  ', 10, 95);
+          doc.text('Cant. de Cuotas: ', 80, 105);
           doc.text('Fecha de Alta: ', 80, 105);
           doc.text('Talón Cliente', 80, 110);
   
@@ -184,27 +185,34 @@ export class SimuladorComponent implements OnInit {
           
           doc.text(this.datePipe.transform(element.fechaAlta, 'dd/MM/yyyy'), 50, 65);
           doc.text(this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 65);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.capital), 50, 70);  //monto pedido
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.capital), 50, 70);  //monto pedido.
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.totalAPagar), 120, 70);
           //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 70);
-          doc.text(element.tipoPlan, 50, 75);
-          doc.text(cantidadCuota, 50, 80);   //cantidad de cuotas es el ultimo orden
+          doc.text(element.tipoPlan, 50, 75);  //plan de pago es el tipo de plan(semanal, quincenal, etc...)
+          doc.text(cantidadCuota, 120, 75);   //cantidad de cuotas es el ultimo orden
   
           doc.line(10, 85, 150, 85);
   
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.totalAPagar), 120, 90);
-          doc.text(this.formas[0].formaPago.toString(), 50, 95);
+     
+         
   
           doc.line(10, 100, 150, 100);   //x, , largo , y
-  /*
-          doc.text(this.datePipe.transform(element.fechaPago, 'dd/MM/yyyy'), 120, 105);
-  
+          const today = Date.now();
+          doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 105);
+
+          //parte de la cuota
+          doc.setFontSize(12);
+          doc.line(10, 125, 150, 125);
+          doc.setFontType("bold");
+
+          doc.text()
+          
+   /*
   
           //Talon para el Cliente
   
   
-          doc.setFontSize(12);
-          doc.line(10, 125, 150, 125);
-          doc.setFontType("bold");
+          
   
           doc.text('ORDEN DE PAGO', 80, 130, 'center');
           doc.line(10, 135, 150, 135);   //x, , largo , y

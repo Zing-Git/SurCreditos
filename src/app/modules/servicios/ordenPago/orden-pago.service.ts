@@ -46,11 +46,12 @@ export class OrdenPagoService {
     return this.http.post<any[]>(this.urlPostOrdenPagoVigentePorDni, newSession, cudOptions);
   }
 
-  postPagarOrdenDePago(idOrden: string, token: string){
+  postPagarOrdenDePago(idOrden: string, token: string, medioPago: string){
 
     const paramnetros ={
       token: token,
-      idOrden: idOrden
+      idOrden: idOrden,
+      medioPago: medioPago
     };
     const newSession = Object.assign({}, paramnetros);
     return this.http.post<any[]>(this.urlPostPagarOrdenDePago, newSession, cudOptions);

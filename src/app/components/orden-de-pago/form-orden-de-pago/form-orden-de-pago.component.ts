@@ -115,11 +115,8 @@ export class FormOrdenDePagoComponent implements OnInit {
       dni: new FormControl('', [Validators.required])
     });
 
-    this.creditoService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
-      this.charactersCreditos = response['creditos'];
-    });
-
     this.cargarControlesCombos();
+    
   }
 
   onCustom(event) {
@@ -329,15 +326,19 @@ export class FormOrdenDePagoComponent implements OnInit {
       //console.log(this.formas[0].formaPago);
       this.estadosCasa = result['respuesta'].estadosCasa;
       this.estados = result['respuesta'].estadosCredito;
+      
     });
 
   }
 
   private pagarOrdenDePago(idOrden: string){
     console.log(idOrden + ' / ' + this.session.token);
-    this.ordenDePago.postPagarOrdenDePago(idOrden, this.session.token).subscribe(result =>{
+    let medioPago= this.formas[0].formaPago.toString()
+    
+    console.log(medioPago);
+    this.ordenDePago.postPagarOrdenDePago(idOrden, this.session.token, medioPago).subscribe(result =>{
       let respuesta = result;
-      console.log(respuesta);
+      console.log('respuesta del pago**** ' +respuesta);
       alert('Se actualizó el estado de Credito');
       this.buscarCreditoPorDni();
     });
@@ -345,9 +346,17 @@ export class FormOrdenDePagoComponent implements OnInit {
     this.postAprobarRechazar(idOrden,'PAGADO');
 
   }
-
+  cargarCreditos(dni: string){
+    this.creditoService.postGetCreditosVigentes(this.session, dni).subscribe((response: TableCreditos[]) => {
+      this.charactersCreditos = response['creditos'];
+      console.log( 'AQUI UN RESULTADO DE CREDITOS------>' + response['creditos']);
+    });
+    console.log('AQUI UN RESULTADO DE CREDITOS------>' +this.charactersCreditos);
+  }
 
   postAprobarRechazar(id: string, nuevoEstado: string) {
+    let dni = this.dni.value;
+    this.cargarCreditos(dni);
     let idNuevoEstado: string;
     this.estados.forEach(element => {
       if (nuevoEstado == element.nombre) {

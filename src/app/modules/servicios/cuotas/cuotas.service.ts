@@ -25,7 +25,7 @@ export class CuotasService {
 
     const paramnetros ={
       token: pago.token,
-      cuotas: pago.cuota
+      cuotas: pago.cuotas
     };
     const newSession = Object.assign({}, paramnetros);
     return this.http.post<any[]>(this.urlPagarCuota, newSession, cudOptions);

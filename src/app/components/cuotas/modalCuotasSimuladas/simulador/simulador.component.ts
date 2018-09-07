@@ -25,13 +25,13 @@ export class SimuladorComponent implements OnInit {
 
   cuotasModalForm: FormGroup;
   session = new Session();
-  cuotasSimuladas: TableCuotas[];
-  
+  cuotasSimuladas: any[];
+  token: string;
   cuotas: any;
   creditos: TableCreditos[];
   cuotaAPagar: Pago;
   idCredito: string;
-  
+  todosMontosPagados: string;
   miOrdenDePago: any;
   formas: any[];
   settings = {
@@ -50,8 +50,8 @@ export class SimuladorComponent implements OnInit {
         title: 'Orden',
         width: '5%'
       },
-      montoPagado: {
-        title: 'Montos Pagados',
+       montoPagado: {
+        title: 'Monto Pagado',
         width: '8%',
         valuePrepareFunction: (value) => {
           return value === 'montoPagado' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
@@ -88,15 +88,14 @@ export class SimuladorComponent implements OnInit {
     //this.cuotas = this.cuotasSimuladas;
   }
 
-  simularPago(misCuotas: TableCuotas[], misCreditos: any[], idCredito: string) {
-    
+  simularPago(misCuotas: any[], misCreditos: any[], idCredito: string, miToken: string) {
+
     //this.cuotasSimuladas.lenght = 0;
     this.cuotasSimuladas = misCuotas;
     this.creditos = misCreditos;
     this.idCredito = idCredito;
-    console.log(this.cuotasSimuladas);
-    console.log(this.creditos);
-    console.log(this.idCredito);
+    this.token = miToken;
+    this.cargarControlesCombos();
 
   }
   cerrarModal(event) {
@@ -106,71 +105,81 @@ export class SimuladorComponent implements OnInit {
   }
 
   realizarPago() {
-    this.session.token = this.loginService.getTokenDeSession();
-
+    
     this.cuotaAPagar = new Pago();
-    this.cuotaAPagar.token = this.session.token;
-    let miCuota : any[] = new Array();
+    this.cuotaAPagar.token = this.token;
+
+    let miCuota: any[] = new Array();
+
+    console.log('XXXXXXXXXXXXXXXX' + this.cuotasSimuladas);
     this.cuotasSimuladas.forEach(element => {
       
-      miCuota.push(element);
-      console.log('NUMERO DE ORDEN DE CUOTAS ------->' +element.orden);
+      let cuota = {
+        _id: element._id,
+        diasRetraso: element.diasRetraso,
+        montoInteresMora: element.montoInteresPorMora,
+        montoPagado: element.montoPagado,
+        porcentajeInteresPorMora: element.montoInteresPorMora,
+        comentario: element.comentario,
+      }
+      
+      miCuota.push(cuota);
+      
     });
-    this.cuotaAPagar.cuota = miCuota;
-    
-    if(this.cuotaAPagar != null){
-      alert('Cuotas Pagadas!!!' + this.cuotaAPagar);
-    }else{
-      alert('Hubo un problema al registrar la solicitud de credito');
-    }
-    /*if (this.cuotaAPagar != null) {
+    this.cuotaAPagar.cuotas = miCuota;
+
+    console.log('JSON PARA POSTMAN' +this.cuotaAPagar);
+      
+
+    if (this.cuotaAPagar != null) {
       //llamar al servicio para realizar el pago
       this.cutaService.postPagarCuota(this.cuotaAPagar).subscribe(result => {
         let respuesta = result;
-        console.log(respuesta);
-        console.log(result);
-        alert('Cuotas Pagadas!!!');
-
+        if(result){
+            console.log(respuesta);
+            console.log(result);
+            alert('Cuotas Pagadas!!!');
+        }       
       }, err => {
         alert('Hubo un problema al registrar la solicitud de credito');
 
       });
-    }*/
+    }
   }
-
-  imprimirPDF() {
-     const doc = new jsPDF();
-    let numeroFactura: string;
  
-    this.cuotaAPagar.cuota.forEach(x=>{
+  imprimirPDF() {
+    const doc = new jsPDF();
+    let numeroFactura: string;
+
+    this.cuotaAPagar.cuotas.forEach(x => {
 
       doc.setFontSize(12);
- 
+
       doc.setFontType("bold");
       doc.text('CUPON DE PAGO', 80, 30, 'center');
       doc.line(10, 35, 150, 35);   //x, , largo , y
       doc.setFontSize(8);
       doc.setTextColor(0)
-  
+
       this.creditos.forEach(element => {
-  
+
         if (element._id == this.idCredito) {
-  
+
           let fechaCancelacion: string;
           let cantidadCuota: string;  //es el orden
-  
+
           this.creditos.forEach(element => {
             element.cuotas.forEach(plan => {
               fechaCancelacion = plan.fechaVencimiento;
               cantidadCuota = plan.orden.toString();
-            });  
+            });
           });
-          numeroFactura= this.utilidades.crearNumeroFactura(element.legajoPrefijo, element.legajo);
+          numeroFactura = this.utilidades.crearNumeroFactura(element.legajoPrefijo, element.legajo);
           //console.log(element._id);
-  
+
           //console.log();
           doc.setFontType("normal")
-  
+
           doc.text('Legajo de Credito: ', 10, 40);
           doc.text('Titular: ', 10, 50);
           doc.text('Domicilio: ', 10, 55);
@@ -184,8 +193,8 @@ export class SimuladorComponent implements OnInit {
           doc.text('Cant. de Cuotas: ', 80, 75);
           doc.line(10, 80, 150, 80);
           //datos de la cuota usamos x
-          
-          doc.text('Nº Cuota: ' , 40, 90);
+
+          doc.text('Nº Cuota: ', 40, 90);
           doc.text('Valor de Cuota:', 40, 95);
           doc.text('Dias mora: ', 40, 100);
           doc.text('Total a Pagar: ', 40, 105);
@@ -193,14 +202,14 @@ export class SimuladorComponent implements OnInit {
           doc.text('Saldo por cuota: (adeudado):', 40, 115);
 
           doc.setFontType("bold");
-  
+
           doc.text(numeroFactura, 50, 40);
           doc.text(element.titularApellidos + ', ' + element.titularNombres, 50, 50);
-  
+
           doc.text(element.titularCalle + ' ' + element.titularNumeroCasa + ' ' + element.titularLocalidad + ' - ' + element.titularProvincia, 50, 55);
           doc.text(element.titularDni, 120, 50);
-  
-          
+
+
           doc.text(this.datePipe.transform(element.fechaAlta, 'dd/MM/yyyy'), 50, 65);
           doc.text(this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 65);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.capital), 50, 70);  //monto pedido.
@@ -208,13 +217,15 @@ export class SimuladorComponent implements OnInit {
           //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 70);
           doc.text(element.tipoPlan, 50, 75);  //plan de pago es el tipo de plan(semanal, quincenal, etc...)
           doc.text(cantidadCuota, 120, 75);   //cantidad de cuotas es el ultimo orden
-  
-          doc.text(element.cuotas.find(t=>t._id === x._id).orden.toString(), 120, 90);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t=>t._id === x._id).montoCapital),120, 95);
-          let diasRetraso = String(element.cuotas.find(t=>t._id === x._id).diasRetraso);
+
+          doc.text(element.cuotas.find(t => t._id === x._id).orden.toString(), 120, 90);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).montoCapital), 120, 95);
+          let diasRetraso = String(element.cuotas.find(t => t._id === x._id).diasRetraso);
           doc.text(diasRetraso, 120, 100);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t=>t._id === x._id).MontoTotalCuota),120, 105);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 105);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 110);
+          let montoAdeudado = element.cuotas.find(t => t._id === x._id).MontoTotalCuota - x.montoPagado;
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 115);
           //doc.line(10, 100, 150, 100);   //x, , largo , y
           const today = Date.now();
           //doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 105);
@@ -224,72 +235,6 @@ export class SimuladorComponent implements OnInit {
           doc.line(10, 125, 150, 125);
           doc.setFontType("bold");
 
-          //doc.text()
-          
-   /*
-  
-          //Talon para el Cliente
-  
-  
-          
-  
-          doc.text('ORDEN DE PAGO', 80, 130, 'center');
-          doc.line(10, 135, 150, 135);   //x, , largo , y
-          doc.setFontSize(8);
-          doc.setTextColor(0)
-  
-          this.crearNumeroFactura(element.credito.legajo_prefijo, element.credito.legajo);
-  
-          doc.setFontType("normal")
-  
-          doc.text('Legajo de Credito: ', 10, 140);
-          doc.text('Titular: ', 10, 150);
-          doc.text('Domicilio: ', 10, 155);
-          doc.text('Dni: ', 100, 150);
-          doc.text('Telefono:     ', 10, 160);
-          doc.text('Fecha de Alta: ', 10, 165);
-          doc.text('Fecha de Cancelacion: ', 80, 165);
-          doc.text('Capital: ', 10, 170);
-          //doc.text('Total a Pagar: ', 80, 170);
-          doc.text('Plan de Pago: ', 10, 175);
-          doc.text('Cant. de Cuotas: ', 10, 180);
-          doc.text('Total a pagar: .....................................................................................', 10, 190);
-          doc.text('Forma de pago:  ', 10, 195);
-          doc.text('Fecha de Alta: ', 80, 205);
-  
-          doc.text('..............................................', 20, 210);
-          doc.text('Firma y aclaracion del titular', 20, 215);
-          doc.text('Recibí conforme', 20, 220)
-          doc.text('Talón Cajero', 80, 210);
-  
-          doc.setFontType("bold");
-  
-          doc.text(this.numeroFactura, 50, 140);
-          doc.text(element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres, 50, 150);
-  
-          doc.text(element.cliente.titular.domicilio.calle + ' ' + element.cliente.titular.domicilio.numeroCasa + ' ' + element.cliente.titular.domicilio.localidad + ' - ' + element.cliente.titular.domicilio.provincia, 50, 155);
-          doc.text(element.cliente.titular.dni, 120, 150);
-  
-          if (element.cliente.contactos.numeroCelular != null) {
-            doc.text(element.cliente.contactos.numeroCelular, 50, 160);
-          }
-  
-          doc.text(this.datePipe.transform(element.fechaGeneracion, 'dd/MM/yyyy'), 50, 165);
-          doc.text(this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 165);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 50, 170);
-          //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 170);
-          doc.text(element.credito.planPagos.tipoPlan.nombre, 50, 175);
-          doc.text(element.credito.planPagos.CantidadCuotas.toString(), 50, 180);
-  
-          doc.line(10, 185, 150, 185);
-  
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.credito.montoPedido), 120, 190);
-          doc.text(this.formas[0].formaPago.toString(), 50, 195);
-  
-          doc.line(10, 200, 150, 200);
-  
-          doc.text(this.datePipe.transform(element.fechaPago, 'dd/MM/yyyy'), 120, 205);
-  */
         }
       });
 
@@ -297,27 +242,23 @@ export class SimuladorComponent implements OnInit {
 
       doc.addPage();
     })
-     
-     doc.save('CuponDePago.pdf');
-     //doc.output('dataurlnewwindow');  
-     
-   }
 
-   private cargarControlesCombos() {
+    doc.save('CuponDePago.pdf');
+    //doc.output('dataurlnewwindow');  
+
+  }
+
+  private cargarControlesCombos() {
 
     this.clientesServices.postGetCombos().subscribe(result => {
-      //this.provincias = result['respuesta'].provincias;
       this.formas = result['respuesta'].formasPago;
-      // this.tiposPlanes = result['respuesta'].tiposPlanes;
-      //console.log(this.formas[0].formaPago);
-      //this.estadosCasa = result['respuesta'].estadosCasa;
-      //this.estados = result['respuesta'].estadosCredito;
+
     });
 
   }
 
-  pagar(){
-    this.realizarPago();   
+  pagar() {
+    this.realizarPago();
     this.imprimirPDF();
   }
 }

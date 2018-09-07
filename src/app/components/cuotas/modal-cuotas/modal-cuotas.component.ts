@@ -8,6 +8,8 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SimuladorComponent } from '../modalCuotasSimuladas/simulador/simulador.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TableCreditos } from '../tableCreditos';
+import { Cuota } from 'src/app/components/cuotas/modal-cuotas/cuota';
+
 
 
 @Component({
@@ -21,9 +23,10 @@ export class ModalCuotasComponent implements OnInit {
   cuotasModalForm: FormGroup;
   session = new Session();
 
-  //ordenDePago: any;
+  nuevaCuota: Cuota;
   cuotas: any[];
-  cuotasSimuladas: TableCuotas[];
+  token: string;
+  cuotasSimuladas: any[];
   cuotasBackup: TableCuotas[];
   miOrdenDePago: any;
   creditos: TableCreditos[];
@@ -41,17 +44,18 @@ export class ModalCuotasComponent implements OnInit {
 
     },
     columns: {
-      orden: {
-        title: 'Orden',
-        width: '5%'
+      ordenYPagado: {
+        title: ' Estado ',
+        width: '10%',
+        valuePrepareFunction: (cell, row) => { return row.orden + '_' + (row.cuotaPagada === true ? 'PAG' : 'IMP'); }
       },
-      cuotaPagada: {
+      /*cuotaPagada: {
         title: 'Estado',
         width: '7%',
         valuePrepareFunction: (value) => {
           return value === true ? 'PAGADO' : 'IMPAGA';
         }
-      },
+      ,}*/
       montoPagado: {
         title: 'Montos Pagados',
         width: '8%',
@@ -108,81 +112,97 @@ export class ModalCuotasComponent implements OnInit {
   onCustom(event) {
 
   }
-  getDataFromCuotas(misCuotas: any[], misCreditos: TableCreditos[], idCredito: string) {
+  getDataFromCuotas(misCuotas: any[], misCreditos: TableCreditos[], idCredito: string, miToken: string) {
     this.cuotas = misCuotas;
     this.creditos = misCreditos;
     this.idCredito = idCredito;
-    
+    this.token = miToken;
   }
 
   simularPago() {
     let monto = this.getMonto.value;
-    
+
     this.cuotasSimuladas = new Array();
     //console.log('OBJETO CLONADO....' + this.cuotasSimuladas);
     if (monto > 0) {
 
-      let contador = 0;
-
-      let bandera = true;
-
       this.cuotas.forEach(i => {
-        contador = monto;  //aqui  recuerdo el valor
-        //console.log('OBTENGO DEL PADRE ' + i.MontoTotalCuota);
-        monto = monto - i.MontoTotalCuota;
-        let nuevo: TableCuotas;
-        if (bandera === true) {
-          if (monto === 0) {
 
-            nuevo = JSON.parse(JSON.stringify(i));
-            nuevo.montoPendienteDePago = 0;
-            //i.montoPendienteDePago = 0;
-            this.cuotasSimuladas.push(nuevo);
-            bandera = false;
-            //console.log('pasa por monto === 0');
+        this.nuevaCuota = new Cuota();  //inicialiso la cuota
+
+        if (i.cuotaPagada === false) {
+
+          if (i.montoPendienteDePago > 0 && monto >= i.montoPendienteDePago) {   //tiene saldo?
+
+            monto = monto - i.montoPendienteDePago;
+
+            this.nuevaCuota._id = String(i._id);
+
+            this.nuevaCuota.comentario = 'pago parcial';
+            this.nuevaCuota.diasRetraso = i.diasRetraso;
+            this.nuevaCuota.montoInteresMora = i.montoInteresPorMora;
+            this.nuevaCuota.montoPagado = i.montoPendienteDePago;   //es el saldo
+            this.nuevaCuota.montoInteresMora == i.montoInteresPorMora;
+            this.nuevaCuota.porcentajeInteresPorMora = i.porcentajeInteresPorMora;
+            this.nuevaCuota.montoPendienteDePago = 0;
+            this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
+            this.nuevaCuota.orden = i.orden;
+
+            this.cuotasSimuladas.push(this.nuevaCuota);
+            //controlar si es monto es 0 o negativo            
+
+          } else {
+
+            if (monto >= i.MontoTotalCuota) {
+
+              monto = monto - i.MontoTotalCuota;
+
+              this.nuevaCuota._id = String(i._id);
+
+              this.nuevaCuota.comentario = 'pago total';
+              this.nuevaCuota.diasRetraso = i.diasRetraso;
+              this.nuevaCuota.montoInteresMora = i.montoInteresPorMora;
+              this.nuevaCuota.montoPagado = i.MontoTotalCuota;   //es el total
+              this.nuevaCuota.montoInteresMora == i.montoInteresPorMora;
+              this.nuevaCuota.porcentajeInteresPorMora = i.porcentajeInteresPorMora;
+              this.nuevaCuota.montoPendienteDePago = 0;
+              this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
+              this.nuevaCuota.orden = i.orden;
+
+              this.cuotasSimuladas.push(this.nuevaCuota);
+
+            } else {
+              if (monto > 0) {
+
+                this.nuevaCuota._id = String(i._id);
+
+                this.nuevaCuota.comentario = 'pago parcial';
+                this.nuevaCuota.diasRetraso = i.diasRetraso;
+                this.nuevaCuota.montoInteresMora = i.montoInteresPorMora;
+                this.nuevaCuota.montoPagado = monto;   //es el total
+                this.nuevaCuota.montoInteresMora == i.montoInteresPorMora;
+                this.nuevaCuota.porcentajeInteresPorMora = i.porcentajeInteresPorMora;
+                this.nuevaCuota.montoPendienteDePago = i.MontoTotalCuota - monto;
+                this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
+                this.nuevaCuota.orden = i.orden;
+
+                this.cuotasSimuladas.push(this.nuevaCuota);
+
+                monto = 0
+              }
+            }
           }
-
-          if (monto < 0) {
-            nuevo = JSON.parse(JSON.stringify(i));
-            nuevo.montoPagado.push(contador.toString());
-            nuevo.montoPendienteDePago = monto;
-            nuevo.comentarios.push('pago parcial');
-            //i.montoPagado.push(contador.toString());
-            //i.montoPendienteDePago = monto;
-            //i.comentarios.push('pago parcial');
-            this.cuotasSimuladas.push(nuevo);
-            bandera = false;
-            //console.log('pasa por monto < 0');
-          }
-
-          if (monto > 0) {
-            nuevo = JSON.parse(JSON.stringify(i));
-            nuevo.montoPagado.push(i.MontoTotalCuota.toString());
-            nuevo.montoPendienteDePago = 0;
-            nuevo.comentarios.push('pago toda la cuota');
-
-            //i.montoPagado.push(i.MontoTotalCuota.toString());
-            //i.montoPendienteDePago = 0;
-            //i.comentarios.push('pago toda la cuota');
-            this.cuotasSimuladas.push(nuevo);
-            //console.log('pasa por monto > 0');
-          }
-          //console.log(monto);
-          //console.log(this.cuotasSimuladas);
         }
-      })
-      
-      //console.log(this.cuotasSimuladas);
-      this.hijo.simularPago(this.cuotasSimuladas, this.creditos, this.idCredito);
+      });
+      //llamo al Simulador
+      this.hijo.simularPago(this.cuotasSimuladas, this.creditos, this.idCredito, this.token);
       this.ngxSmartModalService.getModal('simuladorModal').open();
-      //this.ngxSmartModalService.resetModalData('simuladorModal');
-      //this.cuotasSimuladas.length = 0;   //limpiamos el array
-      //console.log('Aqui salgo del modal' + this.cuotasSimuladas);
-      monto = 0;
-    } else {
 
+    } else {
+      alert('Monto debe ser mayor a cero');
     }
   }
+
 
   onCerrarSimulacion() {
     //this.cuotas = this.cuotasBackup;

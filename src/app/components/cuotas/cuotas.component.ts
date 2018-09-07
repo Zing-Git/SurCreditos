@@ -122,7 +122,7 @@ export class CuotasComponent implements OnInit {
 
   buscarCreditoPorDni() {
     let dni = this.dni.value;
-    console.log(dni)
+    //console.log(dni)
     if (dni !== '') {
       this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe(response => {
         let charactersCreditos = response['creditos'];        
@@ -137,16 +137,16 @@ export class CuotasComponent implements OnInit {
   } 
 
   mostrarCuotas(idCredito: string){
-    console.log('id de credito.........' + idCredito);
+    //console.log('id de credito.........' + idCredito);
     this.charactersCreditos.forEach(x=>{
       if(idCredito == x._id){
         this.cuotas = x.cuotas;  
               
       }      
     });
-    console.log('CUOTAS PARA ENVIAR A --->' + this.cuotas);
+    //console.log('CUOTAS PARA ENVIAR A --->' + this.cuotas);
 
-    this.hijoModal.getDataFromCuotas(this.cuotas, this.charactersCreditos, idCredito);
+    this.hijoModal.getDataFromCuotas(this.cuotas, this.charactersCreditos, idCredito, this.session.token);
     this.ngxSmartModalService.getModal('cuotaModal').open();
   }
   

@@ -3,9 +3,13 @@ export class Cuota {
     diasRetraso: number;
     montoInteresMora: number;
     montoPagado: number;
-    porcentajeInteresPorMora: string;
+    porcentajeInteresPorMora: number;
     comentario: string;
-    orden: number;
+    montoPendienteDePago: number;
+    todosMontoPagoActual: string;
+    MontoTotalCuota: string;
+    orden: string;
+    //orden: number;
    /* montoPendienteDePago: number;
     orden:number;
     cuotaPagada: boolean;

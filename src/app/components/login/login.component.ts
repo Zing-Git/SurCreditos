@@ -40,19 +40,19 @@ export class LoginComponent implements OnInit {
         session.rolPrecendencia = response['usuario'].rol.precedencia;
 
         switch (session.rol_id) {
-          case '5b211fecbac3952988ca92b1': {
+          case '5b91731eb02df40f286142bc': {
             session.rolNombre = 'VENDEDOR';
             break;
-          }
-          case '5b211fecbac3952988ca92b3':{
-            session.rolNombre = 'COBRADOR';
-            break;
-          }
-          case '5b211fecbac3952988ca92b2': {
+          }       
+          case '5b91731eb02df40f286142bd': {
             session.rolNombre = 'CAJERO';
             break;
           }
-          case '5b211fecbac3952988ca92b0': {
+          case '5b91731eb02df40f286142be': {
+            session.rolNombre = 'COBRADOR';
+            break;
+          }
+          case '5b91731eb02df40f286142bb': {
             session.rolNombre = 'ADMINISTRADOR';
             break;
           }

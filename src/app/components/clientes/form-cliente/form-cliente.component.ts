@@ -141,10 +141,19 @@ export class FormClienteComponent implements OnInit {
 
   capturarValoresDeFormulario(): any {
 
+    /* this.codigoPais1.value,
+    this.codigoArea1.value,
+    String(this.numero1.value) },
+    this.codigoPais2.value,
+    this.codigoArea2.value,
+    String(this.numero2.value) },
+    this.email.value}], */
+
+
     let cliente = {
       persona: {
           _id: this.idPersona,
-          tipoDni: 	'5b0d6a845b9d842646da57c9',
+          tipoDni: 	'DNI',
           dni: String(this.dni.value),
           apellidos: this.apellidos.value,
           nombres: this.nombres.value,

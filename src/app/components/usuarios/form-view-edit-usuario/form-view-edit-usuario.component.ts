@@ -176,13 +176,14 @@ export class FormViewEditUsuarioComponent implements OnInit {
     this.usuariosService.postSearchdUsuario(parametros).subscribe(response => {
       this.usuario = response['usuario'][0];
       this.cargarUsuarioAControles(this.usuario);
+      console.log('Usuario encontrado: ', this.usuario);
     });
   }
 
 
   cargarUsuarioAControles(usuario: any){
     // Persona
-    this.tipoDni.setValue(usuario.persona.tipoDni.nombre, {onlySelf: true});
+    this.tipoDni.setValue(usuario.persona.tipoDni);
     this.dni.setValue(usuario.persona.dni);
     this.apellidos.setValue(usuario.persona.apellidos);
     this.nombres.setValue(usuario.persona.nombres);
@@ -204,20 +205,20 @@ export class FormViewEditUsuarioComponent implements OnInit {
     this.rol.setValue(usuario.rol.nombre, {onlySelf: true});
     // Contactos:
     for (const contacto of usuario.contactos) {
-        switch (contacto._id) {
-          case '5b2bae57b44803001445c1d7': {
+        switch (contacto.tipoContacto._id) {
+          case '5b10071f42fb563dffcf6b8c': {
             this.codigoPais1.setValue(contacto.codigoPais);
             this.codigoArea1.setValue(contacto.codigoArea);
             this.numero1.setValue(contacto.numeroCelular);
             break;
           }
-          case '5b2bae57b44803001445c1d9': {
+          case '5b10071f42fb563dffcf6b8d': {
             this.codigoPais2.setValue(contacto.codigoPais);
             this.codigoArea2.setValue(contacto.codigoArea);
             this.numero2.setValue(contacto.numeroCelular);
             break;
           }
-          case '5b2bae57b44803001445c1db': {
+          case '5b10071f42fb563dffcf6b8e': {
             this.email.setValue(contacto.email);
             break;
           }
@@ -228,6 +229,7 @@ export class FormViewEditUsuarioComponent implements OnInit {
   inicializarControlesUsandoGETServices(usuario: any) {
       this.usuariosService.getAllTipoDni().subscribe(result => {
         this.tiposDni = result['tiposDni'];
+        
       });
       this.usuariosService.getAllEstadoCasa().subscribe(result => {
         this.estadosCasa = result['estadosCasaDB'];

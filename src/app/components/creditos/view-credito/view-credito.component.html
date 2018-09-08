@@ -249,7 +249,7 @@
 
                                 <!-- Campo 1: Documentacion presentada -->
                                 <div class="form-group">
-                                    <div class="form-check" *ngFor="let tag of documentosAPresentar; let i=index;">
+                                    <!-- <div class="form-check" *ngFor="let tag of documentosAPresentar; let i=index;">
                                         <label class="form-check-label" for="tag{{tag.nombre}}">
                                         <input
                                             class="form-check-input"
@@ -261,7 +261,17 @@
                                             >
                                             {{tag.nombre}}
                                         </label>
+                                    </div> -->
+
+                                    <div class="form-group col-md-8">
+                                        <ul>
+                                            <li *ngFor="let ref of documentosAPresentar">
+                                                {{ ref.nombre }}
+                                            </li>
+                                        </ul>
                                     </div>
+
+
                                 </div>
 
 

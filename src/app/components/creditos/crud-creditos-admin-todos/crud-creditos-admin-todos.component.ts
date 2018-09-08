@@ -97,15 +97,16 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
         filter: true,
         sort: true,
         valuePrepareFunction: (cell, row) => (row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres),
-
-
-        filterFunction(cell?: any, search?: string): boolean {
-          if (cell >= search || search === '') {
+        /* valuePrepareFunction: (value) => {
+          return value.cliente.titular.apellidos;
+        }, */
+        /* filterFunction(obj?: any, search?: string): boolean {
+          if (obj.cliente.titular.apellidos.toLowerCase().indexOf(search) > -1){
             return true;
           } else {
             return false;
           }
-        }
+        } */
       },
       cuit: {
         title: 'Cuit',
@@ -288,15 +289,15 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     // tslint:disable-next-line:max-line-length
     // imgData.src = 'https://npclhg.dm.files.1drv.com/y4m9GX1-ImqUAw21oHBc1AU0cXj8xJb_B4EW3Omo1lOtFGEwYTmTagcQHp6Zn7AjSsa84JUu_H2bNDa_rY8Ubsl2hkNV4xk5zmWlUaN2tz_0i1q39QOAfWe_FLpR-Jfg_J94rvvQpLHLNw5_aT2hWdWRsBclGuCgF9U1i5taliO9DWw7sc4EnxfgcWT_WamOy60jkpOdDzEQIINslKGINAR6A?width=558&height=299&cropmode=none' ;
     // doc.addImage(imgData, 50, 50);
-    doc.text('CrediSUR', 20, 15, 'center');
+    doc.text('SUR Créditos', 20, 15);
     doc.setFontSize(7);
-    doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
+    doc.text('CREDITOS PARA COMERCIANTES', 20, 18);
 
     doc.setFontSize(12);
-    doc.setTextColor(255);
-    doc.setFillColor(52, 152, 219)
-    doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
-    doc.setFillColor(1);
+    // doc.setTextColor(255);
+    // doc.setFillColor(52, 152, 219)
+    // doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
+    // doc.setFillColor(1);
 
     doc.text('NOTA DE PEDIDO', 72, 30, 'center');
 
@@ -309,7 +310,6 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
 
 
     this.characters.forEach(x => {
-
       if (x._id === id) {
         this.crearNumeroFactura(x.legajo_prefijo, x.legajo);
         doc.text('Legajo Nº:  ' + this.numeroFactura, 130, 30);
@@ -335,11 +335,12 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     });
 
     doc.setFontSize(12);
-    doc.setFillColor(52, 152, 219)
-    doc.roundedRect(10, 60, 182, 8, 3, 3, 'FD')
+    // doc.setFillColor(52, 152, 219)
+    // doc.roundedRect(10, 60, 182, 8, 3, 3, 'FD')
 
-    doc.setTextColor(255);
-    doc.text('Domicilio Particular', 100, 65, 'center');
+    // doc.setTextColor(255);
+    // doc.text('Domicilio Particular', 100, 65, 'center');
+    doc.text('Domicilio Particular', 20, 70);
 
     doc.setFontSize(10);
     doc.setTextColor(0);
@@ -361,11 +362,12 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     });
 
     doc.setFontSize(12);
-    doc.setFillColor(52, 152, 219)
-    doc.roundedRect(10, 90, 182, 8, 3, 3, 'FD')
+    // doc.setFillColor(52, 152, 219)
+    // doc.roundedRect(10, 90, 182, 8, 3, 3, 'FD')
 
-    doc.setTextColor(255);
-    doc.text('Domicilio Comercial', 100, 95, 'center');
+    // doc.setTextColor(255);
+    // doc.text('Domicilio Comercial', 100, 95, 'center');
+    doc.text('Domicilio Comercial', 20, 100);
 
     doc.setFontSize(10);
     doc.setTextColor(0);
@@ -442,40 +444,50 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
 
     this.characters.forEach(element => {
       if (element._id === id) {
-        doc.text('Monto Solicitado: ' + element.montoPedido, 20, 175);
+
+        // doc.text('Monto Solicitado: ' + element.montoPedido, 20, 175);
+        let m = Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.montoPedido);
+        doc.text('Monto Solicitado: ' + m, 20, 175);
         doc.text('Cantidad de Cuotas: ' + element.cantidadCuotas, 80, 175);
+        doc.text('Plan: ' + element.planPagos.tipoPlan.nombre, 150, 175); // plan
         //aqui iba tipo de plan que no existe en credito
       }
     });
 
     this.getData('CuerpoPlanPago', id);
     doc.setFontSize(10);
-    doc.text('Pagare sin protesto [art. 50 D. Ley 5965 / 53] a Sur Creditos o a su Oredn la Cantidad de Pesos ', 10, 190);
-    doc.setFontSize(12);
-    doc.setLineWidth(0.5);
-    doc.line(10, 194, 190, 194);
-    doc.line(10, 202, 190, 202);   //x, , largo , y
-    doc.text(this.toText(this.cantidadTotal), 60, 200);
+    // tslint:disable-next-line:max-line-length
+    doc.text(' ---------------------------------------------------------------------------------------------------------------------------------------------', 10, 195);
+    doc.setFontSize(14);
+    doc.text(' PAGARÉ:', 20, 205);
     doc.setFontSize(10);
-    doc.text('por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.', 10, 210);
-    doc.text('Firmante (Lugar y fecha): ', 90, 230);
+    doc.text('Pagaré sin protesto [art. 50 D. Ley 5965 / 53] a Sur Créditos o a su orden la cantidad de pesos ', 20, 215);
+    doc.setFontSize(10);
+   /*  doc.setLineWidth(0.2);
+    doc.line(10, 200, 190, 200);
+    doc.line(10, 215, 190, 215);   //x, , largo , y */
+    doc.text(' -----------  ' + this.toText(this.cantidadTotal) + '  ----------- ', 60, 225);
+    doc.setFontSize(10);
+    doc.text('Por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.-', 20, 235);
+    doc.text('.................................................... ', 115, 255);
+    doc.text('Firmante (Lugar y fecha): ', 120, 260);
 
     this.carroIndividual = 50;
     this.cantidadTotal = 0;
 
     doc.addPage();
 
-    doc.text('CrediSUR', 20, 15, 'center');
+    doc.text('SUR Créditos', 20, 15, 'center');
     doc.setFontSize(7);
     doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
 
-    doc.setFontSize(12);
-    doc.setTextColor(255);
-    doc.setFillColor(52, 152, 219)
-    doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
-    doc.setFillColor(1);
+    // doc.setFontSize(12);
+    // doc.setTextColor(255);
+    // doc.setFillColor(52, 152, 219)
+    // doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
+    // doc.setFillColor(1);
 
-    doc.text('NOTA DE PEDIDO', 72, 30, 'center');
+    // doc.text('NOTA DE PEDIDO', 72, 30, 'center');
 
     doc.setFontSize(12);
 
@@ -491,8 +503,12 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       }
     });
 
+    // TODO: agregar esta apertura de pestaña a todos los cruds
+    doc.save('credito.pdf');
+    let pdfImprimir = doc.output("blob"); // debe ser blob para pasar el documento a un objeto de impresion en jspdf
+    window.open(URL.createObjectURL(pdfImprimir)); // Abre una nueva ventana para imprimir en el navegador
+    // doc.save('credito.pdf'); // Obliga a guardar el documento
 
-    doc.save('reporteIndividual.pdf');
     this.carroIndividual = 50;
     this.cantidadTotal = 0;
   }

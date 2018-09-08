@@ -237,7 +237,7 @@ export class CrudCreditosAdminComponent implements OnInit {
     });
   }
 
-  imprimirPDF(id: string) {
+  imprimirPDF(id: string) {/* {
     const doc = new jsPDF();
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -301,6 +301,7 @@ export class CrudCreditosAdminComponent implements OnInit {
         doc.text('Localidad: ' + element.cliente.titular.domicilio.localidad, 20, 80);
         doc.text('Provincia: ' + element.cliente.titular.domicilio.provincia, 130, 80);
         let miEstado: string;
+
         this.estadosCasa.forEach(estadoC => {
           if (element.cliente.titular.domicilio.estadoCasa == estadoC._id) {
             miEstado = estadoC.nombre;
@@ -448,7 +449,7 @@ export class CrudCreditosAdminComponent implements OnInit {
     doc.output('datauristring');
     //doc.output('dataurlnewwindow',{});
     this.carroIndividual = 50;
-    this.cantidadTotal = 0;
+    this.cantidadTotal = 0; */
   }
 
 

@@ -119,7 +119,7 @@ export class SimuladorComponent implements OnInit {
         diasRetraso: element.diasRetraso,
         montoInteresMora: element.montoInteresPorMora,
         montoPagado: element.montoPagado,
-        porcentajeInteresPorMora: element.montoInteresPorMora,
+        porcentajeInteresPorMora: element.porcentajeInteresPorMora,
         comentario: element.comentario,
       }
       
@@ -129,7 +129,9 @@ export class SimuladorComponent implements OnInit {
     this.cuotaAPagar.cuotas = miCuota;
 
     console.log('JSON PARA POSTMAN' +this.cuotaAPagar);
-      
+      this.cuotaAPagar.cuotas.forEach(x =>{
+        console.log(x);
+      })
 
     if (this.cuotaAPagar != null) {
       //llamar al servicio para realizar el pago

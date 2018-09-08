@@ -148,6 +148,7 @@ export class CuotasComponent implements OnInit {
 
     this.hijoModal.getDataFromCuotas(this.cuotas, this.charactersCreditos, idCredito, this.session.token);
     this.ngxSmartModalService.getModal('cuotaModal').open();
+    
   }
   
 }

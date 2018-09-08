@@ -15,15 +15,15 @@ import { environment } from '../../../environments/environment';
 export class LoginComponent implements OnInit {
   mensaje: String;
   idRol: string;
-
-  constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService) {}
+  miSession: Session;
+  constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService) { }
 
   ngOnInit() {
 
     /* this.usuariosService.getTest().subscribe(resp => {
       console.log ('Servicio TEST: ', resp );
-    }); */    
-
+    }); */
+  
   }
 
 
@@ -34,39 +34,40 @@ export class LoginComponent implements OnInit {
     session.nombreUsuario = form.value.nombreUsuario;
     session.clave = form.value.password;
 
-    this.usuariosService.postLogin(session).subscribe( response => {
-        session.token = response['token'];
-        session.rol_id = response['usuario'].rol._id;
-        session.rolPrecendencia = response['usuario'].rol.precedencia;
+    this.usuariosService.postLogin(session).subscribe(response => {
+      session.token = response['token'];
+      session.rol_id = response['usuario'].rol._id;
+      session.rolPrecendencia = response['usuario'].rol.precedencia;
 
-        switch (session.rol_id) {
-          case '5b91731eb02df40f286142bc': {
-            session.rolNombre = 'VENDEDOR';
-            break;
-          }       
-          case '5b91731eb02df40f286142bd': {
-            session.rolNombre = 'CAJERO';
-            break;
-          }
-          case '5b91731eb02df40f286142be': {
-            session.rolNombre = 'COBRADOR';
-            break;
-          }
-          case '5b91731eb02df40f286142bb': {
-            session.rolNombre = 'ADMINISTRADOR';
-            break;
-          }
-          // TODO: falta comparar si el usuario es ROOT
-          default: {
-              session.rolNombre = 'INDEFINIDO';
-              break;
-          }
+      switch (session.rol_id) {
+        case '5b91731eb02df40f286142bc': {
+          session.rolNombre = 'VENDEDOR';
+          break;
         }
-        this.loginService.registrarLogin(session);
-        this.router.navigate(['/info']);
-      }, err => {
+        case '5b91731eb02df40f286142bd': {
+          session.rolNombre = 'CAJERO';
+          break;
+        }
+        case '5b91731eb02df40f286142be': {
+          session.rolNombre = 'COBRADOR';
+          break;
+        }
+        case '5b91731eb02df40f286142bb': {
+          session.rolNombre = 'ADMINISTRADOR';
+          break;
+        }
+        // TODO: falta comparar si el usuario es ROOT
+        default: {
+          session.rolNombre = 'INDEFINIDO';
+          break;
+        }
+      }
+      this.loginService.registrarLogin(session);
+      this.router.navigate(['/info']);
+      this.miSession = session;
+      /*}, err => {
           alert('Usuario o clave incorrecta!');
-          this.router.navigate(['/login']);
-      });
+          this.router.navigate(['/login']);*/
+    });
   }
 }

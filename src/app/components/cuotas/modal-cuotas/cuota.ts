@@ -1,7 +1,7 @@
 export class Cuota {
     _id: string;
     diasRetraso: number;
-    montoInteresMora: number;
+    montoInteresPorMora: number;
     montoPagado: number;
     porcentajeInteresPorMora: number;
     comentario: string;

@@ -59,8 +59,8 @@ export class ModalCuotasComponent implements OnInit {
       montoPagado: {
         title: 'Montos Pagados',
         width: '8%',
-        valuePrepareFunction: (value) => {
-          return value === 'montoPagado' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+        valuePrepareFunction: (value) => {         
+          return value === 'montoPagado' ? value :  value.join(",");   //aqui puedo usar metodos
         }
       },
       montoPendienteDePago: {
@@ -140,14 +140,19 @@ export class ModalCuotasComponent implements OnInit {
 
             this.nuevaCuota.comentario = 'pago parcial';
             this.nuevaCuota.diasRetraso = i.diasRetraso;
-            this.nuevaCuota.montoInteresMora = i.montoInteresPorMora;
-            this.nuevaCuota.montoPagado = i.montoPendienteDePago;   //es el saldo
-            this.nuevaCuota.montoInteresMora == i.montoInteresPorMora;
-            this.nuevaCuota.porcentajeInteresPorMora = i.porcentajeInteresPorMora;
+            this.nuevaCuota.montoInteresPorMora = +i.montoInteresPorMora;
+            this.nuevaCuota.montoPagado = i.montoPendienteDePago;   //es el saldo            
+            
+            if(i.porcentajeInteresPorMora) {
+              this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
+            }else{              
+              this.nuevaCuota.porcentajeInteresPorMora = 0;
+            }
+
             this.nuevaCuota.montoPendienteDePago = 0;
             this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
             this.nuevaCuota.orden = i.orden;
-
+            
             this.cuotasSimuladas.push(this.nuevaCuota);
             //controlar si es monto es 0 o negativo            
 
@@ -160,15 +165,20 @@ export class ModalCuotasComponent implements OnInit {
               this.nuevaCuota._id = String(i._id);
 
               this.nuevaCuota.comentario = 'pago total';
-              this.nuevaCuota.diasRetraso = i.diasRetraso;
-              this.nuevaCuota.montoInteresMora = i.montoInteresPorMora;
+              this.nuevaCuota.diasRetraso = i.diasRetraso;              
               this.nuevaCuota.montoPagado = i.MontoTotalCuota;   //es el total
-              this.nuevaCuota.montoInteresMora == i.montoInteresPorMora;
-              this.nuevaCuota.porcentajeInteresPorMora = i.porcentajeInteresPorMora;
+              this.nuevaCuota.montoInteresPorMora == i.montoInteresPorMora;
+
+              if(i.porcentajeInteresPorMora) {
+                this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
+              }else{              
+                this.nuevaCuota.porcentajeInteresPorMora = 0;
+              }
+             
               this.nuevaCuota.montoPendienteDePago = 0;
               this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
               this.nuevaCuota.orden = i.orden;
-
+             
               this.cuotasSimuladas.push(this.nuevaCuota);
 
             } else {
@@ -176,16 +186,21 @@ export class ModalCuotasComponent implements OnInit {
 
                 this.nuevaCuota._id = String(i._id);
 
+                if(i.porcentajeInteresPorMora) {
+                  this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
+                }else{              
+                  this.nuevaCuota.porcentajeInteresPorMora = 0;
+                }
+
                 this.nuevaCuota.comentario = 'pago parcial';
                 this.nuevaCuota.diasRetraso = i.diasRetraso;
-                this.nuevaCuota.montoInteresMora = i.montoInteresPorMora;
-                this.nuevaCuota.montoPagado = monto;   //es el total
-                this.nuevaCuota.montoInteresMora == i.montoInteresPorMora;
-                this.nuevaCuota.porcentajeInteresPorMora = i.porcentajeInteresPorMora;
+                this.nuevaCuota.montoInteresPorMora = +i.montoInteresPorMora;
+                this.nuevaCuota.montoPagado = monto;   //es el total                
+                //this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
                 this.nuevaCuota.montoPendienteDePago = i.MontoTotalCuota - monto;
                 this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
                 this.nuevaCuota.orden = i.orden;
-
+                
                 this.cuotasSimuladas.push(this.nuevaCuota);
 
                 monto = 0

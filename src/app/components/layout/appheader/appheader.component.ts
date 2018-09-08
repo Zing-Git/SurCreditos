@@ -16,6 +16,7 @@ export class AppheaderComponent implements OnInit, DoCheck{
     this.isLogged = this.loginService.verificaEstadoLogin();
   }
   ngOnInit() {
+    this.isLogged = this.loginService.verificaEstadoLogin();
   }
 
 }

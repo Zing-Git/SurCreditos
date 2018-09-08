@@ -332,13 +332,13 @@ export class FormOrdenDePagoComponent implements OnInit {
   }
 
   private pagarOrdenDePago(idOrden: string){
-    console.log(idOrden + ' / ' + this.session.token);
+   
     let medioPago= this.formas[0].formaPago.toString()
     
-    console.log(medioPago);
+    
     this.ordenDePago.postPagarOrdenDePago(idOrden, this.session.token, medioPago).subscribe(result =>{
       let respuesta = result;
-      console.log('respuesta del pago**** ' +respuesta);
+      
       alert('Se actualizó el estado de Credito');
       this.buscarCreditoPorDni();
     });
@@ -363,7 +363,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         idNuevoEstado = element._id;
       }
     });
-    console.log(idNuevoEstado);
+    
     this.charactersCreditos.forEach(element => {
       if (element._id === id) {
         if (element.estado.nombre === 'APROBADO') {
@@ -380,7 +380,7 @@ export class FormOrdenDePagoComponent implements OnInit {
           this.creditoService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
             let respuesta = result;
             alert('Se actualizó el estado de Credito');
-            console.log(respuesta);
+            
           }, err => {
             alert('Ocurrio un problema');
           });

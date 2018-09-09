@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+
 import { LoginService } from '../../../../modules/servicios/login/login.service';
 import { Session } from '../../../../modelo/util/session';
-import * as moment from 'moment';
+
 import { NgxSmartModalService } from 'ngx-smart-modal';
 //import { TableCuotas } from '../../modal-cuotas/TableCuotas';
 import { Pago } from './pago';
@@ -13,8 +13,10 @@ import { TableCreditos } from '../../tableCreditos';
 import { UtilidadesService } from '../../../../modules/servicios/utiles/utilidades.service';
 import { DatePipe } from '@angular/common';
 import { ClientesService } from '../../../../modules/servicios/clientes/clientes.service';
-import { TableCuotas } from '../../tableCuotas';
+
 import swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 declare let jsPDF;
 
 @Component({
@@ -51,7 +53,7 @@ export class SimuladorComponent implements OnInit {
         title: 'Orden',
         width: '5%'
       },
-       montoPagado: {
+      montoPagado: {
         title: 'Monto Pagado',
         width: '8%',
         valuePrepareFunction: (value) => {
@@ -80,7 +82,8 @@ export class SimuladorComponent implements OnInit {
     },
     noDataMessage: 'El Cliente no tiene Cuotas...'
   };
-  constructor(public ngxSmartModalService: NgxSmartModalService,
+
+  constructor(private router: Router, public ngxSmartModalService: NgxSmartModalService,
     public loginService: LoginService,
     public cutaService: CuotasService,
     public utilidades: UtilidadesService, private datePipe: DatePipe, private clientesServices: ClientesService) { }
@@ -106,7 +109,7 @@ export class SimuladorComponent implements OnInit {
   }
 
   realizarPago() {
-    
+
     this.cuotaAPagar = new Pago();
     this.cuotaAPagar.token = this.token;
 
@@ -114,7 +117,7 @@ export class SimuladorComponent implements OnInit {
 
     console.log('XXXXXXXXXXXXXXXX' + this.cuotasSimuladas);
     this.cuotasSimuladas.forEach(element => {
-      
+
       let cuota = {
         _id: element._id,
         diasRetraso: element.diasRetraso,
@@ -123,35 +126,38 @@ export class SimuladorComponent implements OnInit {
         porcentajeInteresPorMora: element.porcentajeInteresPorMora,
         comentario: element.comentario,
       }
-      
+
       miCuota.push(cuota);
-      
+
     });
     this.cuotaAPagar.cuotas = miCuota;
 
-    console.log('JSON PARA POSTMAN' +this.cuotaAPagar);
-      this.cuotaAPagar.cuotas.forEach(x =>{
-        console.log(x);
-      })
+    console.log('JSON PARA POSTMAN' + this.cuotaAPagar);
+    this.cuotaAPagar.cuotas.forEach(x => {
+      console.log(x);
+    })
 
     if (this.cuotaAPagar != null) {
       //llamar al servicio para realizar el pago
       this.cutaService.postPagarCuota(this.cuotaAPagar).subscribe(result => {
         let respuesta = result;
 
-        if(result){
-            console.log(respuesta);
-            console.log(result);
-            swal('Pagado!!', 'Cuotas Pagadas!!!', 'success');
-            //alert('Cuotas Pagadas!!!');
-        }       
+        if (result) {
+          console.log(respuesta);
+          console.log(result);
+          swal('Pagado!!', 'Cuotas Pagadas!!!', 'success');
+         /* setTimeout(() => {
+            this.router.navigate(['/cuotas']);
+          },
+            5000);*/
+        }
       }, err => {
         //alert('Hubo un problema al registrar la solicitud de credito');
         swal('Error', 'Hubo un problema al registrar el pago', 'warning');
       });
     }
   }
- 
+
   imprimirPDF() {
     const doc = new jsPDF();
     let numeroFactura: string;

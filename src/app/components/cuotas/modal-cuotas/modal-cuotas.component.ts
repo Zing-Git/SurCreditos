@@ -59,8 +59,17 @@ export class ModalCuotasComponent implements OnInit {
       montoPagado: {
         title: 'Montos Pagados',
         width: '8%',
-        valuePrepareFunction: (value) => {         
-          return value === 'montoPagado' ? value :  value.join(",");   //aqui puedo usar metodos
+        valuePrepareFunction: (value) => { 
+          let total: number= 0;
+          for(var i=0;i<value.length;i++)
+              {
+                     total += Number(value[i]);
+               }             
+          
+              return Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(total);
+           
+          
+            //value.join(",");   //aqui puedo usar metodos
         }
       },
       montoPendienteDePago: {
@@ -127,16 +136,14 @@ export class ModalCuotasComponent implements OnInit {
     if (monto > 0) {
 
       this.cuotas.forEach(i => {
-        console.log(i);
+        
         this.nuevaCuota = new Cuota();  //inicialiso la cuota
 
         if (i.cuotaPagada === false) {
 
-          valorConFormato = +Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(i.montoPendienteDePago);
-          console.log('si pendiente de pago > 0 y monto > total');
-          console.log(valorConFormato);
-          console.log(i.montoPendienteDePago);
-          if (i.montoPendienteDePago > 0 && monto >= i.montoPendienteDePago) {   //tiene saldo? valorconformato
+          valorConFormato = Math.round(i.montoPendienteDePago * 100) / 100;
+        
+          if (i.montoPendienteDePago > 0 && monto >= valorConFormato) {   //tiene saldo? valorconformato
 
             monto = monto - valorConFormato; // i.montoPendienteDePago;
                        
@@ -161,11 +168,10 @@ export class ModalCuotasComponent implements OnInit {
             //controlar si es monto es 0 o negativo            
 
           } else {
-            valorConFormato = +Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(i.MontoTotalCuota);
-            console.log(valorConFormato);
-            if (monto >= i.MontoTotalCuota) {
+            valorConFormato = Math.round(i.montoPendienteDePago * 100) / 100;
+            if (monto >= valorConFormato) {
 
-              monto = monto - i.MontoTotalCuota;   //valocconformato
+              monto = monto - (Math.round(i.MontoTotalCuota* 100) / 100);   //valocconformato
 
               this.nuevaCuota._id = String(i._id);
 
@@ -187,8 +193,7 @@ export class ModalCuotasComponent implements OnInit {
               this.cuotasSimuladas.push(this.nuevaCuota);
 
             } else {
-              valorConFormato = +Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(i.montoPendienteDePago);
-              console.log(valorConFormato);
+              valorConFormato = Math.round(i.montoPendienteDePago * 100) / 100;
               if (monto > 0) {
 
                 this.nuevaCuota._id = String(i._id);

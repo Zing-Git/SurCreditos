@@ -14,6 +14,7 @@ import { Estado } from '../../modelo/negocio/estado';
 import { TableCreditos } from './tableCreditos';
 import { ModalCuotasComponent } from './modal-cuotas/modal-cuotas.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import swal from 'sweetalert2';
 
 declare let jsPDF;
 
@@ -31,7 +32,7 @@ export class CuotasComponent implements OnInit {
   clientes: any;
   cuotas: any[];
   //charactersOrdenPago: any[];
- 
+
   settings = {
 
     actions: {
@@ -53,7 +54,7 @@ export class CuotasComponent implements OnInit {
         title: 'Legajo',
         width: '10%',
         valuePrepareFunction: (cell, row) => row.legajoPrefijo + ' - ' + row.legajo
-        
+
       },
       titular: {
         title: 'Nombre titular',
@@ -94,7 +95,7 @@ export class CuotasComponent implements OnInit {
     this.cuotasForm = this.fb.group({
       dni: new FormControl('')
     });
-    
+
   }
 
   onCustom(event) {
@@ -125,30 +126,37 @@ export class CuotasComponent implements OnInit {
     //console.log(dni)
     if (dni !== '') {
       this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe(response => {
-        let charactersCreditos = response['creditos'];        
-        this.charactersCreditos = JSON.parse(JSON.stringify(charactersCreditos));
+        let charactersCreditos = response['creditos'];
+        if (typeof charactersCreditos === 'undefined') {
+          swal('Advertencia', 'Credito esta pagada o no existe!!', 'warning');
+          //location.reload();
+        } else {
+          this.charactersCreditos = JSON.parse(JSON.stringify(charactersCreditos));
+        }
+
       });
-      
+
     }
+    
   }
 
   pagarCuotas() {
-   
-  } 
 
-  mostrarCuotas(idCredito: string){
+  }
+
+  mostrarCuotas(idCredito: string) {
     //console.log('id de credito.........' + idCredito);
-    this.charactersCreditos.forEach(x=>{
-      if(idCredito == x._id){
-        this.cuotas = x.cuotas;  
-              
-      }      
+    this.charactersCreditos.forEach(x => {
+      if (idCredito == x._id) {
+        this.cuotas = x.cuotas;
+        
+      }
     });
     //console.log('CUOTAS PARA ENVIAR A --->' + this.cuotas);
 
     this.hijoModal.getDataFromCuotas(this.cuotas, this.charactersCreditos, idCredito, this.session.token);
     this.ngxSmartModalService.getModal('cuotaModal').open();
-    
+
   }
-  
+
 }

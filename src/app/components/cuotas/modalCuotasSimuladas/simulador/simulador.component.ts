@@ -14,6 +14,7 @@ import { UtilidadesService } from '../../../../modules/servicios/utiles/utilidad
 import { DatePipe } from '@angular/common';
 import { ClientesService } from '../../../../modules/servicios/clientes/clientes.service';
 import { TableCuotas } from '../../tableCuotas';
+import swal from 'sweetalert2';
 declare let jsPDF;
 
 @Component({
@@ -137,14 +138,16 @@ export class SimuladorComponent implements OnInit {
       //llamar al servicio para realizar el pago
       this.cutaService.postPagarCuota(this.cuotaAPagar).subscribe(result => {
         let respuesta = result;
+
         if(result){
             console.log(respuesta);
             console.log(result);
-            alert('Cuotas Pagadas!!!');
+            swal('Pagado!!', 'Cuotas Pagadas!!!', 'success');
+            //alert('Cuotas Pagadas!!!');
         }       
       }, err => {
-        alert('Hubo un problema al registrar la solicitud de credito');
-
+        //alert('Hubo un problema al registrar la solicitud de credito');
+        swal('Error', 'Hubo un problema al registrar el pago', 'warning');
       });
     }
   }
@@ -221,7 +224,7 @@ export class SimuladorComponent implements OnInit {
           doc.text(cantidadCuota, 120, 75);   //cantidad de cuotas es el ultimo orden
 
           doc.text(element.cuotas.find(t => t._id === x._id).orden.toString(), 120, 90);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).montoCapital), 120, 95);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 95);
           let diasRetraso = String(element.cuotas.find(t => t._id === x._id).diasRetraso);
           doc.text(diasRetraso, 120, 100);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 105);

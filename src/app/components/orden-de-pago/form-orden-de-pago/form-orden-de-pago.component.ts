@@ -14,6 +14,7 @@ import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 import { Estado } from '../../../modelo/negocio/estado';
 import { TableCreditos } from '../../creditos/crud-creditos/TableCreditos';
 declare let jsPDF;
+import Swal from'sweetalert2';
 
 @Component({
   selector: 'app-form-orden-de-pago',
@@ -32,6 +33,7 @@ export class FormOrdenDePagoComponent implements OnInit {
   formas: any[];
   estadosCasa: EstadoCasa[];
   estados: Estado[];
+  confirmarAlerta: string= '';
 
   settings = {
 
@@ -116,7 +118,36 @@ export class FormOrdenDePagoComponent implements OnInit {
     });
 
     this.cargarControlesCombos();
+    
+  }
 
+  lanzarPopup(id : string){
+    Swal({
+      title: 'Estas seguro?',
+      text: 'Estas por realizar el pago de una Orden de Pago!!!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, Pagar!',
+      cancelButtonText: 'No, Cancelar'
+    }).then((result) => {
+      
+      if (result.value) {
+        this.pagarOrdenDePago(id);
+        Swal(
+          'Pagado!',
+          'La Orden de Pago fue Pagada!!',
+          'success'
+        )
+      // For more information about handling dismissals please visit
+      // https://sweetalert2.github.io/#handling-dismissals
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal(
+          'Cancelado',
+          'Cancelo el pago',
+          'error'
+        )
+      }
+    })
   }
 
   onCustom(event) {
@@ -136,7 +167,8 @@ export class FormOrdenDePagoComponent implements OnInit {
         break;
       }
       case 'pagarOrdenDePago':{
-        this.pagarOrdenDePago(id);
+        this.lanzarPopup(id);
+        //this.pagarOrdenDePago(id);
         break;
       }
       case 'imprimirPDF': {
@@ -312,6 +344,10 @@ export class FormOrdenDePagoComponent implements OnInit {
     if (this.dni.value !== '') {
       this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
         this.characters = response['ordenDb'];
+        if(typeof this.characters === 'undefined'){
+          Swal('Advertencia', 'Orden de pago esta pagada o no existe!!', 'warning');
+        }
+        
         console.log('Busqueda: ', this.characters);
       });
     }
@@ -340,7 +376,7 @@ export class FormOrdenDePagoComponent implements OnInit {
     this.ordenDePago.postPagarOrdenDePago(idOrden, this.session.token, medioPago).subscribe(result =>{
       let respuesta = result;
 
-      alert('Se actualizó el estado de Credito');
+      //alert('Se actualizó el estado de Credito');
       this.buscarCreditoPorDni();
     });
 
@@ -350,6 +386,9 @@ export class FormOrdenDePagoComponent implements OnInit {
   cargarCreditos(dni: string){
     this.creditoService.postGetCreditosVigentes(this.session, dni).subscribe((response: TableCreditos[]) => {
       this.charactersCreditos = response['creditos'];
+      if(typeof response['creditos'] === 'undefined'){
+        Swal('Advertencia', 'Orden de pago esta pagada o no existe!!', 'warning');
+      }
       console.log( 'AQUI UN RESULTADO DE CREDITOS------>' + response['creditos']);
     });
     console.log('AQUI UN RESULTADO DE CREDITOS------>' +this.charactersCreditos);
@@ -380,7 +419,7 @@ export class FormOrdenDePagoComponent implements OnInit {
 
           this.creditoService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
             let respuesta = result;
-            alert('Se actualizó el estado de Credito');
+            //alert('Se actualizó el estado de Credito');
 
           }, err => {
             alert('Ocurrio un problema');

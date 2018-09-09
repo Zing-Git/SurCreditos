@@ -16,6 +16,7 @@ import { EstadoCasa } from "../../../modelo/negocio/estado-casa";
 import { TableUsuarios } from "../../usuarios/crud-usuarios/TableUsuarios";
 import { Estado } from "../../../modelo/negocio/estado";
 import { element } from "@angular/core/src/render3/instructions";
+import swal from "sweetalert2";
 
 @Component({
   selector: "app-crud-creditos-admin-todos",
@@ -302,7 +303,8 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
           this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(
             result => {
               let respuesta = result;
-              alert("Se actualizó el estado de Credito");
+              swal('Perfecto', 'Se actualizó el estado de Credito', 'success');
+              //alert("Se actualizó el estado de Credito");
               // console.log(respuesta);
             },
             err => {

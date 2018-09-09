@@ -23,6 +23,7 @@ import { ReferenciaComercio } from './modelos/RefereciaComercio';
 import { ModalComercioComponent } from '../modal-comercio/modal-comercio.component';
 import { Persona } from '../../../modelo/negocio/persona';
 import { Router } from '@angular/router';
+import swal from 'sweetalert2';
 
 
 
@@ -290,7 +291,8 @@ export class FormCreditoComponent implements OnInit {
               this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
                   let respuesta = result;
                   // console.log('Result de Guardar Credito: ', respuesta);
-                  alert('Bien hecho!, Credito generado con éxito');
+                  swal('Bien hecho!', 'Credito generado con éxito','success');
+                  //alert('Bien hecho!, Credito generado con éxito');
                   this.router.navigate(['crudcreditos']);
               }, err => {
                   alert('Hubo un problema al registrar la solicitud de credito');

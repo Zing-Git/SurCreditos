@@ -116,7 +116,7 @@ export class FormOrdenDePagoComponent implements OnInit {
     });
 
     this.cargarControlesCombos();
-    
+
   }
 
   onCustom(event) {
@@ -312,6 +312,7 @@ export class FormOrdenDePagoComponent implements OnInit {
     if (this.dni.value !== '') {
       this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
         this.characters = response['ordenDb'];
+        console.log('Busqueda: ', this.characters);
       });
     }
 
@@ -326,19 +327,19 @@ export class FormOrdenDePagoComponent implements OnInit {
       //console.log(this.formas[0].formaPago);
       this.estadosCasa = result['respuesta'].estadosCasa;
       this.estados = result['respuesta'].estadosCredito;
-      
+
     });
 
   }
 
   private pagarOrdenDePago(idOrden: string){
-   
+
     let medioPago= this.formas[0].formaPago.toString()
-    
-    
+
+
     this.ordenDePago.postPagarOrdenDePago(idOrden, this.session.token, medioPago).subscribe(result =>{
       let respuesta = result;
-      
+
       alert('Se actualizó el estado de Credito');
       this.buscarCreditoPorDni();
     });
@@ -363,7 +364,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         idNuevoEstado = element._id;
       }
     });
-    
+
     this.charactersCreditos.forEach(element => {
       if (element._id === id) {
         if (element.estado.nombre === 'APROBADO') {
@@ -380,7 +381,7 @@ export class FormOrdenDePagoComponent implements OnInit {
           this.creditoService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
             let respuesta = result;
             alert('Se actualizó el estado de Credito');
-            
+
           }, err => {
             alert('Ocurrio un problema');
           });

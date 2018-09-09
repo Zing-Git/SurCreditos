@@ -3,7 +3,13 @@
         <p class="bg-primary">Créditos generados por los vendedores</p>
     </div>
 </div>
-<ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #creditosForm></ng2-smart-table>
+<div class="form-row text-right">
+    <div class="col-12">
+        <button class="btn btn-outline-primary" (click)="filtrarEnEsperaDeAprobacion()">Ver Pendientes</button>
+        <button class="btn btn-outline-primary" (click)="filtrarTodos()">Ver Todos</button>
+    </div>
+</div>
+<ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersNuevo" (custom)="onCustom($event)" #creditosForm></ng2-smart-table>
 <div class="form-row text-right">
     <div class="col-1">
 

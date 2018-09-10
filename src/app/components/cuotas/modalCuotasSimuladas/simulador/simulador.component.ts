@@ -115,7 +115,7 @@ export class SimuladorComponent implements OnInit {
 
     let miCuota: any[] = new Array();
 
-    console.log('XXXXXXXXXXXXXXXX' + this.cuotasSimuladas);
+    //console.log('XXXXXXXXXXXXXXXX' + this.cuotasSimuladas);
     this.cuotasSimuladas.forEach(element => {
 
       let cuota = {
@@ -132,10 +132,8 @@ export class SimuladorComponent implements OnInit {
     });
     this.cuotaAPagar.cuotas = miCuota;
 
-    console.log('JSON PARA POSTMAN' + this.cuotaAPagar);
-    this.cuotaAPagar.cuotas.forEach(x => {
-      console.log(x);
-    })
+    //console.log('JSON PARA POSTMAN' + this.cuotaAPagar);
+    
 
     if (this.cuotaAPagar != null) {
       //llamar al servicio para realizar el pago
@@ -143,9 +141,12 @@ export class SimuladorComponent implements OnInit {
         let respuesta = result;
 
         if (result) {
-          console.log(respuesta);
-          console.log(result);
+          //console.log(respuesta);
+          //console.log(result);
           swal('Pagado!!', 'Cuotas Pagadas!!!', 'success');
+          this.ngxSmartModalService.getModal('simuladorModal').close();
+          this.ngxSmartModalService.getModal('cuotaModal').close();
+          this.router.navigate(['/cuotas']);
          /* setTimeout(() => {
             this.router.navigate(['/cuotas']);
           },
@@ -161,14 +162,21 @@ export class SimuladorComponent implements OnInit {
   imprimirPDF() {
     const doc = new jsPDF();
     let numeroFactura: string;
+    let nextPag = 0;
 
     this.cuotaAPagar.cuotas.forEach(x => {
+
+      if(nextPag > 0){
+        doc.addPage();
+      }else{
+        nextPag +=1;
+      }
 
       doc.setFontSize(12);
 
       doc.setFontType("bold");
       doc.text('CUPON DE PAGO', 80, 30, 'center');
-      doc.line(10, 35, 150, 35);   //x, , largo , y
+      doc.line(10, 35, 150, 35);   //x, y, largo , y
       doc.setFontSize(8);
       doc.setTextColor(0)
 
@@ -211,7 +219,8 @@ export class SimuladorComponent implements OnInit {
           doc.text('Total a Pagar: ', 40, 105);
           doc.text('Pagado: ', 40, 110);
           doc.text('Saldo por cuota: (adeudado):', 40, 115);
-
+          doc.text('Saldo Total del Credito:', 40,123)
+          doc.text('Fecha de Pago: ', 80, 128)
           doc.setFontType("bold");
 
           doc.text(numeroFactura, 50, 40);
@@ -235,23 +244,116 @@ export class SimuladorComponent implements OnInit {
           doc.text(diasRetraso, 120, 100);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 105);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 110);
+          
+          let montototalAdeudado = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
+          
           let montoAdeudado = element.cuotas.find(t => t._id === x._id).MontoTotalCuota - x.montoPagado;
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 115);
           //doc.line(10, 100, 150, 100);   //x, , largo , y
           const today = Date.now();
-          //doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 105);
-
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format( (+element.totalAPagar) - montototalAdeudado), 120, 123);
+          doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 128)
           //parte de la cuota
           doc.setFontSize(12);
           doc.line(10, 125, 150, 125);
+          doc.line(10, 135, 150, 135);
           doc.setFontType("bold");
+
+        }
+      });     //   x: 10, y: 125
+      //****************************************FIN DE CUPON PARA CAJERO  ******************************************** */
+
+      doc.setFontSize(12);
+
+      doc.setFontType("bold");
+      doc.text('CUPON DE PAGO', 80, 145, 'center');
+      doc.line(10, 150, 150, 150);   //x, y, largo , y
+      doc.setFontSize(8);
+      doc.setTextColor(0)
+
+      this.creditos.forEach(element => {
+
+        if (element._id == this.idCredito) {
+
+          let fechaCancelacion: string;
+          let cantidadCuota: string;  //es el orden
+
+          this.creditos.forEach(element => {
+            element.cuotas.forEach(plan => {
+              fechaCancelacion = plan.fechaVencimiento;
+              cantidadCuota = plan.orden.toString();
+            });
+          });
+          numeroFactura = this.utilidades.crearNumeroFactura(element.legajoPrefijo, element.legajo);
+          //console.log(element._id);
+
+          //console.log();
+          doc.setFontType("normal")
+
+          doc.text('Legajo de Credito: ', 10, 160);
+          doc.text('Titular: ', 10, 170);
+          doc.text('Domicilio: ', 10, 175);
+          doc.text('Dni: ', 100, 180);
+          doc.text('Telefono:     ', 10, 180);
+          doc.text('Fecha de Alta: ', 10, 185);
+          doc.text('Fecha de Cancelacion: ', 80, 185);
+          doc.text('Capital: ', 10, 190);
+          doc.text('Total a Pagar: ', 80, 190);
+          doc.text('Plan de Pago: ', 10, 195);
+          doc.text('Cant. de Cuotas: ', 80, 195);
+          doc.line(10, 200, 150, 200);
+          //datos de la cuota usamos x
+
+          doc.text('Nº Cuota: ', 40, 210);
+          doc.text('Valor de Cuota:', 40, 215);
+          doc.text('Dias mora: ', 40, 220);
+          doc.text('Total a Pagar: ', 40, 225);
+          doc.text('Pagado: ', 40, 230);
+          doc.text('Saldo por cuota: (adeudado):', 40, 235);
+          doc.text('Saldo Total del Credito:', 40,243)
+          doc.text('Fecha de Pago: ', 80, 255)
+          doc.text('Firma del cajero: ', 10,255);
+          doc.setFontType("bold");
+
+          doc.text(numeroFactura, 50, 160);
+          doc.text(element.titularApellidos + ', ' + element.titularNombres, 50, 170);
+
+          doc.text(element.titularCalle + ' ' + element.titularNumeroCasa + ' ' + element.titularLocalidad + ' - ' + element.titularProvincia, 50, 175);
+          doc.text(element.titularDni, 120, 180);
+
+
+          doc.text(this.datePipe.transform(element.fechaAlta, 'dd/MM/yyyy'), 50, 185);
+          doc.text(this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 185);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.capital), 50, 190);  //monto pedido.
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.totalAPagar), 120, 190);
+          //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 70);
+          doc.text(element.tipoPlan, 50, 195);  //plan de pago es el tipo de plan(semanal, quincenal, etc...)
+          doc.text(cantidadCuota, 120, 195);   //cantidad de cuotas es el ultimo orden
+
+          doc.text(element.cuotas.find(t => t._id === x._id).orden.toString(), 120, 210);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 215);
+          let diasRetraso = String(element.cuotas.find(t => t._id === x._id).diasRetraso);
+          doc.text(diasRetraso, 120, 220);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 225);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 230);
+          let montototalAdeudado = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
+          
+          let montoAdeudado = element.cuotas.find(t => t._id === x._id).MontoTotalCuota - x.montoPagado;
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 235);
+          //doc.line(10, 100, 150, 100);   //x, , largo , y
+          const today = Date.now();
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format( (+element.totalAPagar) - montototalAdeudado), 120, 243);
+          doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 255)
+
+          //parte de la cuota
+          doc.setFontSize(12);
+          doc.line(10, 245, 150, 245);
+          
+          //doc.line(10, 235, 150, 235);
 
         }
       });
 
-
-
-      doc.addPage();
     })
 
     doc.save('CuponDePago.pdf');
@@ -259,13 +361,12 @@ export class SimuladorComponent implements OnInit {
 
   }
 
-  private cargarControlesCombos() {
+  
 
+  private cargarControlesCombos() {
     this.clientesServices.postGetCombos().subscribe(result => {
       this.formas = result['respuesta'].formasPago;
-
     });
-
   }
 
   pagar() {

@@ -95,7 +95,7 @@ export class CuotasComponent implements OnInit {
     this.cuotasForm = this.fb.group({
       dni: new FormControl('')
     });
-
+    
   }
 
   onCustom(event) {
@@ -136,6 +136,8 @@ export class CuotasComponent implements OnInit {
 
       });
 
+    }else{
+
     }
     
   }
@@ -156,7 +158,7 @@ export class CuotasComponent implements OnInit {
 
     this.hijoModal.getDataFromCuotas(this.cuotas, this.charactersCreditos, idCredito, this.session.token);
     this.ngxSmartModalService.getModal('cuotaModal').open();
-
+    this.ngOnInit();
   }
 
 }

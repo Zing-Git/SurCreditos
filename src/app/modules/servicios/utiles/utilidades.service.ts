@@ -32,6 +32,13 @@ export class UtilidadesService {
     return numeroFactura;
   }
 
+  calcularMontoAdeudado(n: number, cuotas: any[]): number{
+    let total: number=0;
+    for(let i=0; i<n; ++i){
+      total += Number(cuotas[i].MontoTotalCuota);
+    }
+    return total;
+  }
   /*
 
   //SEGUN BOLEANDO OBIENE SI O NO

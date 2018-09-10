@@ -84,7 +84,6 @@ export class CuotasComponent implements OnInit {
     private creditosServices: CreditosService,
     private loginService: LoginService,
     private router: Router,
-    private datePipe: DatePipe,
     private ngxSmartModalService: NgxSmartModalService) { }
 
   get dni() { return this.cuotasForm.get('dni'); }
@@ -95,7 +94,7 @@ export class CuotasComponent implements OnInit {
     this.cuotasForm = this.fb.group({
       dni: new FormControl('')
     });
-    
+    this.charactersCreditos = new Array();
   }
 
   onCustom(event) {

@@ -153,7 +153,8 @@ export class ModalCuotasComponent implements OnInit {
             this.nuevaCuota.diasRetraso = i.diasRetraso;
             this.nuevaCuota.montoInteresPorMora = +i.montoInteresPorMora;
             this.nuevaCuota.montoPagado = i.montoPendienteDePago;   //es el saldo            
-            
+            this.nuevaCuota.montoPagadoHistorico = i.montoPagado;
+
             if(i.porcentajeInteresPorMora) {
               this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
             }else{              
@@ -163,6 +164,7 @@ export class ModalCuotasComponent implements OnInit {
             this.nuevaCuota.montoPendienteDePago = 0;
             this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
             this.nuevaCuota.orden = i.orden;
+            this.nuevaCuota.montoPagadoHistorico = i.montoPagado;
             
             this.cuotasSimuladas.push(this.nuevaCuota);
             //controlar si es monto es 0 o negativo            
@@ -179,6 +181,7 @@ export class ModalCuotasComponent implements OnInit {
               this.nuevaCuota.diasRetraso = i.diasRetraso;              
               this.nuevaCuota.montoPagado = i.MontoTotalCuota;   //es el total
               this.nuevaCuota.montoInteresPorMora == i.montoInteresPorMora;
+              this.nuevaCuota.montoPagadoHistorico = i.montoPagado;
 
               if(i.porcentajeInteresPorMora) {
                 this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
@@ -207,7 +210,8 @@ export class ModalCuotasComponent implements OnInit {
                 this.nuevaCuota.comentario = 'pago parcial';
                 this.nuevaCuota.diasRetraso = i.diasRetraso;
                 this.nuevaCuota.montoInteresPorMora = +i.montoInteresPorMora;
-                this.nuevaCuota.montoPagado = monto;   //es el total                
+                this.nuevaCuota.montoPagado = monto;   //es el total   
+                this.nuevaCuota.montoPagadoHistorico = i.montoPagado;             
                 //aqui sumo el array de montos pagados
                 if(i.montoPagado.lenght >0){
                   i.montoPagado.forEach(x =>{

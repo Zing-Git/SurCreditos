@@ -34,6 +34,7 @@ export class UtilidadesService {
 
   calcularMontoAdeudado(n: number, cuotas: any[]): number{
     let total: number=0;
+    n= n-1;
     for(let i=0; i<n; ++i){
       total += Number(cuotas[i].MontoTotalCuota);
     }

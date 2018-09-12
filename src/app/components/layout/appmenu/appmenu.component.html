@@ -26,7 +26,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                         <!--MENU CREDITOS -->
-                        <ng-container *ngSwitchCase="rol === 'VENDEDOR' || rol === 'INDEFINIDO'">
+                        <ng-container *ngSwitchCase="rol === 'VENDEDOR' || rol === 'ROOT'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-edit"></i><p>Creditos<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -38,7 +38,7 @@
                         <!--FIN MENU CREDITOS -->
 
                         <!--MENU CREDITOS ADMINISTRADOR-->
-                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT' || rol === 'INDEFINIDO' ">
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-edit"></i><p>Creditos<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -51,7 +51,7 @@
 
 
                         <!--MENU CLIENTES -->
-                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'INDEFINIDO' || rol === 'VENDEDOR'">
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT' || rol === 'VENDEDOR'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-users"></i><p>Clientes<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -63,7 +63,7 @@
                         <!--FIN MENU CLIENTES -->
 
                         <!--MENU CAJA -->
-                        <ng-container *ngSwitchCase="rol === 'CAJERO' || rol === 'INDEFINIDO'">
+                        <ng-container *ngSwitchCase="rol === 'CAJERO' || rol === 'ROOT'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-money"></i><p>Caja<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -79,18 +79,34 @@
                         <!--FIN MENU CLIENTES -->
 
 
+
+
+
+
                         <!--MENU ADMINISTRACION -->
                         <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT' || rol === 'INDEFINIDO'">
                             <li class="nav-item has-treeview">
-                                <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-cog"></i><p>Administración<i class="fa fa-angle-left right"></i></p></a>
+                                <a href="#" class="nav-link" style="color:white">
+                                    <i class="nav-icon fa fa-cog"></i>
+                                    <p>Administración
+                                        <i class="fa fa-angle-left right"></i>
+                                    </p>
+                                </a>
+
+
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item"><a class="nav-link" routerLink="crudusuarios"><i class="fa fa-angle-right nav-icon"></i><p>Usuarios</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="cuotas"><i class="fa fa-angle-right nav-icon"></i><p>Cobrar Cuota</p></a></li>
+                                    <!-- <li class="nav-item"><a class="nav-link" routerLink="cuotas"><i class="fa fa-angle-right nav-icon"></i><p>Cobrar Cuota</p></a></li> -->
                                 </ul>
 
                             </li>
                         </ng-container>
                         <!--FIN MENU ADMINISTRACION -->
+
+
+
+
+
 
                         <li class="nav-item" style="color:gray">
                             <a class="nav-link" (click)="logout()"><i class="nav-icon fas fa-power-off"></i><p>Logout</p></a>

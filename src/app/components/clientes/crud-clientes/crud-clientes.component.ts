@@ -148,6 +148,10 @@ export class CrudClientesComponent implements OnInit {
 
 
     doc.save('reporte.pdf');
+    let pdfImprimir = doc.output("blob"); // debe ser blob para pasar el documento a un objeto de impresion en jspdf
+    window.open(URL.createObjectURL(pdfImprimir)); // Abre una nueva ventana para imprimir en el navegador
+    // doc.save('credito.pdf'); // Obliga a guardar el documento
+
   }
 
   imprimirPDF(id: string, dni: string) {
@@ -251,7 +255,10 @@ export class CrudClientesComponent implements OnInit {
 
     });
 
-    doc.save('reporteIndividual.pdf');
+    doc.save('reporte.pdf');
+    let pdfImprimir = doc.output("blob"); // debe ser blob para pasar el documento a un objeto de impresion en jspdf
+    window.open(URL.createObjectURL(pdfImprimir)); // Abre una nueva ventana para imprimir en el navegador
+    // doc.save('credito.pdf'); // Obliga a guardar el documento
 
   }
 
@@ -262,10 +269,10 @@ export class CrudClientesComponent implements OnInit {
       case 'cabecera':
         {
           dataArray.push({
-            dni: 'DNI',            
+            dni: 'DNI',
             nombre: 'Nombre Cliente',
             fechaAlta: 'Fecha de Alta'
-           
+
           });
           break;
         }
@@ -276,7 +283,7 @@ export class CrudClientesComponent implements OnInit {
             dni: element.titular.dni,
             nombre: element.titular.apellidos + ', ' + element.titular.nombres,
             fechaAlta: moment(element.titular.fechaAlta).format('DD-MM-YYYY')
-           
+
           });
         });
         break;

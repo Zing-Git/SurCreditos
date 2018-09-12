@@ -304,6 +304,9 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
             result => {
               let respuesta = result;
               swal('Perfecto', 'Se actualizó el estado de Credito', 'success');
+              this.filtrarTodos(); // AGREGUE ESTO PARA ACTUALIZAR LA LISTA DESPUES DE APROBAR!
+
+
               //alert("Se actualizó el estado de Credito");
               // console.log(respuesta);
             },

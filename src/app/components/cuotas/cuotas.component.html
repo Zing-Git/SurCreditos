@@ -6,36 +6,36 @@
     </div>
 </div>
 <div class="container">
-  <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-      <!-- <h2><strong>Buscar Creditos</strong></h2> -->
-      <form class="" [formGroup]="cuotasForm" >
-        <div class="form-row">
-          <!-- Campo 1:  Dni Garante-->
-          <div class="form-group col-md-6">
-              <label for="inputDni">* Número de Documento</label>
-              <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDniCliente" placeholder="30300300">
-          </div>
-  
-          <div class="col-md-6">
-              <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>
-          </div>
-  
-          <!-- Dni error block -->
-          <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
-              <div *ngIf="dni.errors['required']">
-                  El número de documento es requerido
-              </div>
-          </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <!-- <h2><strong>Buscar Creditos</strong></h2> -->
+            <form class="" [formGroup]="cuotasForm">
+                <div class="form-row">
+                    <!-- Campo 1:  Dni Garante-->
+                    <div class="form-group col-md-6">
+                        <label for="inputDni">* Número de Documento</label>
+                        <input type="number" formControlName="dni" class="form-control form-control-sm" (keyup.enter)="onEnterDniCliente()" id="inputDniCliente" placeholder="30300300">
+                    </div>
+
+                    <div class="col-md-6">
+                        <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>
+                    </div>
+
+                    <!-- Dni error block -->
+                    <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
+                        <div *ngIf="dni.errors['required']">
+                            El número de documento es requerido
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
         </div>
-      </form>
-      
-      
+        <div>
+            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersCreditos" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
+        </div>
+
     </div>
-    <div>
-        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersCreditos"  (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
-    </div>
-    
-  </div>
 </div>

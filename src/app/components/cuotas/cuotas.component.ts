@@ -53,25 +53,29 @@ export class CuotasComponent implements OnInit {
       nuevoLegajo: {
         title: 'Legajo',
         width: '10%',
+        filter: false,
         valuePrepareFunction: (cell, row) => row.legajoPrefijo + ' - ' + row.legajo
 
       },
       titular: {
         title: 'Nombre titular',
         width: '15%',
+        filter: false,
         valuePrepareFunction: (cell, row) => row.titularApellidos + ', ' + row.titularNombres
       },
 
       totalAPagar: {
         title: 'Monto a Pagar',
         width: '30%',
+        filter: false,
         valuePrepareFunction: (value) => {
           return value === 'totalAPagar' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       tipoPlan: {
         title: 'Tipo Plan',
-        width: '10%'
+        width: '10%',
+        filter: false,
       }
     },
     pager: {
@@ -138,7 +142,7 @@ export class CuotasComponent implements OnInit {
     }else{
 
     }
-    
+
   }
 
   pagarCuotas() {
@@ -150,7 +154,7 @@ export class CuotasComponent implements OnInit {
     this.charactersCreditos.forEach(x => {
       if (idCredito == x._id) {
         this.cuotas = x.cuotas;
-        
+
       }
     });
     //console.log('CUOTAS PARA ENVIAR A --->' + this.cuotas);
@@ -159,5 +163,10 @@ export class CuotasComponent implements OnInit {
     this.ngxSmartModalService.getModal('cuotaModal').open();
     this.ngOnInit();
   }
+
+  onEnterDniCliente(){
+    this.buscarCreditoPorDni();
+  }
+
 
 }

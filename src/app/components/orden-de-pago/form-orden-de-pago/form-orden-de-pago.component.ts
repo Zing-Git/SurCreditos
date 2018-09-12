@@ -59,17 +59,20 @@ export class FormOrdenDePagoComponent implements OnInit {
       legajo_prefijo: {
         title: 'Num. Orden',
         width: '10%',
+        filter: false,
         valuePrepareFunction: (cell, row) => row.numeroOrden
       },
       nombre: {
         title: 'Nombre Completo',
         width: '15%',
+        filter: false,
         valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres
       },
 
       montoAPagar: {
         title: 'Monto de Credito',
         width: '30%',
+        filter: false,
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
@@ -77,6 +80,7 @@ export class FormOrdenDePagoComponent implements OnInit {
       fechaGeneracion: {
         title: 'Fecha Generación',
         width: '15%',
+        filter: false,
         valuePrepareFunction: (date) => {
           let raw = new Date(date);
           let formatted = this.datePipe.transform(raw, 'dd/MM/yyyy');
@@ -118,7 +122,7 @@ export class FormOrdenDePagoComponent implements OnInit {
     });
 
     this.cargarControlesCombos();
-    
+
   }
 
   lanzarPopup(id : string){
@@ -130,7 +134,7 @@ export class FormOrdenDePagoComponent implements OnInit {
       confirmButtonText: 'Si, Pagar!',
       cancelButtonText: 'No, Cancelar'
     }).then((result) => {
-      
+
       if (result.value) {
         this.pagarOrdenDePago(id);
         Swal(
@@ -216,9 +220,9 @@ export class FormOrdenDePagoComponent implements OnInit {
           });  //debo obtener el plan de pago
         });
         this.crearNumeroFactura(element.credito.legajo_prefijo, element.credito.legajo);
-        console.log(element._id);
+        // console.log(element._id);
 
-        console.log();
+
         doc.setFontType("normal")
 
         doc.text('Legajo de Credito: ', 10, 40);
@@ -333,7 +337,9 @@ export class FormOrdenDePagoComponent implements OnInit {
       }
     });
     doc.save('CuponDePago.pdf');
-    //doc.output('dataurlnewwindow');
+    let pdfImprimir = doc.output("blob"); // debe ser blob para pasar el documento a un objeto de impresion en jspdf
+    window.open(URL.createObjectURL(pdfImprimir)); // Abre una nueva ventana para imprimir en el navegador
+
   }
 
   get dni() { return this.ordenDePagoForm.get('dni'); }
@@ -347,8 +353,8 @@ export class FormOrdenDePagoComponent implements OnInit {
         if(typeof this.characters === 'undefined'){
           Swal('Advertencia', 'Orden de pago esta pagada o no existe!!', 'warning');
         }
-        
-        console.log('Busqueda: ', this.characters);
+
+        // console.log('Busqueda: ', this.characters);
       });
     }
 
@@ -389,9 +395,9 @@ export class FormOrdenDePagoComponent implements OnInit {
       if(typeof response['creditos'] === 'undefined'){
         Swal('Advertencia', 'Orden de pago esta pagada o no existe!!', 'warning');
       }
-      console.log( 'AQUI UN RESULTADO DE CREDITOS------>' + response['creditos']);
+      // console.log( 'AQUI UN RESULTADO DE CREDITOS------>' + response['creditos']);
     });
-    console.log('AQUI UN RESULTADO DE CREDITOS------>' +this.charactersCreditos);
+    // console.log('AQUI UN RESULTADO DE CREDITOS------>' +this.charactersCreditos);
   }
 
   postAprobarRechazar(id: string, nuevoEstado: string) {
@@ -431,4 +437,7 @@ export class FormOrdenDePagoComponent implements OnInit {
     });
   }
 
+  onEnterDniCliente(){
+    this.buscarCreditoPorDni();
+  }
 }

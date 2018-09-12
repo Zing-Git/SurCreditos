@@ -47,6 +47,7 @@ export class ModalCuotasComponent implements OnInit {
       ordenYPagado: {
         title: ' Estado ',
         width: '10%',
+        filter: false,
         valuePrepareFunction: (cell, row) => { return row.orden + '_' + (row.cuotaPagada === true ? 'PAG' : 'IMP'); }
       },
       /*cuotaPagada: {
@@ -59,22 +60,24 @@ export class ModalCuotasComponent implements OnInit {
       montoPagado: {
         title: 'Montos Pagados',
         width: '8%',
-        valuePrepareFunction: (value) => { 
+        filter: false,
+        valuePrepareFunction: (value) => {
           let total: number= 0;
           for(var i=0;i<value.length;i++)
               {
                      total += Number(value[i]);
-               }             
-          
+               }
+
               return Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(total);
-           
-          
+
+
             //value.join(",");   //aqui puedo usar metodos
         }
       },
       montoPendienteDePago: {
         title: 'Pendiente de pago',
         width: '8%',
+        filter: false,
         valuePrepareFunction: (value) => {
           return value === 'montoPendienteDePago' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
@@ -82,6 +85,7 @@ export class ModalCuotasComponent implements OnInit {
       MontoTotalCuota: {
         title: 'Total a pagar',
         width: '8%',
+        filter: false,
         valuePrepareFunction: (value) => {
           return value === 'MontoTotalCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
@@ -89,6 +93,7 @@ export class ModalCuotasComponent implements OnInit {
       fechaVencimiento: {
         title: 'Vencimiento',
         width: '8%',
+        filter: false,
         valuePrepareFunction: (cell, row) => { return moment(row.fechaVencimiento).format('DD-MM-YYYY') }
       }
     },
@@ -107,6 +112,8 @@ export class ModalCuotasComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.cuotasModalForm.setValue({ monto: 0});
   }
 
   get getMonto() { return this.cuotasModalForm.get('monto'); }
@@ -136,36 +143,36 @@ export class ModalCuotasComponent implements OnInit {
     if (monto > 0) {
 
       this.cuotas.forEach(i => {
-        
+
         this.nuevaCuota = new Cuota();  //inicialiso la cuota
 
         if (i.cuotaPagada === false) {
 
           valorConFormato = Math.round(i.montoPendienteDePago * 100) / 100;
-        
+
           if (i.montoPendienteDePago > 0 && monto >= valorConFormato) {   //tiene saldo? valorconformato
 
             monto = monto - valorConFormato; // i.montoPendienteDePago;
-                       
+
             this.nuevaCuota._id = String(i._id);
 
             this.nuevaCuota.comentario = 'pago parcial';
             this.nuevaCuota.diasRetraso = i.diasRetraso;
             this.nuevaCuota.montoInteresPorMora = +i.montoInteresPorMora;
-            this.nuevaCuota.montoPagado = i.montoPendienteDePago;   //es el saldo            
-            
+            this.nuevaCuota.montoPagado = i.montoPendienteDePago;   //es el saldo
+
             if(i.porcentajeInteresPorMora) {
               this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
-            }else{              
+            }else{
               this.nuevaCuota.porcentajeInteresPorMora = 0;
             }
-           
+
             this.nuevaCuota.montoPendienteDePago = 0;
             this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
             this.nuevaCuota.orden = i.orden;
-            
+
             this.cuotasSimuladas.push(this.nuevaCuota);
-            //controlar si es monto es 0 o negativo            
+            //controlar si es monto es 0 o negativo
 
           } else {
             valorConFormato = Math.round(i.montoPendienteDePago * 100) / 100;
@@ -176,20 +183,20 @@ export class ModalCuotasComponent implements OnInit {
               this.nuevaCuota._id = String(i._id);
 
               this.nuevaCuota.comentario = 'pago total';
-              this.nuevaCuota.diasRetraso = i.diasRetraso;              
+              this.nuevaCuota.diasRetraso = i.diasRetraso;
               this.nuevaCuota.montoPagado = i.MontoTotalCuota;   //es el total
               this.nuevaCuota.montoInteresPorMora == i.montoInteresPorMora;
 
               if(i.porcentajeInteresPorMora) {
                 this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
-              }else{              
+              }else{
                 this.nuevaCuota.porcentajeInteresPorMora = 0;
               }
-             
+
               this.nuevaCuota.montoPendienteDePago = 0;
               this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
               this.nuevaCuota.orden = i.orden;
-             
+
               this.cuotasSimuladas.push(this.nuevaCuota);
 
             } else {
@@ -200,14 +207,14 @@ export class ModalCuotasComponent implements OnInit {
 
                 if(i.porcentajeInteresPorMora) {
                   this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
-                }else{              
+                }else{
                   this.nuevaCuota.porcentajeInteresPorMora = 0;
                 }
 
                 this.nuevaCuota.comentario = 'pago parcial';
                 this.nuevaCuota.diasRetraso = i.diasRetraso;
                 this.nuevaCuota.montoInteresPorMora = +i.montoInteresPorMora;
-                this.nuevaCuota.montoPagado = monto;   //es el total                
+                this.nuevaCuota.montoPagado = monto;   //es el total
                 //aqui sumo el array de montos pagados
                 if(i.montoPagado.lenght >0){
                   i.montoPagado.forEach(x =>{
@@ -217,7 +224,7 @@ export class ModalCuotasComponent implements OnInit {
                 this.nuevaCuota.montoPendienteDePago = i.montoPendienteDePago - monto;
                 this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
                 this.nuevaCuota.orden = i.orden;
-                
+
                 this.cuotasSimuladas.push(this.nuevaCuota);
 
                 monto = 0
@@ -244,6 +251,9 @@ export class ModalCuotasComponent implements OnInit {
   }
   confirmarPago() {
 
+  }
+  onEnterMonto(){
+    this.simularPago();
   }
 
 

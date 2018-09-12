@@ -5,7 +5,7 @@ import { UsuariosService } from '../../modules/servicios/usuarios/usuarios.servi
 import { LoginService } from '../../modules/servicios/login/login.service';
 import { Session } from '../../modelo/util/session';
 import { environment } from '../../../environments/environment';
-
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +13,7 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  mensaje: String;
+  mensaje: string;
   idRol: string;
   miSession: Session;
   constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService) { }
@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     /* this.usuariosService.getTest().subscribe(resp => {
       console.log ('Servicio TEST: ', resp );
     }); */
-  
+
   }
 
 
@@ -38,6 +38,8 @@ export class LoginComponent implements OnInit {
       session.token = response['token'];
       session.rol_id = response['usuario'].rol._id;
       session.rolPrecendencia = response['usuario'].rol.precedencia;
+
+      console.log('Id de Rol de Session: ', session.rol_id);
 
       switch (session.rol_id) {
         case '5b91731eb02df40f286142bc': {
@@ -57,8 +59,12 @@ export class LoginComponent implements OnInit {
           break;
         }
         // TODO: falta comparar si el usuario es ROOT
+        case '5b91731eb02df40f286142ba': {
+          session.rolNombre = 'ROOT';
+          break;
+        }
         default: {
-          session.rolNombre = 'INDEFINIDO';
+          console.log('No se encontro este ID de rol en case de login component: ', session.rol_id);
           break;
         }
       }

@@ -27,6 +27,7 @@ export class CrudCreditosComponent implements OnInit {
   //@Output() enviarCredito: EventEmitter<TableCreditos> =new  EventEmitter<TableCreditos>();
   numFactura : string;
   message = '';
+  charactersNuevo = [];
   characters: TableCreditos[];
   character: TableCreditos;
   estadosCasa: EstadoCasa[];
@@ -70,17 +71,24 @@ export class CrudCreditosComponent implements OnInit {
       dni: {
         title: 'Dni',
         width: '10%',
-        valuePrepareFunction: (cell, row) => row.cliente.titular.dni
+        // valuePrepareFunction: (cell, row) => row.cliente.titular.dni
       },
-      titular: {
+      nombreApellido: {
         title: 'Titular',
         width: '20%',
-        valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres
+        // valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres
+      },
+      cuit: {
+        title: "Cuit",
+        width: "10%",
+        filter: true,
+        sort: true,
+        // valuePrepareFunction: (cell, row) => row.comercio.cuit
       },
       razonSocial: {
         title: 'Comercio',
         width: '20%',
-        valuePrepareFunction: (cell, row) => row.comercio.razonSocial
+        // valuePrepareFunction: (cell, row) => row.comercio.razonSocial
       },
       /* rubro:{
         title: 'Rubro',
@@ -88,12 +96,12 @@ export class CrudCreditosComponent implements OnInit {
       }, */
       montoPedido: {
         title: 'Credito',
-        width: '13%',
+        width: '15%',
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
-      cantidadCuotas: {
+     /*  cantidadCuotas: {
         title: 'Cuotas',
         width: '5%'
       },
@@ -110,7 +118,7 @@ export class CrudCreditosComponent implements OnInit {
         valuePrepareFunction: (value) => {
           return value === 'montoInteres' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
-      },
+      }, */
      /*  tieneCobranzaADomicilio: {
         title: 'Cobro a Dom.',
         width: '10%',
@@ -120,18 +128,18 @@ export class CrudCreditosComponent implements OnInit {
         title: 'Cobro a Dom.%',
         width: '10%'
       }, */
-      montoCobranzaADomicilio: {
+      /* montoCobranzaADomicilio: {
         title: '$Domic.',
         width: '15%',
         valuePrepareFunction: (value) => {
           // tslint:disable-next-line:max-line-length
           return value === 'montoCobranzaADomicilio' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
-      },
+      }, */
       estado: {
         title: 'Estado',
         width: '15%',
-        valuePrepareFunction: (cell, row) => row.estado.nombre
+        // valuePrepareFunction: (cell, row) => row.estado.nombre
       },
     },
     pager: {
@@ -151,9 +159,39 @@ export class CrudCreditosComponent implements OnInit {
     this.session.token = this.loginService.getTokenDeSession();
     this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
      this.characters = response['credito'];
+
+     this.charactersNuevo = this.convertirDataSourceParaTabla(this.characters, '');
+
+
     });
 
     this.cargarControlesCombos();
+  }
+
+  convertirDataSourceParaTabla(tabla: TableCreditos[], filtro: string): any[] {
+    let arrayCreditos = [];
+    // let arrayCreditosFiltrados = [];
+    tabla.forEach(element => {
+
+      let fila = {
+        _id: element._id,
+        legajo_prefijo: element.legajo_prefijo,
+        legajo: element.legajo,
+        dni: element.cliente.titular.dni,
+        nombreApellido: element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres,
+        cuit: element.comercio.cuit,
+        razonSocial: element.comercio.razonSocial,
+        montoPedido: element.montoPedido,
+        estado: element.estado.nombre,
+      };
+
+      if (filtro === '') {
+        arrayCreditos.push(fila);
+      }
+    });
+
+    return arrayCreditos;
+
   }
 
   private cargarControlesCombos() {

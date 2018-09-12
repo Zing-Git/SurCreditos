@@ -51,11 +51,13 @@ export class SimuladorComponent implements OnInit {
     columns: {
       orden: {
         title: 'Orden',
-        width: '5%'
+        width: '5%',
+        filter: false,
       },
       montoPagado: {
         title: 'Monto Pagado',
         width: '8%',
+        filter: false,
         valuePrepareFunction: (value) => {
           return value === 'montoPagado' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
@@ -63,6 +65,7 @@ export class SimuladorComponent implements OnInit {
       montoPendienteDePago: {
         title: 'Pendiente de pago',
         width: '8%',
+        filter: false,
         valuePrepareFunction: (value) => {
           return value === 'montoPendienteDePago' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
@@ -70,6 +73,7 @@ export class SimuladorComponent implements OnInit {
       MontoTotalCuota: {
         title: 'Total a pagar',
         width: '8%',
+        filter: false,
         valuePrepareFunction: (value) => {
           return value === 'MontoTotalCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
@@ -133,7 +137,7 @@ export class SimuladorComponent implements OnInit {
     this.cuotaAPagar.cuotas = miCuota;
 
     //console.log('JSON PARA POSTMAN' + this.cuotaAPagar);
-    
+
 
     if (this.cuotaAPagar != null) {
       //llamar al servicio para realizar el pago
@@ -244,9 +248,9 @@ export class SimuladorComponent implements OnInit {
           doc.text(diasRetraso, 120, 100);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 105);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 110);
-          
+
           let montototalAdeudado = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
-          
+
           let montoAdeudado = element.cuotas.find(t => t._id === x._id).MontoTotalCuota - x.montoPagado;
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 115);
           //doc.line(10, 100, 150, 100);   //x, , largo , y
@@ -337,7 +341,7 @@ export class SimuladorComponent implements OnInit {
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 225);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 230);
           let montototalAdeudado = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
-          
+
           let montoAdeudado = element.cuotas.find(t => t._id === x._id).MontoTotalCuota - x.montoPagado;
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 235);
           //doc.line(10, 100, 150, 100);   //x, , largo , y
@@ -348,7 +352,7 @@ export class SimuladorComponent implements OnInit {
           //parte de la cuota
           doc.setFontSize(12);
           doc.line(10, 245, 150, 245);
-          
+
           //doc.line(10, 235, 150, 235);
 
         }
@@ -357,11 +361,13 @@ export class SimuladorComponent implements OnInit {
     })
 
     doc.save('CuponDePago.pdf');
-    //doc.output('dataurlnewwindow');  
+    let pdfImprimir = doc.output("blob"); // debe ser blob para pasar el documento a un objeto de impresion en jspdf
+    window.open(URL.createObjectURL(pdfImprimir)); // Abre una nueva ventana para imprimir en el navegador
+
 
   }
 
-  
+
 
   private cargarControlesCombos() {
     this.clientesServices.postGetCombos().subscribe(result => {

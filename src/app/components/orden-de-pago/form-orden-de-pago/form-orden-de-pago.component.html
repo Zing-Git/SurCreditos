@@ -1,4 +1,3 @@
-
 <div class="form-row text-center">
     <div class="col-12">
         <p class="bg-primary">Orden de Pago</p>
@@ -6,36 +5,36 @@
 </div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-      <form class="" [formGroup]="ordenDePagoForm" >
-        <div class="form-row">
-          <!-- Campo 1:  Dni Garante-->
-          <div class="form-group col-md-6">
-              <label for="inputDniGarante">* Número de Documento</label>
-              <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDniCliente" placeholder="30300300">
-          </div>
-  
-          <div class="col-md-6">
-              <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>
-          </div>
-  
-          <!-- Dni error block -->
-          <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
-              <div *ngIf="dni.errors['required']">
-                  El número de documento es requerido
-              </div>
-          </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <form class="" [formGroup]="ordenDePagoForm">
+                <div class="form-row">
+                    <!-- Campo 1:  Dni Garante-->
+                    <div class="form-group col-md-6">
+                        <label for="inputDniGarante">* Número de Documento</label>
+                        <input type="number" formControlName="dni" class="form-control form-control-sm" (keyup.enter)="onEnterDniCliente()" id="inputDniCliente" placeholder="30300300">
+                    </div>
+
+                    <div class="col-md-6">
+                        <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>
+                    </div>
+
+                    <!-- Dni error block -->
+                    <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
+                        <div *ngIf="dni.errors['required']">
+                            El número de documento es requerido
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
         </div>
-      </form>
-      
-      
+        <div>
+            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #ordenPagoForm></ng2-smart-table>
+        </div>
+
     </div>
-    <div>
-        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #ordenPagoForm></ng2-smart-table>
-    </div>
-    
-  </div>
-  
+
 </div>

@@ -17,6 +17,7 @@ import { ClientesService } from '../../../../modules/servicios/clientes/clientes
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
+import { CreditosService } from '../../../../modules/servicios/creditos/creditos.service';
 declare let jsPDF;
 
 @Component({
@@ -86,7 +87,10 @@ export class SimuladorComponent implements OnInit {
   constructor(private router: Router, public ngxSmartModalService: NgxSmartModalService,
     public loginService: LoginService,
     public cutaService: CuotasService,
-    public utilidades: UtilidadesService, private datePipe: DatePipe, private clientesServices: ClientesService) { }
+    public utilidades: UtilidadesService, 
+    private datePipe: DatePipe, 
+    private clientesServices: ClientesService,
+    private creditoServices: CreditosService) { }
 
   ngOnInit() {
     //this.cuotas = this.cuotasSimuladas;
@@ -266,9 +270,10 @@ export class SimuladorComponent implements OnInit {
           
           //suma de todas las cuotas anteriores, el pagos individuales de esta cuota y el pago de cuota actual
           let totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior + x.montoPagado; //total pagado hasta ahora 
-          let totalCuotaActual: number = historicoCuotaActual + x.montoPagado;          
           
-
+          let totalCuotaActual: number =+element.cuotas.find(t => t._id === x._id).MontoTotalCuota -( historicoCuotaActual + x.montoPagado);          
+          
+console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto total:' + totalCuotaActual)
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
                 .format(totalCuotaActual), 120, 115);  //Saldo por cuota: (adeudado)
           

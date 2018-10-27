@@ -156,10 +156,10 @@ export class SimuladorComponent implements OnInit {
           this.ngxSmartModalService.getModal('simuladorModal').close();
           this.ngxSmartModalService.getModal('cuotaModal').close();
           this.router.navigate(['/cuotas']);
-         /* setTimeout(() => {
-            this.router.navigate(['/cuotas']);
-          },
-            5000);*/
+          /* setTimeout(() => {
+             this.router.navigate(['/cuotas']);
+           },
+             5000);*/
         }
       }, err => {
         //alert('Hubo un problema al registrar la solicitud de credito');
@@ -175,10 +175,10 @@ export class SimuladorComponent implements OnInit {
 
     this.cuotaAPagar.cuotas.forEach(x => {
 
-      if(nextPag > 0){
+      if (nextPag > 0) {
         doc.addPage();
-      }else{
-        nextPag +=1;
+      } else {
+        nextPag += 1;
       }
 
       doc.setFontSize(12);
@@ -228,7 +228,7 @@ export class SimuladorComponent implements OnInit {
           doc.text('Total a Pagar: ', 40, 105);
           doc.text('Pagado: ', 40, 110);
           doc.text('Saldo por cuota: (adeudado):', 40, 115);
-          doc.text('Saldo Total del Credito:', 40,123)
+          doc.text('Saldo Total del Credito:', 40, 123)
           doc.text('Fecha de Pago: ', 80, 128)
           doc.setFontType("bold");
 
@@ -243,10 +243,10 @@ export class SimuladorComponent implements OnInit {
           doc.text(this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 65);
 
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
-                  .format(+element.capital), 50, 70);  //Capital
+            .format(+element.capital), 50, 70);  //Capital
 
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
-                  .format(+element.totalAPagar), 120, 70);   //total a pagar
+            .format(+element.totalAPagar), 120, 70);   //total a pagar
 
           //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 70);
           doc.text(element.tipoPlan, 50, 75);  //plan de pago es el tipo de plan(semanal, quincenal, etc...)
@@ -254,17 +254,24 @@ export class SimuladorComponent implements OnInit {
 
           doc.text(element.cuotas.find(t => t._id === x._id).orden.toString(), 120, 90);  //numero de cuota a pagar
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
-                  .format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 95);  //valor de cuota
+            .format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 95);  //valor de cuota
 
           let diasRetraso = String(element.cuotas.find(t => t._id === x._id).diasRetraso);
           doc.text(diasRetraso, 120, 100);
 
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+<<<<<<< HEAD
                   .format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 105);  //total a pagar
 
           let historicoCuotaActual : number=0;
           for(var i=0;i<this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico.length;i++)
           {
+=======
+            .format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 105);  //total a pagar
+
+          let historicoCuotaActual: number = 0;
+          for (var i = 0; i < this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico.length; i++) {
+>>>>>>> c05732692914c2be3ef89f8dd7feb7f727bcd519
             historicoCuotaActual += Number(this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico[i]);
           }
 
@@ -273,6 +280,7 @@ export class SimuladorComponent implements OnInit {
           let montoTotalAdeudadoAnterior = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
 
           //suma de todas las cuotas anteriores, el pagos individuales de esta cuota y el pago de cuota actual
+<<<<<<< HEAD
           let totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior + x.montoPagado; //total pagado hasta ahora
 
           let totalCuotaActual: number =+element.cuotas.find(t => t._id === x._id).MontoTotalCuota -( historicoCuotaActual + x.montoPagado);
@@ -280,12 +288,20 @@ export class SimuladorComponent implements OnInit {
 console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto total:' + totalCuotaActual)
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
                 .format(totalCuotaActual), 120, 115);  //Saldo por cuota: (adeudado)
+=======
+          let totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior + x.montoPagado; //total pagado hasta ahora 
+
+          let totalCuotaActual: number = +element.cuotas.find(t => t._id === x._id).MontoTotalCuota - (historicoCuotaActual + x.montoPagado);
+
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+            .format(totalCuotaActual), 120, 115);  //Saldo por cuota: (adeudado)
+>>>>>>> c05732692914c2be3ef89f8dd7feb7f727bcd519
 
           const today = Date.now();
 
           //es la totalGlobal  restado el valor anterior
           let montoAdeudado = +element.totalAPagar - totalPagadoHastaAhora;
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format( montoAdeudado), 120, 123);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 123);
           doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 128)
           //parte de la cuota
           doc.setFontSize(12);
@@ -293,35 +309,12 @@ console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto tota
           doc.line(10, 135, 150, 135);
           doc.setFontType("bold");
 
-        }
-      });     //   x: 10, y: 125
-      //****************************************FIN DE CUPON PARA CAJERO  ******************************************** */
+          //****************************************FIN DE CUPON PARA CAJERO  ******************************************** */
+          doc.text('CUPON DE PAGO', 80, 145, 'center');
+          doc.line(10, 150, 150, 150);   //x, y, largo , y
+          doc.setFontSize(8);
+          doc.setTextColor(0)
 
-      doc.setFontSize(12);
-
-      doc.setFontType("bold");
-      doc.text('CUPON DE PAGO', 80, 145, 'center');
-      doc.line(10, 150, 150, 150);   //x, y, largo , y
-      doc.setFontSize(8);
-      doc.setTextColor(0)
-
-      this.creditos.forEach(element => {
-
-        if (element._id == this.idCredito) {
-
-          let fechaCancelacion: string;
-          let cantidadCuota: string;  //es el orden
-
-          this.creditos.forEach(element => {
-            element.cuotas.forEach(plan => {
-              fechaCancelacion = plan.fechaVencimiento;
-              cantidadCuota = plan.orden.toString();
-            });
-          });
-          numeroFactura = this.utilidades.crearNumeroFactura(element.legajoPrefijo, element.legajo);
-          //console.log(element._id);
-
-          //console.log();
           doc.setFontType("normal")
 
           doc.text('Legajo de Credito: ', 10, 160);
@@ -344,9 +337,9 @@ console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto tota
           doc.text('Total a Pagar: ', 40, 225);
           doc.text('Pagado: ', 40, 230);
           doc.text('Saldo por cuota: (adeudado):', 40, 235);
-          doc.text('Saldo Total del Credito:', 40,243)
+          doc.text('Saldo Total del Credito:', 40, 243)
           doc.text('Fecha de Pago: ', 80, 255)
-          doc.text('Firma del cajero: ', 10,255);
+          doc.text('Firma del cajero: ', 10, 255);
           doc.setFontType("bold");
 
           doc.text(numeroFactura, 50, 160);
@@ -366,10 +359,11 @@ console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto tota
 
           doc.text(element.cuotas.find(t => t._id === x._id).orden.toString(), 120, 210);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 215);
-          let diasRetraso = String(element.cuotas.find(t => t._id === x._id).diasRetraso);
+          //let diasRetraso = String(element.cuotas.find(t => t._id === x._id).diasRetraso);
           doc.text(diasRetraso, 120, 220);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 225);
 
+<<<<<<< HEAD
           let historicoCuotaActual : number=0;
           for(var i=0;i<this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico.length;i++)
           {
@@ -391,9 +385,29 @@ console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto tota
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(totalCuotaActual), 120, 235);
           //doc.line(10, 100, 150, 100);   //x, , largo , y
           const today = Date.now();
+=======
+          //let historicoCuotaActual: number = 0;
+          //for (var i = 0; i < this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico.length; i++) {
+           // historicoCuotaActual += Number(this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico[i]);
+          //}
+
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 230);   //monto pagado
+
+          //let montoTotalAdeudadoAnterior = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
+
+          //suma de todas las cuotas anteriores, el pagos individuales de esta cuota y el pago de cuota actual
+         // let totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior + x.montoPagado; //total pagado hasta ahora 
+
+          //let totalCuotaActual: number = +element.cuotas.find(t => t._id === x._id).MontoTotalCuota - (historicoCuotaActual + x.montoPagado);
+
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+            .format(totalCuotaActual), 120, 235);  //Saldo por cuota: (adeudado)
+
+          //const today = Date.now();
+>>>>>>> c05732692914c2be3ef89f8dd7feb7f727bcd519
 
           //es la totalGlobal  restado el valor anterior
-          let montoAdeudado = +element.totalAPagar - totalPagadoHastaAhora;
+          //let montoAdeudado = +element.totalAPagar - totalPagadoHastaAhora;
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 243);
           doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 255)
 
@@ -401,10 +415,14 @@ console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto tota
           doc.setFontSize(12);
           doc.line(10, 245, 150, 245);
 
+<<<<<<< HEAD
           //doc.line(10, 235, 150, 235);
+=======
+>>>>>>> c05732692914c2be3ef89f8dd7feb7f727bcd519
 
         }
-      });
+      });     //   x: 10, y: 125
+  
 
     })
 

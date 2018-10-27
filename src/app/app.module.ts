@@ -50,6 +50,12 @@ import { CrudCreditosAdminTodosComponent } from './components/creditos/crud-cred
 import { CuotasComponent } from './components/cuotas/cuotas.component';
 import { ModalCuotasComponent } from './components/cuotas/modal-cuotas/modal-cuotas.component';
 import { SimuladorComponent } from './components/cuotas/modalCuotasSimuladas/simulador/simulador.component';
+import { CuponDePagoComponent } from './components/cupon-de-pago/cupon-de-pago.component';
+import { SeleccionDeClienteComponent } from './components/cupon-de-pago/seleccion-de-cliente/seleccion-de-cliente.component';
+import { ElegirCuotasComponent } from './components/cupon-de-pago/elegir-cuotas/elegir-cuotas.component';
+import { ModalCuotasCobranzaComponent } from './components/cupon-de-pago/modal-cuotas-cobranza/modal-cuotas-cobranza.component';
+import { ModalCuotasCobroComponent } from './components/cupon-de-pago/modal-cuotas-cobro/modal-cuotas-cobro.component';
+import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/rendicion-de-nomina.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +82,13 @@ import { SimuladorComponent } from './components/cuotas/modalCuotasSimuladas/sim
     CrudCreditosAdminTodosComponent,
     CuotasComponent,
     ModalCuotasComponent,
-    SimuladorComponent
+    SimuladorComponent,
+    CuponDePagoComponent,
+    SeleccionDeClienteComponent,
+    ElegirCuotasComponent,
+    ModalCuotasCobranzaComponent,
+    ModalCuotasCobroComponent,
+    RendicionDeNominaComponent
   ],
   imports: [
     BrowserModule,

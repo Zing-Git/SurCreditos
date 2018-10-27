@@ -21,7 +21,6 @@ const cudOptionsHtml = {
   providedIn: 'root'
 })
 export class ClientesService {
-  // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
   public urlBase = 'http://18.223.146.82:3001';
 
   // GET URLs
@@ -33,6 +32,8 @@ export class ClientesService {
   public urlPostGuardarComercio = this.urlBase + '/cliente/agregar_comercio/';
   public urlPostAgregarReferenciaComercio = this.urlBase + '/comercio/agregar_referencia/';
   public urlPostAgregarReferenciaCliente = this.urlBase + '/cliente/agregar_referencia/';
+  public urlPostGetClientesActivos = this.urlBase + '/credito/listar_clientes_activos/';
+
 
 
   constructor(public http: HttpClient) { }
@@ -83,7 +84,10 @@ export class ClientesService {
     const newSession = Object.assign({}, comercio);
     return this.http.post<any[]>(this.urlPostAgregarReferenciaComercio, newSession, cudOptions);
   }
-
-
+  // Clientes Activos son los que tienen un credito pendiente de cobro
+  postGetClientesActivos(session: Session): Observable<any[]> {
+    const newSession = Object.assign({}, session);
+    return this.http.post<any[]>(this.urlPostGetClientesActivos, newSession, cudOptions);
+  }
 
 }

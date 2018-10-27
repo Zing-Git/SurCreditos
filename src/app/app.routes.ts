@@ -16,8 +16,10 @@ import { ModalComercioComponent } from './components/creditos/modal-comercio/mod
 import { ViewCreditoComponent } from './components/creditos/view-credito/view-credito.component';
 import { FormOrdenDePagoComponent } from './components/orden-de-pago/form-orden-de-pago/form-orden-de-pago.component';
 import { CrudCreditosAdminTodosComponent } from './components/creditos/crud-creditos-admin-todos/crud-creditos-admin-todos.component';
-import { CuotasComponent } from './components/cuotas/cuotas.component'
-
+import { CuotasComponent } from './components/cuotas/cuotas.component';
+import { CuponDePagoComponent} from './components/cupon-de-pago/cupon-de-pago.component'
+import { SeleccionDeClienteComponent } from './components/cupon-de-pago/seleccion-de-cliente/seleccion-de-cliente.component';
+import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/rendicion-de-nomina.component';
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -42,8 +44,12 @@ export const appRoutes: Routes = [
 { path: 'crudcreditosadmintodos', component: CrudCreditosAdminTodosComponent , canActivate: [NoLoginGuard]},
 
 { path: 'formcomercio', component: ModalComercioComponent , canActivate: [LoginGuard]},
-{ path: 'ordendepago', component: FormOrdenDePagoComponent , canActivate: [NoLoginGuard]},
-{ path: 'cuotas', component: CuotasComponent , canActivate: [NoLoginGuard]},
+{ path: 'ordendepago', component: FormOrdenDePagoComponent , canActivate: [LoginGuard]},
+{ path: 'cupondepago', component: CuponDePagoComponent , canActivate: [LoginGuard]},
+{ path: 'rendicionnomina', component: RendicionDeNominaComponent , canActivate: [LoginGuard]},
+{ path: 'seleccionclientecobro/:evento/:dni/:apellido/:idCobrador', component: SeleccionDeClienteComponent , canActivate: [LoginGuard]},
+{ path: 'cuotas', component: CuotasComponent , canActivate: [LoginGuard]},
+
 { path: '', component: LoginComponent},
 /* { path: '', component: LoginComponent, canActivate: [NoLoginGuard] }, */
 // si es la raiz el login, sale el component de login al iniciar el menu

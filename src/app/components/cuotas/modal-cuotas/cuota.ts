@@ -9,6 +9,7 @@ export class Cuota {
     todosMontoPagoActual: string;
     MontoTotalCuota: string;
     orden: string;
+    montoPagadoHistorico: number[];
     //orden: number;
    /* montoPendienteDePago: number;
     orden:number;

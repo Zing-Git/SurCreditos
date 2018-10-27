@@ -1,0 +1,20 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <p class="bg-primary">Confeccion de Nómina de Cobro para Cobradores</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-row text-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <label for="inputCobrador">Cobrador:  </label>&nbsp;&nbsp;
+            <input #search class="search input-lg" type="text" placeholder="Buscar Cobrador..." (keyup.enter)="onSearch(search.value)">&nbsp;&nbsp;
+            <span class="btn btn-secondary" (click)="onSearch(search.value)">Buscar</span>
+            <br><br>
+            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="source" (custom)="onCustom($event)"></ng2-smart-table>
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+</div>

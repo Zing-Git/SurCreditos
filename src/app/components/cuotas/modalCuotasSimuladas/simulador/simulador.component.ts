@@ -17,6 +17,7 @@ import { ClientesService } from '../../../../modules/servicios/clientes/clientes
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
+import { CreditosService } from '../../../../modules/servicios/creditos/creditos.service';
 declare let jsPDF;
 
 @Component({
@@ -90,7 +91,10 @@ export class SimuladorComponent implements OnInit {
   constructor(private router: Router, public ngxSmartModalService: NgxSmartModalService,
     public loginService: LoginService,
     public cutaService: CuotasService,
-    public utilidades: UtilidadesService, private datePipe: DatePipe, private clientesServices: ClientesService) { }
+    public utilidades: UtilidadesService,
+    private datePipe: DatePipe,
+    private clientesServices: ClientesService,
+    private creditoServices: CreditosService) { }
 
   ngOnInit() {
     //this.cuotas = this.cuotasSimuladas;
@@ -129,6 +133,7 @@ export class SimuladorComponent implements OnInit {
         montoPagado: element.montoPagado,
         porcentajeInteresPorMora: element.porcentajeInteresPorMora,
         comentario: element.comentario,
+        montoPagadoHistorico: element.montoPagadoHistorico
       }
 
       miCuota.push(cuota);
@@ -236,26 +241,51 @@ export class SimuladorComponent implements OnInit {
 
           doc.text(this.datePipe.transform(element.fechaAlta, 'dd/MM/yyyy'), 50, 65);
           doc.text(this.datePipe.transform(fechaCancelacion, 'dd/MM/yyyy'), 120, 65);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.capital), 50, 70);  //monto pedido.
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.totalAPagar), 120, 70);
+
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                  .format(+element.capital), 50, 70);  //Capital
+
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                  .format(+element.totalAPagar), 120, 70);   //total a pagar
+
           //doc.text( Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(element.montoAPagar), 120, 70);
           doc.text(element.tipoPlan, 50, 75);  //plan de pago es el tipo de plan(semanal, quincenal, etc...)
-          doc.text(cantidadCuota, 120, 75);   //cantidad de cuotas es el ultimo orden
+          doc.text(cantidadCuota, 120, 75);   //cantidad de cuotas 12
 
-          doc.text(element.cuotas.find(t => t._id === x._id).orden.toString(), 120, 90);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 95);
+          doc.text(element.cuotas.find(t => t._id === x._id).orden.toString(), 120, 90);  //numero de cuota a pagar
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                  .format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 95);  //valor de cuota
+
           let diasRetraso = String(element.cuotas.find(t => t._id === x._id).diasRetraso);
           doc.text(diasRetraso, 120, 100);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 105);
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 110);
 
-          let montototalAdeudado = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                  .format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 105);  //total a pagar
 
-          let montoAdeudado = element.cuotas.find(t => t._id === x._id).MontoTotalCuota - x.montoPagado;
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 115);
-          //doc.line(10, 100, 150, 100);   //x, , largo , y
+          let historicoCuotaActual : number=0;
+          for(var i=0;i<this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico.length;i++)
+          {
+            historicoCuotaActual += Number(this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico[i]);
+          }
+
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 110);   //monto pagado
+
+          let montoTotalAdeudadoAnterior = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
+
+          //suma de todas las cuotas anteriores, el pagos individuales de esta cuota y el pago de cuota actual
+          let totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior + x.montoPagado; //total pagado hasta ahora
+
+          let totalCuotaActual: number =+element.cuotas.find(t => t._id === x._id).MontoTotalCuota -( historicoCuotaActual + x.montoPagado);
+
+console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto total:' + totalCuotaActual)
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
+                .format(totalCuotaActual), 120, 115);  //Saldo por cuota: (adeudado)
+
           const today = Date.now();
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format( (+element.totalAPagar) - montototalAdeudado), 120, 123);
+
+          //es la totalGlobal  restado el valor anterior
+          let montoAdeudado = +element.totalAPagar - totalPagadoHastaAhora;
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format( montoAdeudado), 120, 123);
           doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 128)
           //parte de la cuota
           doc.setFontSize(12);
@@ -339,14 +369,32 @@ export class SimuladorComponent implements OnInit {
           let diasRetraso = String(element.cuotas.find(t => t._id === x._id).diasRetraso);
           doc.text(diasRetraso, 120, 220);
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.cuotas.find(t => t._id === x._id).MontoTotalCuota), 120, 225);
+
+          let historicoCuotaActual : number=0;
+          for(var i=0;i<this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico.length;i++)
+          {
+            historicoCuotaActual += Number(this.cuotasSimuladas.find(t => t._id === x._id).montoPagadoHistorico[i]);
+          }
+
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 230);
+
+          let montoTotalAdeudadoAnterior = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
+
+          //suma de todas las cuotas anteriores, el pagos individuales de esta cuota y el pago de cuota actual
+          let totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior + x.montoPagado; //total pagado hasta ahora
+          let totalCuotaActual: number = historicoCuotaActual + x.montoPagado;
+
+
           let montototalAdeudado = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
 
-          let montoAdeudado = element.cuotas.find(t => t._id === x._id).MontoTotalCuota - x.montoPagado;
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 235);
+
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(totalCuotaActual), 120, 235);
           //doc.line(10, 100, 150, 100);   //x, , largo , y
           const today = Date.now();
-          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format( (+element.totalAPagar) - montototalAdeudado), 120, 243);
+
+          //es la totalGlobal  restado el valor anterior
+          let montoAdeudado = +element.totalAPagar - totalPagadoHastaAhora;
+          doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 243);
           doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 255)
 
           //parte de la cuota

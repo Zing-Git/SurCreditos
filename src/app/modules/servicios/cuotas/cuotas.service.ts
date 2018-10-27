@@ -19,6 +19,13 @@ export class CuotasService {
   // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
   public urlBase = 'http://18.223.146.82:3001';
   public urlPagarCuota = this.urlBase + '/cuota/pagar/';
+  public urlAsignarCuotasACobrador = this.urlBase + '/caja/asignar_cobranzas_cobrador/';
+  public urlGetNominaCobranza = this.urlBase + '/caja/devolver_cobranzas_cobrador/';
+  public urlGuardarCobranzasDeCobrador = this.urlBase + '/cuota/procesar_rendicion_cobrador/';
+
+
+
+
   constructor(public http: HttpClient) { }
 
   postPagarCuota(pago: Pago): Observable<any[]>{
@@ -30,5 +37,28 @@ export class CuotasService {
     const newSession = Object.assign({}, paramnetros);
     return this.http.post<any[]>(this.urlPagarCuota, newSession, cudOptions);
   }
+
+  postGuardarCredito(asignacionDeCobranzas: any): Observable<any> {
+    const newSession = Object.assign({}, asignacionDeCobranzas);
+    return this.http.post<any[]>(this.urlAsignarCuotasACobrador, newSession, cudOptions);
+  }
+  postGetNominaDeCobranzas(idNomina: any): Observable<any> {
+    const parametros = {
+      idAsignacion: idNomina
+    };
+    const newSession = Object.assign({}, parametros);
+    return this.http.post<any>(this.urlGetNominaCobranza, newSession, cudOptions);
+  }  
+  postGuardarNominaDeCobranzas(nomina: any): Observable<any> {
+    /* const parametros = {
+      idAsignacion: idNomina
+    }; */
+    const newSession = Object.assign({}, nomina);
+    return this.http.post<any>(this.urlGuardarCobranzasDeCobrador, newSession, cudOptions);
+  }
+
+
+
+
 
 }

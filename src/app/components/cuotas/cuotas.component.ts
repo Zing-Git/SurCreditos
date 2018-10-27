@@ -145,10 +145,6 @@ export class CuotasComponent implements OnInit {
 
   }
 
-  pagarCuotas() {
-
-  }
-
   mostrarCuotas(idCredito: string) {
     //console.log('id de credito.........' + idCredito);
     this.charactersCreditos.forEach(x => {

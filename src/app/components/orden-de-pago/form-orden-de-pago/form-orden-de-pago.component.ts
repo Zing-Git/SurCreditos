@@ -125,7 +125,7 @@ export class FormOrdenDePagoComponent implements OnInit {
 
   }
 
-  lanzarPopup(id : string){
+  lanzarPopup(id: string){
     Swal({
       title: 'Estas seguro?',
       text: 'Estas por realizar el pago de una Orden de Pago!!!',

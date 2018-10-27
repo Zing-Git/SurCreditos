@@ -1,0 +1,11 @@
+<!-- <app-modal-cuotas-cobranza></app-modal-cuotas-cobranza> -->
+<!-- <app-modal-cuotas-cobranza (pasameCuotasACobrar)="finalizar($event)"></app-modal-cuotas-cobranza> -->
+
+<ngx-smart-modal #popupOne [identifier]="'popupOne'">
+    <h1>Creditos del Cliente</h1>
+    <div>
+        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersCreditos" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
+    </div>
+    <button class="btn btn-secondary" (click)="popupOne.close()">Cerrar</button>
+
+</ngx-smart-modal>

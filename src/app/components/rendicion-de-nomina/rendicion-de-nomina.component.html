@@ -1,0 +1,88 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <p class="bg-primary">Rendición de Nomina de Cobro</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-row text-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-7">
+            <label for="inputCobrador">ID Nomina de Cobro (ver identificador de la Nómina): &nbsp;&nbsp;  </label>
+            <input #search class="form-control input-lg" type="text" placeholder="Buscar Nómina..." (keyup.enter)="onSearch(search.value)" [(ngModel)]="texto">
+            <span class="btn btn-secondary" (click)="onSearch(search.value)">Buscar</span>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <table class="table table-hover">
+                <tr>
+                    <th>Id</th>
+                    <th>Legajo</th>
+                    <th>Cliente Dni</th>
+                    <th>Cuota</th>
+                    <th>Fecha de Nomina</th>
+                    <th>A Cobrar</th>
+                    <th>Monto Cobrado</th>
+                </tr>
+                <tr *ngFor="let item of nominas.asignaciones; let indice=index">
+                    <td>{{indice+1}}</td>
+                    <td>
+                        {{item.legajoCredito}}
+                    </td>
+                    <td>
+                        {{item.dniCliente}}
+                    </td>
+                    <td>
+                        {{item.valorDeCuota | currency }}
+                    </td>
+                    <td>
+                        {{item.fechaAlta | date:'dd/MM/yyyy'}}
+                    </td>
+                    <td>
+                        {{item.saldoACobrar | currency}}
+                    </td>
+                    <td>
+                        <input [(ngModel)]='item.montoCobrado' type="number" name="decimals" (focusout)="focusOutFunction()" ng-model="decimals" ng-pattern="/^(\d{0,3}(\.\d{0,2})?)$/ ">
+                    </td>
+                </tr>
+            </table>
+
+            <div class="form-row text-center">
+                <div class="col-12 bg-gray">
+                    <blockquote class="blockquote text-center">
+                        <p class="mb-0"> Total Cobrado: {{nominas.totalCobrado | currency}} </p>
+                        <footer class="blockquote-footer">Este monto debe recibir del cobrador</footer>
+                    </blockquote>
+                </div>
+            </div>
+
+            <div class="form-row text-center bg-secondary">
+                <div class="col-4">
+                    <button class="btn btn-outline-light " [disabled]="buttonGuargarDisabled" (click)="lanzarPopupGuardar() ">Guardar Rendicion de Nómina</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-outline-light " [disabled]="buttonImprimirDisabled" (click)="imprimirComprobanteNominaPago() ">Imprimir Rendición</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-outline-light" (click)="nuevaRendicion()">Realizar otra Rendición</button>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-1 ">
+        </div>
+    </div>
+</div>

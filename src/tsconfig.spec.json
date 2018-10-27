@@ -6,7 +6,10 @@
     "types": [
       "jasmine",
       "node"
-    ]
+    ],
+    "lib": [
+      "es2015"
+  ]
   },
   "files": [
     "test.ts",

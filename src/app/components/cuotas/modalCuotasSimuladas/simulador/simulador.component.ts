@@ -68,7 +68,8 @@ export class SimuladorComponent implements OnInit {
         width: '8%',
         filter: false,
         valuePrepareFunction: (value) => {
-          return value === 'montoPendienteDePago' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+          return value === 'montoPendienteDePago' ? value : 
+          Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       MontoTotalCuota: {
@@ -268,8 +269,8 @@ export class SimuladorComponent implements OnInit {
           }
 
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 110);   //monto pagado
-
-          montoTotalAdeudadoAnterior = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
+          
+          let montoTotalAdeudadoAnterior = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
 
           //suma de todas las cuotas anteriores, el pagos individuales de esta cuota y el pago de cuota actual
           let totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior + x.montoPagado; //total pagado hasta ahora
@@ -280,7 +281,7 @@ console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto tota
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
                 .format(totalCuotaActual), 120, 115);  //Saldo por cuota: (adeudado)
 
-          const today = Date.now();
+          let today = Date.now();
 
           //es la totalGlobal  restado el valor anterior
           let montoAdeudado = +element.totalAPagar - totalPagadoHastaAhora;
@@ -354,11 +355,11 @@ console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto tota
 
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.montoPagado), 120, 230);
 
-          let montoTotalAdeudadoAnterior = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
+          let montoTotalAdeudadoAnterior1 = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
 
           //suma de todas las cuotas anteriores, el pagos individuales de esta cuota y el pago de cuota actual
-          totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior + x.montoPagado; //total pagado hasta ahora
-          totalCuotaActual: number = historicoCuotaActual + x.montoPagado;
+          totalPagadoHastaAhora = historicoCuotaActual + montoTotalAdeudadoAnterior1 + x.montoPagado; //total pagado hasta ahora
+          totalCuotaActual = historicoCuotaActual + x.montoPagado;
 
 
           let montototalAdeudado = this.utilidades.calcularMontoAdeudado(Number(element.cuotas.find(t => t._id === x._id).orden.toString()), element.cuotas);
@@ -366,12 +367,12 @@ console.log(historicoCuotaActual +' montoPagado: ' + x.montoPagado + 'Monto tota
 
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(totalCuotaActual), 120, 235);
           //doc.line(10, 100, 150, 100);   //x, , largo , y
-          const today = Date.now();
+          const today1 = Date.now();
 
           //es la totalGlobal  restado el valor anterior
           //let montoAdeudado = +element.totalAPagar - totalPagadoHastaAhora;
           doc.text(Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(montoAdeudado), 120, 243);
-          doc.text(this.datePipe.transform(today, 'dd/MM/yyyy'), 120, 255)
+          doc.text(this.datePipe.transform(today1, 'dd/MM/yyyy'), 120, 255)
 
           //parte de la cuota
           doc.setFontSize(12);

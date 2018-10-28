@@ -14,7 +14,7 @@ declare let jsPDF;
 export class IngresoEgresoComponent implements OnInit {
   token: any;
   dataCombos: any;
-  opcionesOperacion: [];
+  opcionesOperacion: any[];
   filasRegistradas: any[] = [];
   operacionesIngresosEgresos: any;
   fecha = new Date();

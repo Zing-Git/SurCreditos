@@ -20,6 +20,7 @@ import { CuotasComponent } from './components/cuotas/cuotas.component';
 import { CuponDePagoComponent} from './components/cupon-de-pago/cupon-de-pago.component'
 import { SeleccionDeClienteComponent } from './components/cupon-de-pago/seleccion-de-cliente/seleccion-de-cliente.component';
 import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/rendicion-de-nomina.component';
+import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egreso.component';
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -49,6 +50,7 @@ export const appRoutes: Routes = [
 { path: 'rendicionnomina', component: RendicionDeNominaComponent , canActivate: [LoginGuard]},
 { path: 'seleccionclientecobro/:evento/:dni/:apellido/:idCobrador', component: SeleccionDeClienteComponent , canActivate: [LoginGuard]},
 { path: 'cuotas', component: CuotasComponent , canActivate: [LoginGuard]},
+{ path: 'ingresoegreso', component: IngresoEgresoComponent , canActivate: [LoginGuard]},
 
 { path: '', component: LoginComponent},
 /* { path: '', component: LoginComponent, canActivate: [NoLoginGuard] }, */

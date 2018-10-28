@@ -56,6 +56,7 @@ import { ElegirCuotasComponent } from './components/cupon-de-pago/elegir-cuotas/
 import { ModalCuotasCobranzaComponent } from './components/cupon-de-pago/modal-cuotas-cobranza/modal-cuotas-cobranza.component';
 import { ModalCuotasCobroComponent } from './components/cupon-de-pago/modal-cuotas-cobro/modal-cuotas-cobro.component';
 import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/rendicion-de-nomina.component';
+import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egreso.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/ren
     ElegirCuotasComponent,
     ModalCuotasCobranzaComponent,
     ModalCuotasCobroComponent,
-    RendicionDeNominaComponent
+    RendicionDeNominaComponent,
+    IngresoEgresoComponent
   ],
   imports: [
     BrowserModule,

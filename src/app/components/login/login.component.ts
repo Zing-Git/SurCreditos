@@ -38,8 +38,9 @@ export class LoginComponent implements OnInit {
       session.token = response['token'];
       session.rol_id = response['usuario'].rol._id;
       session.rolPrecendencia = response['usuario'].rol.precedencia;
+      session.usuario_id = response['usuario']._id;
 
-      console.log('Id de Rol de Session: ', session.rol_id);
+      console.log('DATOS DE SESSION: ', response);
 
       switch (session.rol_id) {
         case '5b91731eb02df40f286142bc': {

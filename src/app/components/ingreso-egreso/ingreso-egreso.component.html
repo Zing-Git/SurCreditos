@@ -1,0 +1,103 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <p class="bg-primary">Ingreso / Egreso de Efectivo</p>
+    </div>
+</div>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="">
+                <div class="form-group">
+                    <label>Elija el tipo de Operación</label>
+                    <select #tipoOp class="custom-control custom-select" (change)="onChangeTipoDeOperacion(tipoOp.value)">
+                      <option value="INGRESO">INGRESO</option>
+                      <option value="EGRESO">EGRESO</option>
+                    </select>
+
+                </div>
+
+
+
+                <div class="form-group">
+                    <label>Elija una Operación de caja</label>
+                    <select #operacion class="custom-control custom-select" (change)="onChangeOperacion(operacion.value)">
+                      <option value="Elija una opcion..."></option>
+                      <option *ngFor="let operacion of opcionesOperacion">
+                        {{operacion}}
+                      </option>
+                    </select>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="valor">Ingrese Monto (en pesos)</label>
+                    <input #monto type="number" class="form-control" id="valor" placeholder="1000.00">
+                </div>
+                <div class="form-group">
+                    <label>Ingrese un detalle o comentario de la operación</label>
+                    <textarea #textArea class="form-control" id="comentario" rows="3"></textarea>
+                </div>
+                <button (click)="agregarAOperaciones(textArea.value, monto.value)" class="btn btn-secondary text-right">Agregar a mis operaciones</button>
+
+
+            </form>
+
+
+
+
+
+
+            <table class="table table-hover">
+                <tr>
+                    <th>Id</th>
+                    <th>Fecha</th>
+                    <th>Tipo de Operación</th>
+                    <th>Operación</th>
+                    <th>Monto</th>
+                    <th>Comentario</th>
+                    <th>Acción</th>
+                </tr>
+                <tr *ngFor="let item of filasRegistradas; let indice=index">
+                    <td>{{indice+1}}</td>
+                    <td>
+                        {{ fecha | date:'dd/MM/yyyy'}}
+                    </td>
+                    <td>
+                        {{item.tipoOperacion}}
+                    </td>
+                    <td>
+                        {{item.operacion}}
+                    </td>
+                    <td>
+                        {{item.monto | currency }}
+                    </td>
+                    <td>
+                        {{item.comentario}}
+                    </td>
+                    <td>
+                        <button (click)="quitarFila(indice)">Eliminar</button>
+                    </td>
+                </tr>
+            </table>
+
+
+            <button (click)="guardar()" class="btn btn-secondary text-right">Guardar</button>
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</div>

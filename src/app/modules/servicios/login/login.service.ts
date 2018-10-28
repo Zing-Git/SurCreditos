@@ -24,6 +24,7 @@ export class LoginService {
     sessionStorage.removeItem(environment.LSTORE_ROL);
     sessionStorage.removeItem(environment.LSTORE_ROL_ID);
     sessionStorage.removeItem(environment.LSTORE_ROL_PRECEDENCIA);
+    sessionStorage.removeItem(environment.LSTORE_USUARIO_ID);
     return false;
   }
 
@@ -34,6 +35,7 @@ export class LoginService {
     sessionStorage.setItem(environment.LSTORE_ROL, session.rolNombre);
     sessionStorage.setItem(environment.LSTORE_ROL_PRECEDENCIA, session.rolPrecendencia);
     sessionStorage.setItem(environment.LSTORE_ROL_ID, session.rol_id);
+    sessionStorage.setItem(environment.LSTORE_USUARIO_ID, session.usuario_id);
   }
 
   getTokenDeSession(): string {
@@ -47,6 +49,7 @@ export class LoginService {
     session.rol_id = sessionStorage.getItem(environment.LSTORE_ROL_ID);
     session.rolNombre = sessionStorage.getItem(environment.LSTORE_ROL);
     session.rolPrecendencia = sessionStorage.getItem(environment.LSTORE_ROL_PRECEDENCIA);
+    session.usuario_id = sessionStorage.getItem(environment.LSTORE_USUARIO_ID);
     return session;
   }
 

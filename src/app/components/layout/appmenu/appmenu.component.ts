@@ -6,7 +6,6 @@ import { LoginService } from '../../../modules/servicios/login/login.service';
 @Component({
   selector: 'app-appmenu',
   templateUrl: './appmenu.component.html',
-  styleUrls: ['./appmenu.component.css']
 })
 export class AppmenuComponent implements OnInit, DoCheck {
   isLogged: boolean;

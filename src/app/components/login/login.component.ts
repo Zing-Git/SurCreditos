@@ -24,6 +24,16 @@ export class LoginComponent implements OnInit {
       console.log ('Servicio TEST: ', resp );
     }); */
 
+
+    if (this.loginService.getDatosDeSession().token == null) {
+      console.log(this.loginService.getDatosDeSession().token + 'TOKEN VACIO....');
+      this.router.navigate(['/login']);
+
+    } else{
+      console.log(this.loginService.getDatosDeSession().token + 'TOKEN lleno....');
+      this.router.navigate(['/info']);
+    }
+
   }
 
 

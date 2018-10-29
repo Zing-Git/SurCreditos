@@ -22,6 +22,7 @@ const cudOptionsHtml = {
 })
 export class ClientesService {
   public urlBase = 'http://18.223.146.82:3001';
+  // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
 
   // GET URLs
   public urlPostBuscarPorDni = this.urlBase + '/cliente/buscar_por_dni/';  ///credito/buscar_orden_pago/

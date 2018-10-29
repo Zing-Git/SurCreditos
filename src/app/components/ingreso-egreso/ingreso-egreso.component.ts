@@ -5,6 +5,7 @@ import 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { CajaService } from 'src/app/modules/servicios/caja/caja.service';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 declare let jsPDF;
 
 @Component({
@@ -19,48 +20,85 @@ export class IngresoEgresoComponent implements OnInit {
   operacionesIngresosEgresos: any;
   fecha = new Date();
 
-  //Formulario
-  selectTipoOperacion: string;
-  operacion: string;
+  // operacionForm: FormGroup;
+
+  // Formulario
+  selectTipoOperacion: any;
+  operacion: any;
+  selectedValue: any;
+
+
+
+
+
+
 
 
 
   // tslint:disable-next-line:max-line-length
-  constructor(private cajaService: CajaService, private loginService: LoginService, private datePipe: DatePipe, private router: Router) { }
+  constructor(private fb: FormBuilder, private cajaService: CajaService, private loginService: LoginService, private datePipe: DatePipe, private router: Router) { }
 
   ngOnInit() {
+
+
     this.token = this.loginService.getTokenDeSession;
+    // console.log(this.selectTipoOperacion);
     this.cargarCombos();
+
   }
 
 
   cargarCombos() {
-    this.dataCombos = this.cajaService.postGetComboIngresoEgreso(this.token);
-    console.log(JSON.stringify(this.dataCombos));
+    this.cajaService.postGetComboIngresoEgreso(this.token).subscribe( resp => {
+      this.dataCombos = resp;
+      console.log(this.dataCombos);
+      this.onChangeTipoDeOperacion('INGRESO');
+    });
+
+
   }
 
   onChangeTipoDeOperacion(opcionOperacion: string = '') {
     this.selectTipoOperacion = opcionOperacion;
     if (opcionOperacion === 'INGRESO') {
-      this.opcionesOperacion = this.dataCombos.ingresos;
+      this.opcionesOperacion = this.dataCombos.combos.itemsIngreso;
+      this.selectedValue = this.opcionesOperacion[0];
+      console.log(this.selectedValue);
     } else {
-      this.opcionesOperacion = this.dataCombos.egresos;
+      this.opcionesOperacion = this.dataCombos.combos.itemsEgreso;
+      this.selectedValue = this.opcionesOperacion[0];
+      console.log(this.selectedValue);
     }
   }
-  onChangeOperacion(operacion: string = '') {
-    this.operacion = operacion;
+
+
+  onChangeOperacion() {
+    // this.operacion = operacion;
+    console.log(this.selectedValue);
+
   }
+
+
+
+
+
+
+
+
+
 
   agregarAOperaciones(coment: string = '', monto: number = 0) {
     const fila = {
-      tipoOperacion: this.selectTipoOperacion,
-      operacion: this.operacion,
+      tipoOperacion: this.selectedValue.tipoItem,
+      idOperacion: this.selectedValue._id,
+      operacion: this.selectedValue.item,
       monto: monto,
       comentario: coment
     };
     console.log(fila);
     this.filasRegistradas.push(fila);
   }
+
 
   guardar(){
 

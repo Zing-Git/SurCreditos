@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label>Elija el tipo de Operación</label>
                     <select #tipoOp class="custom-control custom-select" (change)="onChangeTipoDeOperacion(tipoOp.value)">
-                      <option value="INGRESO">INGRESO</option>
+                      <option value="INGRESO" selected>INGRESO</option>
                       <option value="EGRESO">EGRESO</option>
                     </select>
 
@@ -23,13 +23,11 @@
 
                 <div class="form-group">
                     <label>Elija una Operación de caja</label>
-                    <select #operacion class="custom-control custom-select" (change)="onChangeOperacion(operacion.value)">
-                      <option value="Elija una opcion..."></option>
-                      <option *ngFor="let operacion of opcionesOperacion">
-                        {{operacion}}
-                      </option>
-                    </select>
+                    <select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="custom-control custom-select" (change)="onChangeOperacion()">
+                  <option *ngFor="let operacion of opcionesOperacion" [ngValue]="operacion">{{operacion.item}}</option>
+                </select>
                 </div>
+
 
 
 
@@ -42,7 +40,6 @@
                     <textarea #textArea class="form-control" id="comentario" rows="3"></textarea>
                 </div>
                 <button (click)="agregarAOperaciones(textArea.value, monto.value)" class="btn btn-secondary text-right">Agregar a mis operaciones</button>
-
 
             </form>
 

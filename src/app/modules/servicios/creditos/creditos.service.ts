@@ -21,7 +21,7 @@ const cudOptionsHtml = {
 })
 export class CreditosService {
   // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
-  public urlBase = 'http://18.223.146.82:3001';
+   public urlBase = 'http://18.223.146.82:3001';
 
    // GET URLs
    public urlPostGetPlanDePago = this.urlBase + '/credito/calcular_plan_pago/';

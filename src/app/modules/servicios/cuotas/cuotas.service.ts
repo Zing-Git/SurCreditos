@@ -48,7 +48,7 @@ export class CuotasService {
     };
     const newSession = Object.assign({}, parametros);
     return this.http.post<any>(this.urlGetNominaCobranza, newSession, cudOptions);
-  }  
+  }
   postGuardarNominaDeCobranzas(nomina: any): Observable<any> {
     /* const parametros = {
       idAsignacion: idNomina

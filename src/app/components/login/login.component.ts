@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
           session.rolNombre = 'COBRADOR';
           break;
         }
-        case '5b91731eb02df40f286142bb': {
+        case '5b91731eb02df40f286142bb': { // esto es de produccion en amazon
           session.rolNombre = 'ADMINISTRADOR';
           break;
         }

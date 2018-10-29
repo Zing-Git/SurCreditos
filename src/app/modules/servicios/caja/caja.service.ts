@@ -18,9 +18,11 @@ const cudOptionsHtml = {
   providedIn: 'root'
 })
 export class CajaService {
-  // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
-  public urlBase = 'http://18.223.146.82:3001';
-  public urlPagarCuota = this.urlBase + '/cuota/pagar/';
+  public urlBase = 'https://ws-sur-creditos.herokuapp.com';
+  // public urlBase = 'http://18.223.146.82:3001';
+
+  public urlGetComboCaja = this.urlBase + '/caja/consultar_combos/';
+
 
   constructor(public http: HttpClient) { }
 
@@ -38,15 +40,15 @@ export class CajaService {
   } */
 
   // INGRESO EGRESO DE CAJA
-  postGetComboIngresoEgreso(token: any): any {
+  postGetComboIngresoEgreso(token: any): Observable<any> {
     const parametros = {
       token: token
     };
     const newSession = Object.assign({}, parametros);
-    // return this.http.post<any[]>(this.urlAsignarCuotasACobrador, newSession, cudOptions);
 
 
-    const comboIngresoEgreso = {
+
+    /* const comboIngresoEgreso = {
       ingresos: [
         'INGRESO CAPITAL PARA CREDITOS',
         'INGRESO POR AJUSTE',
@@ -64,8 +66,9 @@ export class CajaService {
         'EGRESO POR PAGO DE SERVICIOS',
         'EGRESO OTRO',
       ]
-    };
-    return comboIngresoEgreso;
+    }; */
+    // return comboIngresoEgreso;
+    return this.http.post<any[]>(this.urlGetComboCaja, newSession, cudOptions);
 
   }
 

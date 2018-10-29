@@ -43,7 +43,7 @@ export class CajaComponent implements OnInit {
     columns: {
       fechaAlta: {
         title: 'Fecha Alta',
-        width: '10%',
+        width: '20%',
         filter: false,
         valuePrepareFunction: (date) => {
           let raw = new Date(date);
@@ -53,13 +53,13 @@ export class CajaComponent implements OnInit {
       },
       cantidadCreditos: {
         title: 'Cantidad de Creditos',
-        width: '15%',
+        width: '30%',
         filter: false
       },
 
       montoCredito: {
         title: 'Monto Total de Credito',
-        width: '30%',
+        width: '50%',
         filter: false,
         valuePrepareFunction: (value) => {
           return value === 'montoCredito' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);

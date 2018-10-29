@@ -57,6 +57,7 @@ import { ModalCuotasCobranzaComponent } from './components/cupon-de-pago/modal-c
 import { ModalCuotasCobroComponent } from './components/cupon-de-pago/modal-cuotas-cobro/modal-cuotas-cobro.component';
 import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/rendicion-de-nomina.component';
 import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egreso.component';
+import { ReporteGeneral } from './components/reportes/reporteGeneral/reporteGeneral.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egre
     ModalCuotasCobranzaComponent,
     ModalCuotasCobroComponent,
     RendicionDeNominaComponent,
-    IngresoEgresoComponent
+    IngresoEgresoComponent,
+    ReporteGeneral
   ],
   imports: [
     BrowserModule,

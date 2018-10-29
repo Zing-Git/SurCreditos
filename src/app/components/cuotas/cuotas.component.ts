@@ -3,15 +3,8 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { Session } from '../../modelo/util/session';
 import { LoginService } from '../../modules/servicios/login/login.service';
 import { Router } from '@angular/router';
-import { ClientesService } from '../../modules/servicios/clientes/clientes.service';
-import { DatePipe } from '@angular/common';
-import { OrdenPagoService } from '../../modules/servicios/ordenPago/orden-pago.service';
-import { TableOrdenDePago } from '../orden-de-pago/form-orden-de-pago/TableOrdenPago';
 import 'jspdf-autotable';
 import { CreditosService } from '../../modules/servicios/creditos/creditos.service';
-import { EstadoCasa } from '../../modelo/negocio/estado-casa';
-import { Estado } from '../../modelo/negocio/estado';
-import { TableCreditos } from './tableCreditos';
 import { ModalCuotasComponent } from './modal-cuotas/modal-cuotas.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import swal from 'sweetalert2';

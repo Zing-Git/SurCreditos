@@ -1,0 +1,60 @@
+<div class="form-row text-center">
+  <div class="col-12">
+    <p class="bg-primary">Reportes</p>
+    <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCredito()">Nuevo</button> -->
+  </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <form class="" [formGroup]="ordenDePagoForm">
+                <div class="form-row">
+                    <!-- Campo 1:  Dni Garante-->
+                    <div class="form-group col-md-6">
+                        <label for="inputDniGarante">* Número de Documento</label>
+                        <input type="number" formControlName="dni" class="form-control form-control-sm" (keyup.enter)="onEnterDniCliente()" id="inputDniCliente" placeholder="30300300">
+                    </div>
+
+                    <div class="col-md-6">
+                        <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>
+                    </div>
+
+                    <!-- Dni error block -->
+                    <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
+                        <div *ngIf="dni.errors['required']">
+                            El número de documento es requerido
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+        <div>
+            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #ordenPagoForm></ng2-smart-table>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container">
+  <div class="form-row text-center">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <h3>Reportes</h3>
+      <div class="example-button-row">
+        <button mat-stroked-button>Basic</button>
+        <button mat-stroked-button color="primary">Primary</button>
+        <button mat-stroked-button color="accent">Accent</button>
+        <button mat-stroked-button color="warn">Warn</button>
+        <button mat-stroked-button disabled>Disabled</button>
+        <a mat-stroked-button routerLink=".">Link</a>
+      </div>
+    </div>
+    <div class="col-md-2">
+    </div>
+  </div>
+</div>

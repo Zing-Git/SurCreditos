@@ -21,6 +21,9 @@ import { CuponDePagoComponent} from './components/cupon-de-pago/cupon-de-pago.co
 import { SeleccionDeClienteComponent } from './components/cupon-de-pago/seleccion-de-cliente/seleccion-de-cliente.component';
 import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/rendicion-de-nomina.component';
 import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egreso.component';
+import { OpertativosComponent } from './components/reportes/opertativos/opertativos.component';
+import { FinancierosComponent } from './components/reportes/financieros/financieros.component';
+import { CajaComponent } from './components/reportes/caja/caja.component';
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -51,6 +54,10 @@ export const appRoutes: Routes = [
 { path: 'seleccionclientecobro/:evento/:dni/:apellido/:idCobrador', component: SeleccionDeClienteComponent , canActivate: [LoginGuard]},
 { path: 'cuotas', component: CuotasComponent , canActivate: [LoginGuard]},
 { path: 'ingresoegreso', component: IngresoEgresoComponent , canActivate: [LoginGuard]},
+{ path: 'reportesoperativos', component: OpertativosComponent , canActivate: [LoginGuard]},
+{ path: 'reportesfinancieros', component: FinancierosComponent , canActivate: [LoginGuard]},
+{ path: 'reportescaja', component: CajaComponent , canActivate: [LoginGuard]},
+
 
 { path: '', component: LoginComponent},
 /* { path: '', component: LoginComponent, canActivate: [NoLoginGuard] }, */

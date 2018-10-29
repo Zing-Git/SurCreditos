@@ -84,7 +84,7 @@
 
 
                         <!--MENU ADMINISTRACION -->
-                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT' || rol === 'INDEFINIDO'">
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT'">
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link" style="color:white">
                                     <i class="nav-icon fa fa-cog"></i>
@@ -104,6 +104,18 @@
                         <!--FIN MENU ADMINISTRACION -->
 
 
+                        <!--MENU REPORTES -->
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT'">
+                            <li class="nav-item has-treeview">
+                                <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-money"></i><p>Reportes<i class="fa fa-angle-left right"></i></p></a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item"><a class="nav-link" routerLink="reportesoperativos"><i class="fa fa-angle-right nav-icon"></i><p>Reportes Operativos</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="reportesfinancieros"><i class="fa fa-angle-right nav-icon"></i><p>Reportes Financieros</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="reportescaja"><i class="fa fa-angle-right nav-icon"></i><p>Reportes de Caja</p></a></li>
+                                </ul>
+                            </li>
+                        </ng-container>
+                        <!--FIN MENU CAJA -->
 
 
 

@@ -21,7 +21,7 @@ export class ReporteClientes implements OnInit {
 
     fechaInicio: any = (this.datePipe.transform(new Date(Date.now()), 'dd/mm/yyyy'));
     clientesActivos: any;
-
+    clientesInactivos: any;
 
     constructor(private datePipe: DatePipe,
         private creditoService: CreditosService,
@@ -32,20 +32,28 @@ export class ReporteClientes implements OnInit {
 
     ngOnInit(): void {
         this.spinnerService.show();
+        setTimeout(()=>this.spinnerService.hide(),3000)
+
         this.session.token = this.loginService.getTokenDeSession();
         this.creditoService.postGetAllCreditosTodosLosUsuarios(this.session).subscribe(result => {
             this.creditos = result["credito"];
             console.log(this.creditos);
         })
         
-        this.spinnerService.hide();
+        //this.spinnerService.hide();
     }
 
 
     calcular(){
         this.clientesActivos = 0;
+        this.clientesInactivos = 0;
         this.creditos.forEach(x =>{
-            this.clientesActivos +=1
+            if(x.cliente.estado){
+                this.clientesActivos +=1
+            }else{
+                this.clientesInactivos +=1;
+            }
+            
         })
         
     }

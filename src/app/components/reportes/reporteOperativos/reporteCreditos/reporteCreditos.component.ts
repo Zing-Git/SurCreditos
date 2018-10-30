@@ -6,7 +6,9 @@ import { Session } from "src/app/modelo/util/session";
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { CreditosService } from "src/app/modules/servicios/creditos/creditos.service";
 
+import 'jspdf-autotable';
 declare let jsPDF;
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reporteCreditos',
@@ -22,6 +24,9 @@ export class ReporteCreditos implements OnInit {
   cantidadCreditos: any;
   montoTotalCreditos: any;
 
+  fechaActual: any = (this.datePipe.transform(new Date(Date.now()), 'dd/MMM/yyyy'));
+  clientesActivos: any;
+  clientesInactivos: any;
   fechasForm: FormGroup;
 
   settings = {
@@ -286,4 +291,52 @@ export class ReporteCreditos implements OnInit {
     const id = (`${event.data._id}`);
   }
 
+  calcular(){
+    this.clientesActivos = 0;
+    this.clientesInactivos = 0;
+    this.creditos.forEach(x =>{
+      if(x.cliente.estado){
+        this.clientesActivos +=1
+      }else{
+        this.clientesInactivos +=1;
+      }
+        
+    })
+    
+}
+
+  showReporteCliente(){
+    this.calcular();
+    let texto : string;
+    if(this.clientesActivos > 0 && this.clientesInactivos > 0){
+        texto= '<strong> Clientes al ' + this.fechaActual + '<br>' + ' Activos es un Total de :   ' + this.clientesActivos + '</strong>' + '<br>' + ' Inactivos es un Total de :   ' + this.clientesInactivos;
+    }else{
+      if(this.clientesInactivos > 0){
+        texto= '<strong> Clientes Inactivos al ' + this.fechaActual + '<br>' + ' es un Total de :   ' + this.clientesInactivos + '</strong>';
+      }else{
+        if(this.clientesActivos > 0){
+          texto= '<strong> Clientes Activos al ' + this.fechaActual + '<br>' + ' es un Total de :   ' + this.clientesActivos + '</strong>';
+        }
+      }
+    }
+    
+    Swal({
+      title: 'Clientes Activos',
+      
+      html: '<strong>' + texto + '</strong>',
+      type: 'success',
+      showCancelButton: false,
+      reverseButtons: true,
+      confirmButtonText: 'Ok!',
+      cancelButtonText: 'No, Cancelar'
+    }).then((result) => {
+      if (result.value) {
+        //this.imprimirCuponesDePago();
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+      }
+    });
+
+  }
+  
 }

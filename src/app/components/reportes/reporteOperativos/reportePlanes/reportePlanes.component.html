@@ -1,0 +1,34 @@
+<div class="form-row text-center">
+    <div class="col-12">
+      <p class="bg-primary">Reporte de Planes al mes</p>
+      <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCredito()">Nuevo</button> -->
+    </div>
+  </div>
+  
+  
+  <div class="container">
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
+        
+          <div class="form-row">
+            <!-- Campo 1:  Dni Garante-->
+            <div class="form-group col-md-6" *ngIf="fechaActual">
+                <label>Mes Actual: {{mesActual}}</label>
+            </div>
+           
+            <div class="col-md-6">
+              <span class="btn btn-outline-primary" (click)="getData()">Buscar</span>
+            </div>
+  
+            <div class="line-separator"></div>
+            <div class="col-md-12">
+              <ng2-smart-table [settings]="settings" class="table table-hover" [source]="creditosViewModel" 
+                #fechasTableForm></ng2-smart-table>
+            </div>
+          </div>
+      
+  
+  
+      </div>
+    </div>

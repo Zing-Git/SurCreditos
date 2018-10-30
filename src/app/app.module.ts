@@ -62,6 +62,7 @@ import { FinancierosComponent } from './components/reportes/financieros/financie
 import { ReporteCreditos } from './components/reportes/reporteOperativos/reporteCreditos/reporteCreditos.component';
 import { ReporteClientes } from './components/reportes/reporteOperativos/reporteClientes/reporteClientes.component';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
+import { ReportePlanes } from './components/reportes/reporteOperativos/reportePlanes/reportePlanes.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
     OpertativosComponent,
     FinancierosComponent,
     ReporteCreditos,
-    ReporteClientes
+    ReporteClientes,
+    ReportePlanes
   ],
   imports: [
    
@@ -114,7 +116,7 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
     NgbModule.forRoot(),
     Ng2SmartTableModule,
     NgxSmartModalModule.forRoot(),
-     Ng4LoadingSpinnerModule.forRoot() 
+    Ng4LoadingSpinnerModule.forRoot()
   ],
   providers: [
     LoginGuard,

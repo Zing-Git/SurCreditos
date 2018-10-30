@@ -6,6 +6,7 @@ import { LoginService } from '../../modules/servicios/login/login.service';
 import { Session } from '../../modelo/util/session';
 import { environment } from '../../../environments/environment';
 import swal from 'sweetalert2';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,10 @@ export class LoginComponent implements OnInit {
   mensaje: string;
   idRol: string;
   miSession: Session;
-  constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService) { }
+  constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService, private spinnerService: Ng4LoadingSpinnerService) { 
+    
+    this.consultar();
+  }
 
   ngOnInit() {
 
@@ -24,20 +28,29 @@ export class LoginComponent implements OnInit {
       console.log ('Servicio TEST: ', resp );
     }); */
 
+    this.consultar();
 
+
+  }
+
+  consultar(): void {
+    this.spinnerService.show();
+    setTimeout(() => this.spinnerService.hide(), 4000)
+    
     if (this.loginService.getDatosDeSession().token == null) {
       console.log(this.loginService.getDatosDeSession().token + 'TOKEN VACIO....');
       this.router.navigate(['/login']);
 
-    } else{
+    } else {
       console.log(this.loginService.getDatosDeSession().token + 'TOKEN lleno....');
       this.router.navigate(['/info']);
     }
-
   }
-
-
   login(form: NgForm) {
+
+    this.spinnerService.show();
+    setTimeout(() => this.spinnerService.hide(), 4000)
+
     let session: Session;
 
     session = new Session();

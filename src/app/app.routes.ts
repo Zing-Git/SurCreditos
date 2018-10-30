@@ -25,6 +25,7 @@ import { OpertativosComponent } from './components/reportes/opertativos/opertati
 import { FinancierosComponent } from './components/reportes/financieros/financieros.component';
 import { ReporteCreditos } from './components/reportes/reporteOperativos/reporteCreditos/reporteCreditos.component';
 import { ReporteClientes } from './components/reportes/reporteOperativos/reporteClientes/reporteClientes.component';
+import { ReportePlanes } from './components/reportes/reporteOperativos/reportePlanes/reportePlanes.component';
 
 
 export const appRoutes: Routes = [
@@ -60,6 +61,7 @@ export const appRoutes: Routes = [
 { path: 'reportesfinancieros', component: FinancierosComponent, canActivate: [LoginGuard]},
 { path: 'reportesCreditos', component: ReporteCreditos, canActivate: [LoginGuard]},
 { path: 'reportesClientes', component: ReporteClientes, canActivate: [LoginGuard]},
+{ path: 'reportesPlanes', component: ReportePlanes, canActivate: [LoginGuard]},
 { path: '', component: LoginComponent},
 /* { path: '', component: LoginComponent, canActivate: [NoLoginGuard] }, */
 // si es la raiz el login, sale el component de login al iniciar el menu

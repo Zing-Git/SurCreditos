@@ -59,7 +59,9 @@ import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/ren
 import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egreso.component';
 import { OpertativosComponent } from './components/reportes/opertativos/opertativos.component';
 import { FinancierosComponent } from './components/reportes/financieros/financieros.component';
-import { CajaComponent } from './components/reportes/caja/caja.component';
+import { ReporteCreditos } from './components/reportes/reporteOperativos/reporteCreditos/reporteCreditos.component';
+import { ReporteClientes } from './components/reportes/reporteOperativos/reporteClientes/reporteClientes.component';
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 
 @NgModule({
   declarations: [
@@ -96,9 +98,11 @@ import { CajaComponent } from './components/reportes/caja/caja.component';
     IngresoEgresoComponent,
     OpertativosComponent,
     FinancierosComponent,
-    CajaComponent
+    ReporteCreditos,
+    ReporteClientes
   ],
   imports: [
+   
     BrowserModule,
     HttpClientModule,
     DataTablesModule,
@@ -110,6 +114,7 @@ import { CajaComponent } from './components/reportes/caja/caja.component';
     NgbModule.forRoot(),
     Ng2SmartTableModule,
     NgxSmartModalModule.forRoot(),
+     Ng4LoadingSpinnerModule.forRoot() 
   ],
   providers: [
     LoginGuard,

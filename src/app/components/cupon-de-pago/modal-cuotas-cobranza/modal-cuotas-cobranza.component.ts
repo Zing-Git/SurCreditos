@@ -178,4 +178,9 @@ export class ModalCuotasCobranzaComponent implements OnInit {
 
 
   }
+
+  onCustom(event){
+
+  }
+
 }

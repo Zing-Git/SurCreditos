@@ -23,7 +23,9 @@ import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/ren
 import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egreso.component';
 import { OpertativosComponent } from './components/reportes/opertativos/opertativos.component';
 import { FinancierosComponent } from './components/reportes/financieros/financieros.component';
-import { CajaComponent } from './components/reportes/caja/caja.component';
+import { ReporteCreditos } from './components/reportes/reporteOperativos/reporteCreditos/reporteCreditos.component';
+import { ReporteClientes } from './components/reportes/reporteOperativos/reporteClientes/reporteClientes.component';
+
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -56,7 +58,8 @@ export const appRoutes: Routes = [
 { path: 'ingresoegreso', component: IngresoEgresoComponent , canActivate: [LoginGuard]},
 { path: 'reportesoperativos', component: OpertativosComponent, canActivate: [LoginGuard]},
 { path: 'reportesfinancieros', component: FinancierosComponent, canActivate: [LoginGuard]},
-{ path: 'reportescaja', component: CajaComponent, canActivate: [LoginGuard]},
+{ path: 'reportesCreditos', component: ReporteCreditos, canActivate: [LoginGuard]},
+{ path: 'reportesClientes', component: ReporteClientes, canActivate: [LoginGuard]},
 { path: '', component: LoginComponent},
 /* { path: '', component: LoginComponent, canActivate: [NoLoginGuard] }, */
 // si es la raiz el login, sale el component de login al iniciar el menu

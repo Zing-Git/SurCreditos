@@ -9,6 +9,7 @@ import { CreditosService } from "src/app/modules/servicios/creditos/creditos.ser
 import 'jspdf-autotable';
 declare let jsPDF;
 import Swal from 'sweetalert2';
+import { UtilidadesService } from "src/app/modules/servicios/utiles/utilidades.service";
 
 @Component({
   selector: 'app-reporteCreditos',
@@ -28,6 +29,8 @@ export class ReporteCreditos implements OnInit {
   clientesActivos: any;
   clientesInactivos: any;
   fechasForm: FormGroup;
+
+  bandera: boolean =false;
 
   settings = {
 
@@ -76,7 +79,8 @@ export class ReporteCreditos implements OnInit {
   constructor(private datePipe: DatePipe,
     private creditoService: CreditosService,
     private loginService: LoginService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private auxiliar: UtilidadesService) {
 
 
   }
@@ -182,6 +186,8 @@ export class ReporteCreditos implements OnInit {
 
   getData() {
     console.log(this.creditos);
+
+    this.bandera = true;
     let fechaInicio = new Date(this.datePipe.transform(this.fechasForm.get('fechaInicio').value, 'yyyy-MM-dd'));
     let fechaFin = new Date(this.datePipe.transform(this.fechasForm.get('fechaFin').value, 'yyyy-MM-dd'));
     let fecha = new Date();
@@ -207,7 +213,7 @@ export class ReporteCreditos implements OnInit {
             this.cantidadCreditos += 1;
 
             this.creditosViewModel.push({
-              fechaAlta: this.creditos[i].fechaAlta,
+              fechaAlta:this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
               cantidadCreditos: this.cantidadCreditos,
               montoCredito: this.montoTotalCreditos
             })
@@ -216,7 +222,7 @@ export class ReporteCreditos implements OnInit {
 
 
             this.creditosViewModel.push({
-              fechaAlta: this.creditos[i].fechaAlta,
+              fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
               cantidadCreditos: 1,
               montoCredito: (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota)
             })
@@ -242,7 +248,7 @@ export class ReporteCreditos implements OnInit {
               this.cantidadCreditos += 1;
 
               this.creditosViewModel.push({
-                fechaAlta: this.creditos[i].fechaAlta,
+                fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
                 cantidadCreditos: this.cantidadCreditos,
                 montoCredito: this.montoTotalCreditos
               })
@@ -252,7 +258,7 @@ export class ReporteCreditos implements OnInit {
 
             } else {
               this.creditosViewModel.push({
-                fechaAlta: this.creditos[i].fechaAlta,
+                fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
                 cantidadCreditos: 1,
                 montoCredito: (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota)
               })
@@ -267,7 +273,7 @@ export class ReporteCreditos implements OnInit {
           if (this.cantidadCreditos > 0) {
 
             this.creditosViewModel.push({
-              fechaAlta: this.creditos[i].fechaAlta,
+              fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
               cantidadCreditos: this.cantidadCreditos,
               montoCredito: this.montoTotalCreditos
             })
@@ -337,6 +343,10 @@ export class ReporteCreditos implements OnInit {
       }
     });
 
+  }
+
+  generarXls(): void{
+    this.auxiliar.exportAsExcelFile(this.creditosViewModel, 'reporteCredito');
   }
   
 }

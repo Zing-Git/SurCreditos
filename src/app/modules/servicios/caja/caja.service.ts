@@ -18,10 +18,15 @@ const cudOptionsHtml = {
   providedIn: 'root'
 })
 export class CajaService {
-  public urlBase = 'https://ws-sur-creditos.herokuapp.com';
-  // public urlBase = 'http://18.223.146.82:3001';
+  // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
+  public urlBase = 'http://18.223.146.82:3001';
 
   public urlGetComboCaja = this.urlBase + '/caja/consultar_combos/';
+  public urlRegistrarMovimiento = this.urlBase + '/caja/registrar_movimientos/';
+  public urlAbrirCaja = this.urlBase + '/caja/abrir/';
+  public urlCerrarCaja = this.urlBase + '/caja/cerar/';
+  public urlVerificarEstadoCaja = this.urlBase + '/caja/obtener_caja_abierta/';
+
 
 
   constructor(public http: HttpClient) { }
@@ -45,32 +50,31 @@ export class CajaService {
       token: token
     };
     const newSession = Object.assign({}, parametros);
-
-
-
-    /* const comboIngresoEgreso = {
-      ingresos: [
-        'INGRESO CAPITAL PARA CREDITOS',
-        'INGRESO POR AJUSTE',
-        'INGRESO VENTA DE PRODUCTOS',
-        'INGRESO POR COBRANZAS ATRASADAS DE COBRADOR',
-        'INGRESO OTRO',
-      ],
-      egresos:[
-        'EGRESO PAGO DE CREDITOS',
-        'EGRESO POR AJUSTE',
-        'EGRESO POR COMPRA DE INSUMOS',
-        'EGRESO POR PAGO DE HONORARIOS',
-        'EGRESO POR PAGO DE COMPRA DE EQUIPOS',
-        'EGRESO POR PAGO DE IMPUESTOS',
-        'EGRESO POR PAGO DE SERVICIOS',
-        'EGRESO OTRO',
-      ]
-    }; */
-    // return comboIngresoEgreso;
     return this.http.post<any[]>(this.urlGetComboCaja, newSession, cudOptions);
-
   }
+  postRegistrarMovimiento(movimiento: any): Observable<any> {
+    const newSession = Object.assign({}, movimiento);
+    return this.http.post<any>(this.urlRegistrarMovimiento, newSession, cudOptions);
+  }
+  postAbrirCaja(caja: any): Observable<any> {
+    const newSession = Object.assign({}, caja);
+    return this.http.post<any>(this.urlAbrirCaja, newSession, cudOptions);
+  }
+  postCerrarCaja(token: any): Observable<any> {
+    const parametros = {
+      token: token
+    };
+    const newSession = Object.assign({}, parametros);
+    return this.http.post<any>(this.urlCerrarCaja, newSession, cudOptions);
+  }
+  postVerificarEstadoDeCaja(idUsuario: string): Observable<any> {
+    const parametros = {
+      usuario: idUsuario
+    };
+    const newSession = Object.assign({}, parametros);
+    return this.http.post<any>(this.urlVerificarEstadoCaja, newSession, cudOptions);
+  }
+
 
 
 }

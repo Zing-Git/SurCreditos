@@ -22,6 +22,7 @@ export class CuotasService {
   public urlAsignarCuotasACobrador = this.urlBase + '/caja/asignar_cobranzas_cobrador/';
   public urlGetNominaCobranza = this.urlBase + '/caja/devolver_cobranzas_cobrador/';
   public urlGuardarCobranzasDeCobrador = this.urlBase + '/cuota/procesar_rendicion_cobrador/';
+  public urlGetNominaCobranza2PorDni = this.urlBase + '/caja/devolver_cobranzas_cobrador_/';
 
 
 
@@ -55,6 +56,13 @@ export class CuotasService {
     }; */
     const newSession = Object.assign({}, nomina);
     return this.http.post<any>(this.urlGuardarCobranzasDeCobrador, newSession, cudOptions);
+  }
+  postGetNominaDeCobranzasPorDni(dni: any): Observable<any> {
+    const parametros = {
+      dni: dni
+    };
+    const newSession = Object.assign({}, parametros);
+    return this.http.post<any>(this.urlGetNominaCobranza2PorDni, newSession, cudOptions);
   }
 
 

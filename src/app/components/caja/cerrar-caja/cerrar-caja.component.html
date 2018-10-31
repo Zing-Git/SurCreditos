@@ -1,0 +1,72 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <p class="bg-primary">Cerrar Caja</p>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+
+            <p>{{caja}}</p>
+            <button (click)="cerrarCaja()" class="btn btn-secondary text-right">Cerrar Caja</button>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- [disabled]="buttonImprimirDisabled" -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <table class="table table-hover">
+                <tr>
+                    <th>Id</th>
+                    <th>Tipo</th>
+                    <th>Operación</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                </tr>
+                <tr *ngFor="let item of movimientos; let indice=index">
+                    <td>{{indice+1}}</td>
+                    <td>
+                        {{item.tipo}}
+                    </td>
+                    <td>
+                        {{item.operacion}}
+                    </td>
+                    <td>
+                        {{item.monto | currency }}
+                    </td>
+                    <td>
+                        {{item.fecha | date:'dd/MM/yyyy'}}
+                    </td>
+                </tr>
+            </table>
+
+            <div class="form-row text-center">
+                <div class="col-12 bg-gray">
+                    <blockquote class="blockquote text-center">
+                        <p class="mb-0"> Resultado de la Caja: {{ montoFinal | currency}} </p>
+                        <footer class="blockquote-footer">Este monto debe rendir el cajero</footer>
+                    </blockquote>
+                </div>
+            </div>
+
+            <div class="form-row text-center bg-secondary">
+                <div class="col-12">
+                    <button class="btn btn-outline-light " (click)="imprimirCaja() ">Imprimir Caja</button>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-1 ">
+        </div>
+    </div>
+</div>

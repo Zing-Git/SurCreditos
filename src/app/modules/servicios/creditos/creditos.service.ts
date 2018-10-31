@@ -35,6 +35,8 @@ export class CreditosService {
    public urlPostGetAllCreditosTodosLosUsuarios = this.urlBase + '/credito/listar_todos/';
    public urlPostGetCreditoVitenge = this.urlBase + '/credito/consultar_plan_pago_vigente/';
 
+
+
    public Storage : TableCreditos;
   constructor(public http: HttpClient) { }
 

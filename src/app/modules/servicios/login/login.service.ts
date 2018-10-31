@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { environment } from '../../../../environments/environment';
 import { Session } from '../../../modelo/util/session';
+import { CajaService } from 'src/app/modules/servicios/caja/caja.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  constructor() { }
+  constructor(private cajaService: CajaService) { }
 
   verificaEstadoLogin(): boolean {
     if (sessionStorage.getItem(environment.LSTORE_USUARIO) !== null && sessionStorage.getItem(environment.LSTORE_TOKEN) !== null) {
@@ -25,6 +26,13 @@ export class LoginService {
     sessionStorage.removeItem(environment.LSTORE_ROL_ID);
     sessionStorage.removeItem(environment.LSTORE_ROL_PRECEDENCIA);
     sessionStorage.removeItem(environment.LSTORE_USUARIO_ID);
+    sessionStorage.removeItem(environment.LSTORE_CAJA);
+    try {
+      sessionStorage.removeItem(environment.LSTORE_ID_CAJA);
+      sessionStorage.removeItem(environment.LSTORE_CAJA);
+    } catch (error) {
+    }
+
     return false;
   }
 
@@ -36,7 +44,35 @@ export class LoginService {
     sessionStorage.setItem(environment.LSTORE_ROL_PRECEDENCIA, session.rolPrecendencia);
     sessionStorage.setItem(environment.LSTORE_ROL_ID, session.rol_id);
     sessionStorage.setItem(environment.LSTORE_USUARIO_ID, session.usuario_id);
+
+    // Controla si es cajero con caja abierta, guarda id de caja en la session como variable
+    if (session.rolNombre === 'CAJERO') {
+      this.cajaService.postVerificarEstadoDeCaja(session.usuario_id).subscribe( resp => {
+        console.log(resp);
+        if (resp.ok) { // si hay el cajero tiene una caja abierta, se guarda en la session del navegadro el id de caja abierta
+          this.registrarIdentificadorDeCaja(resp['idApertura'], resp['identificador']);
+        } else {
+          this.registrarIdentificadorDeCaja('0', 'CAJA SIN ASIGNAR'); // se guarda cero TEXTO cuando no tiene una caja abierta
+        }
+      });
+    }
   }
+ // OPERACIONES CON LA CAJA -----------------
+  registrarIdentificadorDeCaja(idCaja: string = '', caja: string = ''): void {
+    sessionStorage.setItem(environment.LSTORE_ID_CAJA, idCaja);
+    sessionStorage.setItem(environment.LSTORE_CAJA, caja);
+  }
+  getIdCaja(): string {
+    return sessionStorage.getItem(environment.LSTORE_ID_CAJA);
+  }
+  getCaja(): string {
+    return sessionStorage.getItem(environment.LSTORE_CAJA);
+  }
+  setCierreDeCaja(){  // TODO: metodo solo de prueba
+    sessionStorage.setItem(environment.LSTORE_ID_CAJA, '0');
+    sessionStorage.setItem(environment.LSTORE_CAJA, 'CAJA SIN ASIGNAR');
+  }
+  // ---------------------------------------------
 
   getTokenDeSession(): string {
     return sessionStorage.getItem(environment.LSTORE_TOKEN);
@@ -68,4 +104,7 @@ export class LoginService {
         return false;
       }
   }
+
+
+
 }

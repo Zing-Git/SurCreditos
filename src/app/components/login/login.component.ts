@@ -80,11 +80,29 @@ export class LoginComponent implements OnInit {
         }
       }
       this.loginService.registrarLogin(session);
-      this.router.navigate(['/info']);
+
+      if (session.rolNombre === 'CAJERO'){
+          if (this.loginService.getIdCaja() === '0') {
+            swal(
+              'Debe Abrir una Caja para comenzar a operar...',
+              'Ingrese la caja sobre la que quiere trabajar y un monto inicial de caja',
+              'info'
+            );
+            this.router.navigate(['/abrircaja']);
+          } else { // mensaje de que tiene caja abierta
+            swal(
+              'Ya tiene una caja abierta asignada',
+              'Puedes seguir trabajando o bien cerrar la caja para abrir una nueva',
+              'info'
+            );
+            this.router.navigate(['/info']);
+          }
+      } else {
+        this.router.navigate(['/info']);
+      }
+
       this.miSession = session;
-      /*}, err => {
-          alert('Usuario o clave incorrecta!');
-          this.router.navigate(['/login']);*/
+
     });
   }
 }

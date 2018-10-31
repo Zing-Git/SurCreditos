@@ -60,6 +60,8 @@ import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egre
 import { OpertativosComponent } from './components/reportes/opertativos/opertativos.component';
 import { FinancierosComponent } from './components/reportes/financieros/financieros.component';
 import { CajaComponent } from './components/reportes/caja/caja.component';
+import { AbrirCajaComponent } from './components/caja/abrir-caja/abrir-caja.component';
+import { CerrarCajaComponent } from './components/caja/cerrar-caja/cerrar-caja.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +98,9 @@ import { CajaComponent } from './components/reportes/caja/caja.component';
     IngresoEgresoComponent,
     OpertativosComponent,
     FinancierosComponent,
-    CajaComponent
+    CajaComponent,
+    AbrirCajaComponent,
+    CerrarCajaComponent
   ],
   imports: [
     BrowserModule,

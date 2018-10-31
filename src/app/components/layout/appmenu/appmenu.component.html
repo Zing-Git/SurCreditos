@@ -17,6 +17,8 @@
                 <div class="info">
                     <span class="h6" style="color:whitesmoke">{{usuario}}</span>
                     <span class="h6" style="color:grey">-{{rol}}</span>
+                    <p><span class="h6" style="color:grey">{{caja}}</span></p>
+                    <p><span class="h6" style="color:grey">{{estadoCaja}}</span></p>
                 </div>
             </div>
 
@@ -64,17 +66,29 @@
 
                         <!--MENU CAJA -->
                         <ng-container *ngSwitchCase="rol === 'CAJERO' || rol === 'ROOT'">
-                            <li class="nav-item has-treeview">
-                                <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-money"></i><p>Caja<i class="fa fa-angle-left right"></i></p></a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item"><a class="nav-link" routerLink="ordendepago"><i class="fa fa-angle-right nav-icon"></i><p>Orden de Pago</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="cuotas"><i class="fa fa-angle-right nav-icon"></i><p>Cobrar Cuota</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="cupondepago"><i class="fa fa-angle-right nav-icon"></i><p>Nomina de Cobro</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="rendicionnomina"><i class="fa fa-angle-right nav-icon"></i><p>Rendición de Nomina</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="ingresoegreso"><i class="fa fa-angle-right nav-icon"></i><p>Carga de I/Egreso</p></a></li>
 
+                            <ng-container *ngIf="estadoCajaSwitch">
+                                <li class="nav-item has-treeview">
+                                    <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-money"></i><p>Operaciones<i class="fa fa-angle-left right"></i></p></a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item"><a class="nav-link" routerLink="ordendepago"><i class="fa fa-angle-right nav-icon"></i><p>Orden de Pago</p></a></li>
+                                        <li class="nav-item"><a class="nav-link" routerLink="cuotas"><i class="fa fa-angle-right nav-icon"></i><p>Cobrar Cuota</p></a></li>
+                                        <li class="nav-item"><a class="nav-link" routerLink="cupondepago"><i class="fa fa-angle-right nav-icon"></i><p>Nomina de Cobro</p></a></li>
+                                        <!-- <li class="nav-item"><a class="nav-link" routerLink="rendicionnomina"><i class="fa fa-angle-right nav-icon"></i><p>Rendición de Nomina</p></a></li> -->
+                                        <li class="nav-item"><a class="nav-link" routerLink="ingresoegreso"><i class="fa fa-angle-right nav-icon"></i><p>Carga de I/Egreso</p></a></li>
+                                    </ul>
+                                </li>
+                            </ng-container>
+
+                            <li class="nav-item has-treeview">
+                                <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-money"></i><p>Inicio y Cierre<i class="fa fa-angle-left right"></i></p></a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item"><a class="nav-link" routerLink="abrircaja"><i class="fa fa-angle-right nav-icon"></i><p>Abrir Caja</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="cerrarcaja"><i class="fa fa-angle-right nav-icon"></i><p>Cerrar Caja</p></a></li>
                                 </ul>
                             </li>
+
+
                         </ng-container>
                         <!--FIN MENU CAJA -->
 

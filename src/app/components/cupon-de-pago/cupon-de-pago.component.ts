@@ -36,37 +36,42 @@ export class CuponDePagoComponent implements OnInit {
 
   settings = {
     actions: {
-      columnTitle: "Accion",
+      columnTitle: "Cobranzas",
       add: false,
       delete: false,
       edit: false,
       position: "right",
       custom: [
         {
-          name: "seleccionar",
-          title: "Seleccionar"
+          name: "asignarCobro",
+          title: "Crear Nómina"
+        },
+        {
+          name: "rendirCobro",
+          title: "&nbsp&nbsp&nbspRendir Nómina"
         }
+
       ]
     },
     columns: {
       dni: {
         title: "Dni",
-        width: "25%",
+        width: "10%",
         filter: false
       },
       apellidos: {
         title: "Apellido",
-        width: "25%",
+        width: "20%",
         filter: false
       },
       nombres: {
         title: "Nombres",
-        width: "25%",
+        width: "20%",
         filter: false
       },
       nombreUsuario: {
         title: "Usuario",
-        width: "25%",
+        width: "10%",
         filter: false
       }
     },
@@ -152,18 +157,20 @@ export class CuponDePagoComponent implements OnInit {
     // console.log('INGRESO AL SELECCIONAR: ' + apellido + dni + 'ID: ' + idCobrador);
 
     switch (evento) {
-      case 'seleccionar': {
+      case 'asignarCobro': {
         this.router.navigate(['seleccionclientecobro', evento, dni, apellido, idCobrador]);
         break;
       }
+      case 'rendirCobro': {
+        this.router.navigate(['rendicionnomina', evento, dni, apellido, idCobrador]);
+        break;
 
-
+      }
     }
+
+
+
   }
-
-
-
-
 
 
 }

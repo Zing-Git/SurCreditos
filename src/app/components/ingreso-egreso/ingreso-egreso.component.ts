@@ -26,6 +26,7 @@ export class IngresoEgresoComponent implements OnInit {
   selectTipoOperacion: any;
   operacion: any;
   selectedValue: any;
+  cajaId: any;
 
 
 
@@ -92,7 +93,7 @@ export class IngresoEgresoComponent implements OnInit {
       tipoOperacion: this.selectedValue.tipoItem,
       idOperacion: this.selectedValue._id,
       operacion: this.selectedValue.item,
-      monto: monto,
+      montoOperacion: monto,
       comentario: coment
     };
     console.log(fila);
@@ -100,21 +101,98 @@ export class IngresoEgresoComponent implements OnInit {
   }
 
 
-  guardar(){
+  lanzarPopupGuardar() {
 
+    if (this.filasRegistradas.length > 0) {
+      Swal({
+        title: 'Estas seguro de guardar?',
+        text: 'Los movimientos regristrados no pueden ser eliminador, comprueba la información que se registra',
+        type: 'warning',
+        showCancelButton: true,
+        reverseButtons: true,
+        confirmButtonText: 'Si, Guardar',
+        cancelButtonText: 'No, Cancelar'
+      }).then((result) => {
+        if (result.value) {
+
+          this.cajaService.postVerificarEstadoDeCaja(this.loginService.getDatosDeSession().usuario_id).subscribe( resp => {
+            if (resp.ok) {
+              this.cajaId = resp.idApertura;
+              this.crearRegistroParaGuardar();
+              this.guardar();
+            } else {
+              Swal(
+                'La Caja debe estar abierta para poder guardar un movimiento',
+                'No se puede Guardar, intente abrir una caja o volver a ingresar',
+                'error'
+              );
+            }
+          });
+
+
+
+        }
+      });
+    } else {
+      Swal(
+        'Para guardar, debe agregar agregar movimientos de ingreso o egreso a la lista',
+        'No se puede Guardar todavía',
+        'error'
+      );
+
+    }
+  }
+
+
+
+
+  crearRegistroParaGuardar() {
     this.operacionesIngresosEgresos = {
       token: this.loginService.getDatosDeSession().token,
-      idCaja: '1', // TODO: COLOCAR EL VALOR DE LA CAJA ACTUAL
+      caja: this.cajaId, // TODO: COLOCAR EL VALOR DEL ID DE CAJA ACTUAL
       idUsuario: this.loginService.getDatosDeSession().usuario_id,
       nombreUsuario: this.loginService.getDatosDeSession().nombreUsuario,
       fecha: new Date(),
       operaciones: this.filasRegistradas,
     };
-
     console.log(this.operacionesIngresosEgresos);
     console.log(JSON.stringify(this.operacionesIngresosEgresos));
 
   }
+
+  guardar() {
+
+      this.cajaService.postRegistrarMovimiento(this.operacionesIngresosEgresos).subscribe( resp => {
+          let resultado = resp;
+          console.log(resultado);
+          if (!resp.ok) {
+            Swal(
+              'Hubo un error al guardar, espere un momento y vuelva a intentar',
+              'No se puede Guardar todavía',
+              'error'
+            );
+          } else {
+            Swal(
+              'Se guardó correctamente tus movimientos',
+              'Se verán reflejados en informe de cierre de caja',
+              'success'
+            );
+
+          }
+
+
+      }, error => {
+        Swal(
+          'Hubo un error al guardar, espere un momento y vuelva a intentar',
+          'No se puede Guardar todavía',
+          'error'
+        );
+      });
+
+
+  }
+
+
 
   quitarFila(indice: number){
     console.log(indice);

@@ -1,0 +1,29 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <p class="bg-primary">Abrir Caja</p>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="">
+                <div class="form-group">
+                    <label>Elija una Operación de caja</label>
+                    <select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="custom-control custom-select" (change)="onChangeOperacion()">
+                <option *ngFor="let caja of dataCajas" [ngValue]="caja">{{caja.identificador}}</option>
+              </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="valor">Ingrese Monto Inicial que dispondrá en caja(en pesos)</label>
+                    <input #monto type="number" class="form-control" id="valor" placeholder="1000.00">
+                </div>
+
+                <button (click)="abrirCaja(monto.value)" class="btn btn-secondary text-right">Abrir Caja</button>
+
+            </form>
+        </div>
+    </div>
+</div>

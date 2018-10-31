@@ -4,15 +4,19 @@
     </div>
 </div>
 
+
 <div class="container">
     <div class="form-row text-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-7">
-            <label for="inputCobrador">ID Nomina de Cobro (ver identificador de la Nómina): &nbsp;&nbsp;  </label>
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="source" (custom)="onCustom($event)"></ng2-smart-table>
+
+            <!-- <label for="inputCobrador">ID Nomina de Cobro (ver identificador de la Nómina): &nbsp;&nbsp;  </label>
             <input #search class="form-control input-lg" type="text" placeholder="Buscar Nómina..." (keyup.enter)="onSearch(search.value)" [(ngModel)]="texto">
-            <span class="btn btn-secondary" (click)="onSearch(search.value)">Buscar</span>
+            <span class="btn btn-secondary" (click)="onSearch(search.value)">Buscar</span> -->
         </div>
-        <div class="col-md-3">
+        <div class="col-md-1">
 
         </div>
     </div>
@@ -76,7 +80,9 @@
                     <button class="btn btn-outline-light " [disabled]="buttonImprimirDisabled" (click)="imprimirComprobanteNominaPago() ">Imprimir Rendición</button>
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-outline-light" (click)="nuevaRendicion()">Realizar otra Rendición</button>
+                    <button class="btn btn-outline-light" routerLink="/cupondepago">Realizar otra Rendición</button>
+
+                    <button class="btn btn-outline-light " (click)="verCobros() ">VER COBROS</button>
                 </div>
             </div>
 

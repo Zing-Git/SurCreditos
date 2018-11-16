@@ -38,7 +38,7 @@ export class ReportePlanes implements OnInit {
     planes: any;
     bandera: boolean = false;
 
-    fechaActual = new Date(this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'));
+    fechaActual = new Date(Date.now());
     cuotasPagadas = 0;
     cuotasImpagas = 0;
     mesActual = Meses[this.fechaActual.getMonth() + 1];
@@ -157,7 +157,8 @@ export class ReportePlanes implements OnInit {
         private fb: FormBuilder,
         private auxiliar: UtilidadesService,
         private spinnerService: Ng4LoadingSpinnerService) {
-
+            console.log(this.fechaActual);
+            console.log(this.fechaActual.getMonth());
     }
 
     ngOnInit(): void {

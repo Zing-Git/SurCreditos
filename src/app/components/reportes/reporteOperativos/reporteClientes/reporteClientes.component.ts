@@ -19,7 +19,7 @@ export class ReporteClientes implements OnInit {
     creditos: any;
 
 
-    fechaInicio: any = (this.datePipe.transform(new Date(Date.now()), 'dd/mm/yyyy'));
+    fechaInicio: any = (this.datePipe.transform(new Date(Date.now()), 'dd/MM/yyyy'));
     clientesActivos: any;
     clientesInactivos: any;
 
@@ -38,6 +38,7 @@ export class ReporteClientes implements OnInit {
         this.creditoService.postGetAllCreditosTodosLosUsuarios(this.session).subscribe(result => {
             this.creditos = result["credito"];
             console.log(this.creditos);
+            console.log(this.fechaInicio);
         })
         
         //this.spinnerService.hide();

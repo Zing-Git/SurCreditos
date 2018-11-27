@@ -57,19 +57,40 @@ export class ReportePlanes implements OnInit {
                 title: 'Orden',
                 width: '10%',
                 filter: false,
-                valuePrepareFunction: (cell, row) => row.planPagos.tipoPlan.orden
+                valuePrepareFunction: (cell, row) => {
+                    if(row.planPagos.tipoPlan != null){
+                        return  row.planPagos.tipoPlan.orden
+                    }else{
+                        return 'No Tiene'
+                    }
+                   
+                }
             },
             plan: {
                 title: 'Plan',
                 width: '10%',
                 filter: false,
-                valuePrepareFunction: (cell, row) => row.planPagos.tipoPlan.diasASumar
+                valuePrepareFunction: (cell, row) => {
+                    if(row.planPagos.tipoPlan != null){
+                        return row.planPagos.tipoPlan.diasASumar
+                    }else{
+                        return 'No Tiene'
+                    }
+                    
+                }
             },
             tipoPlan: {
                 title: 'Tipo de Plan',
                 width: '10%',
                 filter: false,
-                valuePrepareFunction: (cell, row) => row.planPagos.tipoPlan.nombre
+                valuePrepareFunction: (cell, row) => {
+                    if(row.planPagos.tipoPlan != null){
+                        return row.planPagos.tipoPlan.nombre
+                    }else{
+                        return 'No Tiene'
+                    }
+                    
+                }
             },
             legajo: {
                 title: 'Legajo',
@@ -81,13 +102,26 @@ export class ReportePlanes implements OnInit {
                 title: 'Cliente',
                 width: '20%',
                 filter: false,
-                valuePrepareFunction: (cell, row) => row.comercio.razonSocial
+                valuePrepareFunction: (cell, row) => {
+                    if (row.comercio) {
+                        return row.comercio.razonSocial;
+                    } else {
+                        return row.cliente.titular.apellidos;
+                    }
+
+                }
             },
             direccion: {
                 title: 'Direccion',
                 width: '30%',
                 filter: false,
-                valuePrepareFunction: (cell, row) => 'Bº: ' + row.comercio.domicilio.barrio + ' ,Calle: ' + row.comercio.domicilio.calle + ' Nº casa: ' + row.comercio.domicilio.numeroCasa
+                valuePrepareFunction: (cell, row) => {
+                    if (row.comercio) {
+                        return 'Bº: ' + row.comercio.domicilio.barrio + ' ,Calle: ' + row.comercio.domicilio.calle + ' Nº casa: ' + row.comercio.domicilio.numeroCasa;
+                    } else {
+                        return 'Bº: ' + row.cliente.titular.domicilio.barrio + ' ,Calle: ' + row.cliente.titular.domicilio.calle + ' Nº casa: ' + row.cliente.titular.domicilio.numeroCasa;
+                    }
+                }
 
             },
             fechaUltimoPago: {
@@ -157,8 +191,8 @@ export class ReportePlanes implements OnInit {
         private fb: FormBuilder,
         private auxiliar: UtilidadesService,
         private spinnerService: Ng4LoadingSpinnerService) {
-            console.log(this.fechaActual);
-            console.log(this.fechaActual.getMonth());
+        console.log(this.fechaActual);
+        console.log(this.fechaActual.getMonth());
     }
 
     ngOnInit(): void {
@@ -195,12 +229,24 @@ export class ReportePlanes implements OnInit {
 
     configurarPlan(): void {
         let ultimaFecha: string = ' ';
+        let cliente: string = ' ';
+        let direccion: string = ' ';
+        let tipoPlan : string = ' ';
+        let orden : string = ' ';
+        let plan : string = ' ';
+
         this.planes = new Array();
         this.planViewModel.forEach(x => {
             x.planPagos.cuotas.forEach(y => {
                 if (y.cuotaPagada === true) {
-                    if (typeof y.fechaPago[y.fechaPago.length - 1] != "undefined") {
-                        ultimaFecha = this.datePipe.transform(y.fechaPago[y.fechaPago.length - 1], 'dd/MM/yyyy')
+                    const n = y.fechaPago.length;
+                    if (n > 0) {
+                        console.log('n es mayor que cero  ' + n);
+                    } else {
+                        console.log('n no es mayor y vale  ' + n);
+                    }
+                    if (typeof y.fechaPago[n - 1] != "undefined") {
+                        ultimaFecha = this.datePipe.transform(y.fechaPago[n - 1], 'dd/MM/yyyy')
                     }
                     this.cuotasPagadas = this.cuotasPagadas + 1;
                 } else {
@@ -208,14 +254,29 @@ export class ReportePlanes implements OnInit {
                     this.cuotasImpagas = this.cuotasImpagas + 1;
                 }
             })
-
+            if (x.comercio) {
+                cliente = x.comercio.razonSocial;
+                direccion = 'Bº: ' + x.comercio.domicilio.barrio + ' ,Calle: ' + x.comercio.domicilio.calle + ' Nº casa: ' + x.comercio.domicilio.numeroCasa;
+            } else {
+                cliente = x.cliente.titular.apellidos;
+                direccion = 'Bº: ' + x.cliente.titular.domicilio.barrio + ' ,Calle: ' + x.cliente.titular.domicilio.calle + ' Nº casa: ' + x.cliente.titular.domicilio.numeroCasa;
+            }
+            if(x.planPagos.tipoPlan != null){
+                tipoPlan = x.planPagos.tipoPlan.nombre;
+                orden= x.planPagos.tipoPlan.orden;
+                plan= x.planPagos.tipoPlan.diasASumar;
+            }else{
+                tipoPlan = 'No Tiene';
+                orden = ' No Tiene';
+                plan='No Tiene';
+            }
             this.planes.push({
-                orden: x.planPagos.tipoPlan.orden,
-                plan: x.planPagos.tipoPlan.diasASumar,
-                tipoPlan: x.planPagos.tipoPlan.nombre,
+                orden: orden,
+                plan: plan,
+                tipoPlan: tipoPlan,
                 legajo: x.legajo_prefijo + ' - ' + x.legajo,
-                cliente: x.comercio.razonSocial,
-                direccion: 'Bº: ' + x.comercio.domicilio.barrio + ' ,Calle: ' + x.comercio.domicilio.calle + ' Nº casa: ' + x.comercio.domicilio.numeroCasa,
+                cliente: cliente,
+                direccion: direccion,
                 fechaUltimoPago: ultimaFecha,
                 montoCredito: Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(x.valorCuota * x.cantidadCuotas),
                 cuotasPagadas: this.cuotasPagadas,

@@ -10,6 +10,7 @@ import 'jspdf-autotable';
 declare let jsPDF;
 import Swal from 'sweetalert2';
 import { UtilidadesService } from "src/app/modules/servicios/utiles/utilidades.service";
+import { Ng4LoadingSpinnerService } from "ng4-loading-spinner";
 
 @Component({
   selector: 'app-reporteCreditos',
@@ -30,7 +31,7 @@ export class ReporteCreditos implements OnInit {
   clientesInactivos: any;
   fechasForm: FormGroup;
 
-  bandera: boolean =false;
+  bandera: boolean = false;
 
   settings = {
 
@@ -80,7 +81,8 @@ export class ReporteCreditos implements OnInit {
     private creditoService: CreditosService,
     private loginService: LoginService,
     private fb: FormBuilder,
-    private auxiliar: UtilidadesService) {
+    private auxiliar: UtilidadesService,
+    private spinnerService: Ng4LoadingSpinnerService) {
 
 
   }
@@ -173,6 +175,11 @@ export class ReporteCreditos implements OnInit {
 
 
   ngOnInit(): void {
+
+    this.spinnerService.show();
+        setTimeout(()=>this.spinnerService.hide(),3000)
+
+
     this.fechasForm = this.fb.group({
       fechaInicio: new FormControl('', [Validators.required]),
       fechaFin: new FormControl('', [Validators.required])
@@ -180,72 +187,116 @@ export class ReporteCreditos implements OnInit {
     this.session.token = this.loginService.getTokenDeSession();
     this.creditoService.postGetAllCreditosTodosLosUsuarios(this.session).subscribe(result => {
       this.creditos = result["credito"];
+
+      this.clientesActivos = 0;
+      this.clientesInactivos = 0;
+      this.creditos.forEach(x => {
+        if (x.cliente.estado) {
+          this.clientesActivos += 1
+        } else {
+          this.clientesInactivos += 1;
+        }
+  
+      })
     })
+
+    //this.calcular();
   }
 
 
   getData() {
     console.log(this.creditos);
 
-    this.bandera = true;
+    
     let fechaInicio = new Date(this.datePipe.transform(this.fechasForm.get('fechaInicio').value, 'yyyy-MM-dd'));
     let fechaFin = new Date(this.datePipe.transform(this.fechasForm.get('fechaFin').value, 'yyyy-MM-dd'));
-    let fecha = new Date();
+    
 
-    this.creditosViewModel = new Array();
-    let fechaSiguiente = new Date();
-    this.montoTotalCreditos = 0;
-    this.cantidadCreditos = 0;
-    let banderaInicial = 0;
-
-    for (var i = 0; i < this.creditos.length; i++) {
-
-      fecha = new Date(this.datePipe.transform(this.creditos[i].fechaAlta, 'yyyy-MM-dd'));
+    if (fechaInicio.getFullYear() > 1971 && fechaFin.getFullYear() > 1971) {
       
-      if (fecha.valueOf() >= fechaInicio.valueOf() && fecha.valueOf() <= fechaFin.valueOf()) {
-       
-        banderaInicial = 1;
-        if (i === (this.creditos.lenght - 1)) {
+      this.bandera = true;
+      let fecha = new Date();
+      console.log(fechaInicio.getFullYear());
+      console.log(fechaFin);
+      this.creditosViewModel = new Array();
+      let fechaSiguiente = new Date();
+      this.montoTotalCreditos = 0;
+      this.cantidadCreditos = 0;
+      let banderaInicial = 0;
 
+      for (var i = 0; i < this.creditos.length; i++) {
 
-          if (this.cantidadCreditos > 0) {
-            this.montoTotalCreditos = this.montoTotalCreditos + (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota);
-            this.cantidadCreditos += 1;
+        fecha = new Date(this.datePipe.transform(this.creditos[i].fechaAlta, 'yyyy-MM-dd'));
 
-            this.creditosViewModel.push({
-              fechaAlta:this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
-              cantidadCreditos: this.cantidadCreditos,
-              montoCredito: this.montoTotalCreditos
-            })
+        if (fecha.valueOf() >= fechaInicio.valueOf() && fecha.valueOf() <= fechaFin.valueOf()) {
 
-          } else {
+          banderaInicial = 1;
+          if (i === (this.creditos.lenght - 1)) {
 
-
-            this.creditosViewModel.push({
-              fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
-              cantidadCreditos: 1,
-              montoCredito: (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota)
-            })
-
-          }
-          break;
-        } else {
-
-          fechaSiguiente = new Date(this.datePipe.transform(this.creditos[i + 1].fechaAlta, 'yyyy-MM-dd'))
-          
-      console.log(fecha);
-      console.log(fechaSiguiente);
-          if (fecha.valueOf() === fechaSiguiente.valueOf()) {
-            console.log('Entro');
-            this.montoTotalCreditos = this.montoTotalCreditos + (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota);
-            this.cantidadCreditos += 1;
-
-          } else {
 
             if (this.cantidadCreditos > 0) {
-
               this.montoTotalCreditos = this.montoTotalCreditos + (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota);
               this.cantidadCreditos += 1;
+
+              this.creditosViewModel.push({
+                fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
+                cantidadCreditos: this.cantidadCreditos,
+                montoCredito: this.montoTotalCreditos
+              })
+
+            } else {
+
+
+              this.creditosViewModel.push({
+                fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
+                cantidadCreditos: 1,
+                montoCredito: (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota)
+              })
+
+            }
+            break;
+          } else {
+
+            fechaSiguiente = new Date(this.datePipe.transform(this.creditos[i + 1].fechaAlta, 'yyyy-MM-dd'))
+
+            console.log(fecha);
+            console.log(fechaSiguiente);
+            if (fecha.valueOf() === fechaSiguiente.valueOf()) {
+              console.log('Entro');
+              this.montoTotalCreditos = this.montoTotalCreditos + (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota);
+              this.cantidadCreditos += 1;
+
+            } else {
+
+              if (this.cantidadCreditos > 0) {
+
+                this.montoTotalCreditos = this.montoTotalCreditos + (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota);
+                this.cantidadCreditos += 1;
+
+                this.creditosViewModel.push({
+                  fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
+                  cantidadCreditos: this.cantidadCreditos,
+                  montoCredito: this.montoTotalCreditos
+                })
+
+                this.cantidadCreditos = 0;
+                this.montoTotalCreditos = 0;
+
+              } else {
+                this.creditosViewModel.push({
+                  fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
+                  cantidadCreditos: 1,
+                  montoCredito: (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota)
+                })
+                this.cantidadCreditos = 0;
+                this.montoTotalCreditos = 0;
+              }
+
+            }
+          }
+        } else {
+          if (banderaInicial === 1) {
+            if (this.cantidadCreditos > 0) {
 
               this.creditosViewModel.push({
                 fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
@@ -256,36 +307,23 @@ export class ReporteCreditos implements OnInit {
               this.cantidadCreditos = 0;
               this.montoTotalCreditos = 0;
 
-            } else {
-              this.creditosViewModel.push({
-                fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
-                cantidadCreditos: 1,
-                montoCredito: (this.creditos[i].cantidadCuotas * this.creditos[i].valorCuota)
-              })
-              this.cantidadCreditos = 0;
-              this.montoTotalCreditos = 0;
             }
-
-          }
-        }
-      } else {
-        if (banderaInicial === 1) {
-          if (this.cantidadCreditos > 0) {
-
-            this.creditosViewModel.push({
-              fechaAlta: this.datePipe.transform(this.creditos[i].fechaAlta, 'yyy-MM-dd'),
-              cantidadCreditos: this.cantidadCreditos,
-              montoCredito: this.montoTotalCreditos
-            })
-
-            this.cantidadCreditos = 0;
-            this.montoTotalCreditos = 0;
-
           }
         }
       }
+    }else{
+      Swal({
+        title: 'Cuidado con las Fechas',
+  
+        text: 'Tienes que seleccionar fecha de inicio y fin',
+        type: 'success',
+        showCancelButton: false,
+        reverseButtons: true,
+        confirmButtonText: 'Ok!',
+        cancelButtonText: 'No, Cancelar'
+      });
     }
-    console.log(this.creditosViewModel);
+    //console.log(this.creditosViewModel);
     //console.log(this.datePipe.transform(this.fechasForm.get('fechaInicio').value, 'dd/MM/yyyy'));
     //console.log(this.datePipe.transform(this.fechasForm.get('fechaFin').value, 'dd/MM/yyyy'));
   }
@@ -297,38 +335,38 @@ export class ReporteCreditos implements OnInit {
     const id = (`${event.data._id}`);
   }
 
-  calcular(){
+  /*calcular() {
     this.clientesActivos = 0;
     this.clientesInactivos = 0;
-    this.creditos.forEach(x =>{
-      if(x.cliente.estado){
-        this.clientesActivos +=1
-      }else{
-        this.clientesInactivos +=1;
+    this.creditos.forEach(x => {
+      if (x.cliente.estado) {
+        this.clientesActivos += 1
+      } else {
+        this.clientesInactivos += 1;
       }
-        
-    })
-    
-}
 
-  showReporteCliente(){
+    })
+
+  }*/
+
+  /*showReporteCliente() {
     this.calcular();
-    let texto : string;
-    if(this.clientesActivos > 0 && this.clientesInactivos > 0){
-        texto= '<strong> Clientes al ' + this.fechaActual + '<br>' + ' Activos es un Total de :   ' + this.clientesActivos + '</strong>' + '<br>' + ' Inactivos es un Total de :   ' + this.clientesInactivos;
-    }else{
-      if(this.clientesInactivos > 0){
-        texto= '<strong> Clientes Inactivos al ' + this.fechaActual + '<br>' + ' es un Total de :   ' + this.clientesInactivos + '</strong>';
-      }else{
-        if(this.clientesActivos > 0){
-          texto= '<strong> Clientes Activos al ' + this.fechaActual + '<br>' + ' es un Total de :   ' + this.clientesActivos + '</strong>';
+    let texto: string;
+    if (this.clientesActivos > 0 && this.clientesInactivos > 0) {
+      texto = '<strong> Clientes al ' + this.fechaActual + '<br>' + ' Activos es un Total de :   ' + this.clientesActivos + '</strong>' + '<br>' + ' Inactivos es un Total de :   ' + this.clientesInactivos;
+    } else {
+      if (this.clientesInactivos > 0) {
+        texto = '<strong> Clientes Inactivos al ' + this.fechaActual + '<br>' + ' es un Total de :   ' + this.clientesInactivos + '</strong>';
+      } else {
+        if (this.clientesActivos > 0) {
+          texto = '<strong> Clientes Activos al ' + this.fechaActual + '<br>' + ' es un Total de :   ' + this.clientesActivos + '</strong>';
         }
       }
     }
-    
+
     Swal({
       title: 'Clientes Activos',
-      
+
       html: '<strong>' + texto + '</strong>',
       type: 'success',
       showCancelButton: false,
@@ -344,9 +382,9 @@ export class ReporteCreditos implements OnInit {
     });
 
   }
-
-  generarXls(): void{
+*/
+  generarXls(): void {
     this.auxiliar.exportAsExcelFile(this.creditosViewModel, 'reporteCredito');
   }
-  
+
 }

@@ -176,7 +176,7 @@ export class FormViewEditUsuarioComponent implements OnInit {
     this.usuariosService.postSearchdUsuario(parametros).subscribe(response => {
       this.usuario = response['usuario'][0];
       this.cargarUsuarioAControles(this.usuario);
-      console.log('Usuario encontrado: ', this.usuario);
+      // console.log('Usuario encontrado: ', this.usuario);
     });
   }
 
@@ -258,7 +258,7 @@ export class FormViewEditUsuarioComponent implements OnInit {
     // console.log(this.localidades);
   }
   volver(): void {
-    console.log('Volviendo...');
+    // console.log('Volviendo...');
   }
 
   guardar(){

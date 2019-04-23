@@ -1,10 +1,14 @@
 <ngx-smart-modal #simuladorModal identifier="simuladorModal" customClass="reveal">
 
+
     <div class="form-row text-center">
         <div class="col-12">
-            <p class="bg-primary">Simulador de Cuotas</p>
+            <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+            <p class="bg-secondary-gradient">Simulador de Cuotas</p>
         </div>
     </div>
+
+
     <div class="container">
         <div class="row">
             <div>
@@ -13,8 +17,8 @@
         </div>
         <div class="form-row text-right">
             <div class="col-12">
-                <span class="btn btn-outline-danger" (click)="simuladorModal.close()">Cerrar</span>
-                <span class="btn btn-outline-success" (click)="pagar()">Confirmar Pago</span>
+                <span class="btn btn-secondary" (click)="simuladorModal.close()">Cerrar</span>
+                <span class="btn btn-secondary" (click)="pagar()">Confirmar Pago</span>
             </div>
         </div>
     </div>

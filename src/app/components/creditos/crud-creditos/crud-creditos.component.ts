@@ -14,6 +14,8 @@ import { ItemsReferencia } from '../../../modelo/negocio/itemsReferencia';
 import * as moment from 'moment/moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 import { Titular } from '../../../modelo/negocio/titular';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -78,7 +80,7 @@ export class CrudCreditosComponent implements OnInit {
         width: '20%',
         // valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres
       },
-      cuit: {
+     /*  cuit: {
         title: "Cuit",
         width: "10%",
         filter: true,
@@ -89,7 +91,7 @@ export class CrudCreditosComponent implements OnInit {
         title: 'Comercio',
         width: '20%',
         // valuePrepareFunction: (cell, row) => row.comercio.razonSocial
-      },
+      }, */
       /* rubro:{
         title: 'Rubro',
         width: '30%'
@@ -152,19 +154,29 @@ export class CrudCreditosComponent implements OnInit {
     private router: Router,
     private creditosService: CreditosService,
     private loginService: LoginService,
-    private clientesServices: ClientesService
+    private clientesServices: ClientesService,
+    private spinnerService: Ng4LoadingSpinnerService
   ) { }
 
   ngOnInit() {
     this.session.token = this.loginService.getTokenDeSession();
+
+    this.spinnerService.show();
     this.creditosService.postGetAllCreditos2(this.session).subscribe((response: TableCreditos[]) => {
-     this.characters = response['credito'];
-
-     this.charactersNuevo = this.convertirDataSourceParaTabla(this.characters, '');
-
-
-    });
-
+        this.characters = response['credito'];
+        this.spinnerService.hide();
+        console.log(this.characters);
+        if (this.characters !== undefined) {
+          this.charactersNuevo = this.convertirDataSourceParaTabla(this.characters, '');
+        } else {
+          Swal(
+            'No hay creditos cargados!',
+            'Cuando genere nuevos creditos podra visualizarlos',
+            'info'
+          );
+        }
+    } // , () => this.spinnerService.hide()
+    );
     this.cargarControlesCombos();
   }
 
@@ -179,8 +191,8 @@ export class CrudCreditosComponent implements OnInit {
         legajo: element.legajo,
         dni: element.cliente.titular.dni,
         nombreApellido: element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres,
-        cuit: element.comercio.cuit,
-        razonSocial: element.comercio.razonSocial,
+        // cuit: element.comercio.cuit,
+        // razonSocial: element.comercio.razonSocial,
         montoPedido: element.montoPedido,
         estado: element.estado.nombre,
       };
@@ -291,26 +303,21 @@ export class CrudCreditosComponent implements OnInit {
 
   imprimirPDF(id: string) {
     const doc = new jsPDF();
-
+    const today = Date.now();
     ///////////////////////////////////////////////////////////////////////////////////
-    doc.setFontSize(18);
+    /* doc.setFontSize(18);
     doc.setTextColor(40);
     doc.setFontStyle('normal');
     const imgData = new Image();
-    // tslint:disable-next-line:max-line-length
-    // imgData.src = 'https://npclhg.dm.files.1drv.com/y4m9GX1-ImqUAw21oHBc1AU0cXj8xJb_B4EW3Omo1lOtFGEwYTmTagcQHp6Zn7AjSsa84JUu_H2bNDa_rY8Ubsl2hkNV4xk5zmWlUaN2tz_0i1q39QOAfWe_FLpR-Jfg_J94rvvQpLHLNw5_aT2hWdWRsBclGuCgF9U1i5taliO9DWw7sc4EnxfgcWT_WamOy60jkpOdDzEQIINslKGINAR6A?width=558&height=299&cropmode=none' ;
-    // doc.addImage(imgData, 50, 50);
+
     doc.text('SUR Créditos', 20, 15);
     doc.setFontSize(7);
     doc.text('CREDITOS PARA COMERCIANTES', 20, 18);
 
-    doc.setFontSize(12);
-    // doc.setTextColor(255);
-    // doc.setFillColor(52, 152, 219)
-    // doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
-    // doc.setFillColor(1);
+    doc.setFontSize(12); */
 
-    doc.text('NOTA DE PEDIDO', 72, 30, 'center');
+
+    /* doc.text('NOTA DE PEDIDO', 72, 30, 'center');
 
     doc.setFontSize(10);
     doc.setTextColor(0)
@@ -326,7 +333,7 @@ export class CrudCreditosComponent implements OnInit {
         doc.text('Legajo Nº:  ' + this.numeroFactura, 130, 30);
         doc.text('Estado: ' + x.estado.nombre, 130, 35);
       }
-    })
+    });
 
 
     doc.setFillColor(52, 152, 219)
@@ -346,11 +353,6 @@ export class CrudCreditosComponent implements OnInit {
     });
 
     doc.setFontSize(12);
-    // doc.setFillColor(52, 152, 219)
-    // doc.roundedRect(10, 60, 182, 8, 3, 3, 'FD')
-
-    // doc.setTextColor(255);
-    // doc.text('Domicilio Particular', 100, 65, 'center');
     doc.text('Domicilio Particular', 20, 70);
 
     doc.setFontSize(10);
@@ -373,35 +375,25 @@ export class CrudCreditosComponent implements OnInit {
     });
 
     doc.setFontSize(12);
-    // doc.setFillColor(52, 152, 219)
-    // doc.roundedRect(10, 90, 182, 8, 3, 3, 'FD')
-
-    // doc.setTextColor(255);
-    // doc.text('Domicilio Comercial', 100, 95, 'center');
     doc.text('Domicilio Comercial', 20, 100);
 
     doc.setFontSize(10);
     doc.setTextColor(0);
     this.characters.forEach(element => {
-      if (element._id === id) {
-        if (element.comercio.domicilio != null) {
+
+
+      if (element._id === id && element.hasOwnProperty('comercio') !== null) {
+        if (element.comercio != null) { // && element.comercio.domicilio !== null
           doc.text('Calle: ' + element.comercio.domicilio.calle, 20, 105);
           doc.text('Barrio:' + element.comercio.domicilio.barrio, 130, 105);
           doc.text('Localidad: ' + element.comercio.domicilio.localidad, 20, 110);
           doc.text('Provincia: ' + element.comercio.domicilio.provincia, 130, 110);
 
-          //doc.text('Celular: ', 20, 115);
-          //doc.text('T. Fijo:', 80, 115)
-         // doc.text('Mail:  ', 130, 115);
         } else {
           doc.text('Calle: ', 20, 105);
           doc.text('Barrio:', 130, 105);
           doc.text('Localidad: ', 20, 110);
           doc.text('Provincia: ', 130, 110);
-
-          //doc.text('Celular: ', 20, 115);
-          //doc.text('T. Fijo:', 80, 115)
-          //doc.text('Mail:  ', 130, 115);
         }
       }
     });
@@ -417,8 +409,8 @@ export class CrudCreditosComponent implements OnInit {
     doc.setTextColor(0);
 
     this.characters.forEach(element => {
-      if (element._id === id) {
-        if (element.garante.titular != null) {
+      if (element._id === id && element.hasOwnProperty('garante') !== null) {
+        if (element.garante != null) {
           doc.text('Apellido y Nombre: ' + element.garante.titular.apellidos + ', ' + element.garante.titular.nombres, 20, 135);
           doc.text('Fecha de Nacimiento: ' + moment(element.garante.titular.fechaNacimiento).format('DD-MM-YYYY'), 20, 140);
           doc.text('D.N.I.: ' + element.garante.titular.dni, 130, 140);
@@ -456,63 +448,269 @@ export class CrudCreditosComponent implements OnInit {
     this.characters.forEach(element => {
       if (element._id === id) {
 
-        // doc.text('Monto Solicitado: ' + element.montoPedido, 20, 175);
+
         let m = Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.montoPedido);
         doc.text('Monto Solicitado: ' + m, 20, 175);
         doc.text('Cantidad de Cuotas: ' + element.cantidadCuotas, 80, 175);
-        doc.text('Plan: ' + element.planPagos.tipoPlan.nombre, 150, 175); // plan
-        //aqui iba tipo de plan que no existe en credito
+
+        if (element.hasOwnProperty('planPagos') !== null) {
+          if (element.planPagos.tipoPlan.hasOwnProperty('nombre')) {
+            doc.text('Plan: ' + element.planPagos.tipoPlan.nombre, 150, 175); // plan
+          }
+        }
+
       }
     });
+    doc.text('.................................................... ', 115, 210);
+    doc.text('Firmante (Lugar y fecha): ', 120, 220);
+
+
+
 
     this.getData('CuerpoPlanPago', id);
-    doc.setFontSize(10);
-    // tslint:disable-next-line:max-line-length
-    doc.text(' ---------------------------------------------------------------------------------------------------------------------------------------------', 10, 195);
-    doc.setFontSize(14);
-    doc.text(' PAGARÉ:', 20, 205);
-    doc.setFontSize(10);
-    doc.text('Pagaré sin protesto [art. 50 D. Ley 5965 / 53] a Sur Créditos o a su orden la cantidad de pesos ', 20, 215);
-    doc.setFontSize(10);
-   /*  doc.setLineWidth(0.2);
-    doc.line(10, 200, 190, 200);
-    doc.line(10, 215, 190, 215);   //x, , largo , y */
-    doc.text(' -----------  ' + this.toText(this.cantidadTotal) + '  ----------- ', 60, 225);
-    doc.setFontSize(10);
-    doc.text('Por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.-', 20, 235);
-    doc.text('.................................................... ', 115, 255);
-    doc.text('Firmante (Lugar y fecha): ', 120, 260);
-
-    this.carroIndividual = 50;
-    this.cantidadTotal = 0;
 
     doc.addPage();
+    doc.setFontSize(10);
+    // tslint:disable-next-line:max-line-length
+    doc.text(' ---------------------------------------------------------------------------------------------------------------------------------------------', 10, 30);
+    doc.setFontSize(14);
+    doc.text('     PAGARÉ: ', 20, 35);
+    doc.setFontSize(10);
+    doc.text('Pagaré sin protesto [art. 50 D. Ley 5965 / 53] a Sur Créditos o a su orden la cantidad de pesos ', 20, 45);
+    doc.setFontSize(10);
 
-    doc.text('SUR Créditos', 20, 15, 'center');
-    doc.setFontSize(7);
-    doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
 
-    // doc.setFontSize(12);
-    // doc.setTextColor(255);
-    // doc.setFillColor(52, 152, 219)
-    // doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
-    // doc.setFillColor(1);
 
-    // doc.text('NOTA DE PEDIDO', 72, 30, 'center');
+    doc.text(' -----------  ' + this.toText(this.cantidadTotal) + '  ----------- ', 60, 55);
 
-    doc.setFontSize(12);
 
-    doc.setTextColor(0);
-    doc.text('Detalle de cuotas', 20, 40);
+    doc.setFontSize(10);
+    doc.text('Por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.-', 20, 65);
+    doc.text('.................................................... ', 115, 85);
+    doc.text('Firmante (Lugar y fecha): ', 120, 95); */
 
-    doc.autoTable({
-      head: this.getData('CabeceraPlanPago'),
-      body: this.getData('CuerpoPlanPago', id),
 
-      margin: {
-        top: 50
+        // ---------------------- FIN PAGARE
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // ----------------------------- NUEVO FORMATO DE CREDITO
+    // -----------------------------
+    // -----------------------------
+    // doc.addPage();
+
+
+
+  /*   this.characters.forEach(x => {
+      if (x._id === id) {
+        console.log('Imprimir: ' + x );
+      }
+    }); */
+
+
+
+    this.getData('CuerpoPlanPago', id);
+    doc.setFontSize(8);
+    let filaBase=20;
+    let columnaBase=10;
+    let columnaCodeudor=70;
+    let incrementoFila=5;
+    let montoPedido, cantidadCuotas, tipoPlan;
+
+    let titular, fechaNac, dni, calle, numero, barrio, localidad, provincia, estadoCasa;
+    let garante, gFechaNac, gDni, gCalle, gNumero, gLocalidad, gProvincia, gEstadoCasa;
+    let valorCuota, vecimientoPrimerCuota, diasASumarCuota, vecimientoUltimaCuota;
+
+    let localidadDeCredito = 'San Pedro de Jujuy';
+
+    this.characters.forEach(element => {
+      if (element._id === id) {
+        montoPedido = Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+element.montoPedido);
+        cantidadCuotas = element.cantidadCuotas;
+
+        titular = element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres;
+        fechaNac =  moment(element.cliente.titular.fechaNacimiento).format('DD-MM-YYYY');
+        dni = element.cliente.titular.dni;
+        calle = element.cliente.titular.domicilio.calle;
+        numero = element.cliente.titular.domicilio.numeroCasa;
+        barrio = element.cliente.titular.domicilio.barrio;
+        localidad = element.cliente.titular.domicilio.localidad;
+        provincia = element.cliente.titular.domicilio.provincia;
+
+        valorCuota = element.valorCuota;
+        vecimientoPrimerCuota = moment(element.planPagos.cuotas[0].fechaVencimiento).format('DD-MM-YYYY');
+        vecimientoUltimaCuota = moment(element.planPagos.cuotas[element.planPagos.cuotas.length - 1].fechaVencimiento).format('DD-MM-YYYY');
+
+        if (element.hasOwnProperty('planPagos') !== null) {
+          if (element.planPagos.tipoPlan.hasOwnProperty('nombre')) {
+            tipoPlan = element.planPagos.tipoPlan.nombre;
+            diasASumarCuota = element.planPagos.tipoPlan.diasASumar;
+          }
+        }
+
+        this.estadosCasa.forEach(estadoC => {
+          if (element.cliente.titular.domicilio.estadoCasa === estadoC._id) {
+            estadoCasa = estadoC.nombre;
+          }
+
+          if (element.garante != null) {
+            if (element.garante.titular.domicilio.estadoCasa === estadoC._id) {
+              gEstadoCasa = estadoC.nombre;
+            }
+          }
+
+        });
+
+        if (element._id === id && element.hasOwnProperty('garante') !== null) {
+          if (element.garante != null) {
+            garante = element.garante.titular.apellidos + ', ' + element.garante.titular.nombres;
+            gFechaNac = moment(element.garante.titular.fechaNacimiento).format('DD-MM-YYYY');
+            gDni = element.garante.titular.dni;
+            if (element.garante.titular.domicilio != null) {
+              gCalle = element.garante.titular.domicilio.calle;
+              gNumero = element.garante.titular.domicilio.numeroCasa;
+              gLocalidad = element.garante.titular.domicilio.localidad;
+              gProvincia = element.garante.titular.domicilio.provincia;
+            }
+          }
+        }
+
+
+
       }
     });
+
+
+
+    doc.text('SUR CREDITOS', 45, filaBase - 5);
+    doc.text('SOLICITUD DE CREDITO DE CONSUMO ', 20, filaBase);
+    // tslint:disable-next-line:max-line-length
+    doc.text('Sr. Gerente de CREDISUR, por el presente solicitamos un prestamo de consumo por la suma de PESOS: ', columnaBase, filaBase + incrementoFila);
+    doc.text(' -----------  ' + this.toText(this.cantidadTotal) + '  ----------- ', columnaBase, filaBase + 2 * incrementoFila);
+
+    doc.text('Deudor: ' + titular, columnaBase, filaBase + 3 * incrementoFila);
+    doc.text('Dni: ' + dni, columnaBase, filaBase + 4 * incrementoFila);
+    doc.text('Fecha de Nac.: ' + fechaNac, columnaBase, filaBase + 5 * incrementoFila);
+    doc.text('Dirección: ' + calle + ' ' + numero, columnaBase, filaBase + 6 * incrementoFila);
+    doc.text('Localidad: ' + localidad, columnaBase, filaBase + 7 * incrementoFila);
+    doc.text('Propiedad: ' + estadoCasa, columnaBase, filaBase + 8 * incrementoFila);
+
+    doc.text('Codeudor: ' + garante, columnaCodeudor, filaBase + 3 * incrementoFila);
+    doc.text('Dni: ' + gDni, columnaCodeudor, filaBase + 4 * incrementoFila);
+    doc.text('Fecha de Nac.: ' + gFechaNac, columnaCodeudor, filaBase + 5 * incrementoFila);
+    doc.text('Dirección: ' + gCalle + ' ' + gNumero, columnaCodeudor, filaBase + 6 * incrementoFila);
+    doc.text('Localidad: ' + gLocalidad, columnaCodeudor, filaBase + 7 * incrementoFila);
+    doc.text('Propiedad: ' + gEstadoCasa, columnaCodeudor, filaBase + 8 * incrementoFila);
+
+
+    // tslint:disable-next-line:max-line-length
+    doc.text('Por el presente reconocemos adeudar a CREDISUR o a su orden la suma de PESOS ' + Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+this.cantidadTotal) + ' por igual valor recibido a nuestra entera satisfacción ', columnaBase, filaBase + 10 * incrementoFila);
+    // tslint:disable-next-line:max-line-length
+    doc.text('pagaremos la suma indicada en ' + cantidadCuotas + ' cuotas iguales con la modalidad de pago ' + tipoPlan + ' y cuotas consecutivas de PESOS ' + Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+valorCuota) + ' cada una,', columnaBase, filaBase + 11 * incrementoFila);
+
+
+    // tslint:disable-next-line:max-line-length
+    doc.text('venciendo la primera el dia  '  + vecimientoPrimerCuota + ' con vencimiento cada ' + diasASumarCuota + ' dias.' , columnaBase, filaBase + 12 * incrementoFila);
+
+    // tslint:disable-next-line:max-line-length
+    doc.text('Los pagos los efectuaremos en el domicilio de Velez Zarfield Nro. 201 de la ciudad de San Pedro de Jujuy o donde en el futuro se nos indique. La' , columnaBase, filaBase + 13 * incrementoFila);
+    doc.text('falta de  ago producirá la mora  automatica y de pleno derecho, sin necesidad de protesto ni  interpelación judicial o extrajudicial y dará lugar ' , columnaBase, filaBase + 14 * incrementoFila);
+    doc.text('al pago de interés compensatorio igual a la tasa que aplica el Banco de la Nación Argentina, para las operaciones de adelanto en cuenta corriente ' , columnaBase, filaBase + 15 * incrementoFila);
+    doc.text('sin acuerdo, mas un interés punitorio pactado, entre partes igual a 1,6 veces dicha tasa en el mismo periodo. Los intereses compensatorio y puni-' , columnaBase, filaBase + 16 * incrementoFila);
+    doc.text('torios  pactados, sufrirán una  capitalización mensual, formando  la base del capital sobre la que se efectuará el calculo de los mismos, y asi su- ' , columnaBase, filaBase + 17 * incrementoFila);
+    doc.text('cesivamente,  conforme lo autoriza  el art. 623 del codigo  civil, modificado  por el art. 11 de la ley 23928. Producirá  la caducidad de los plazos' , columnaBase, filaBase + 18 * incrementoFila);
+    doc.text('otorgados y dará derecho a exigir por la via ejecutiva el saldo total de la deuda con mas un interes compensatorio del 1.25% mensual y un interes' , columnaBase, filaBase + 19 * incrementoFila);
+    doc.text('punitorio del 0,9%. Los pagos parciales o a cuenta en ningun caso no implicarán en ningún caso novación, quita ni espera de las obligaciones con-' , columnaBase, filaBase + 20 * incrementoFila);
+    doc.text('traidas y de  las  acciones judiciales emergentes, aunque tales  pagos fueran posteriores a la interposición  de la demanda, la que seguirá su curso,' , columnaBase, filaBase + 21 * incrementoFila);
+    doc.text('siendo computables aquellos al momento de la liquidación. Las notificaciones serán validas en los domicilios denunciados mas arriba, sometiéndonos' , columnaBase, filaBase + 22 * incrementoFila);
+    doc.text('a la jurisdicción de los tribunales ordinarios de Cordoba con exclusión de cualquier otro fuero o jurisdicción que pueda corresponder.' , columnaBase, filaBase + 23 * incrementoFila);
+    doc.text('Una vez transcurridos 30 dias de cancelada la obligación del presente credito y el solicitante no retire el pagaré autorizamos expresamente a des-' , columnaBase, filaBase + 24 * incrementoFila);
+    doc.text('truir el mismo. Así mismo tomamos conocimiento de tal procedimiento con la firma del presente.' , columnaBase, filaBase + 25 * incrementoFila);
+
+
+    doc.text('Firma Solicitante                                                           Firma Garante' , columnaBase + 30, filaBase + 28 * incrementoFila);
+
+
+    // tslint:disable-next-line:max-line-length
+    doc.text('Recibí de CREDISUR la suma de PESOS ' + this.toText(this.cantidadTotal) + ' (' +  Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+this.cantidadTotal) + ') ' + 'en concepto del prestamo de consumo que', columnaBase, filaBase + 30 * incrementoFila);
+    // tslint:disable-next-line:max-line-length
+    doc.text('solicitara pagaderos en VELEZ SARFIELD 201 o donde se nos indique y en la cantidad de ' + cantidadCuotas + ' cuotas, con vencimiento cada ' + diasASumarCuota + ' días', columnaBase, filaBase + 31 * incrementoFila);
+    // tslint:disable-next-line:max-line-length
+    doc.text('comenzando la primera el dia ' + vecimientoPrimerCuota + 'y la ultima en ' + vecimientoUltimaCuota, columnaBase, filaBase + 32 * incrementoFila);
+
+
+
+    doc.text('Firma Solicitante                                                           Firma Garante' , columnaBase + 30, filaBase + 35 * incrementoFila);
+
+    // tslint:disable-next-line:max-line-length
+    doc.text(localidadDeCredito + ' ' + new Date().getDay() + ' de ' + moment(new Date()).format('MMMM') + ' de ' + moment(new Date()).format('YYYY') + ' a la vista y  a su presentación  pagare/mos solidariamente sin protesto (Art. 50 del D. Let 5965/63) a', columnaBase, filaBase + 37 * incrementoFila);
+    // tslint:disable-next-line:max-line-length
+    doc.text('CREDISUR la suma de PESOS ' + Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(+this.cantidadTotal) + 'por igual valor recibido a nuestra entera satisfacción. La falta de pago producirá la mora automática y', columnaBase, filaBase + 38 * incrementoFila);
+    doc.text('de pleno derecho, sin  necesidad de protesto ni interpelación judicial o  extrajudicial y dara lugar al pago  de interés  compensatorio igual a la tasa ' , columnaBase, filaBase + 39 * incrementoFila);
+    doc.text('que aplica el Banco de la Nacion Argentina, para las operaciones de adelanto en cuenta corriente sin acuerdo, mas un interés punitorio pactado, en' , columnaBase, filaBase + 40 * incrementoFila);
+    doc.text('cuenta corriente sin acuerdo, mas un interés punitorio pactado, entre partes igual a 1,6 veces dicha tasa en el mismo periodo. Los intereses  com-' , columnaBase, filaBase + 41* incrementoFila);
+    doc.text('pensatorios y punitorios pactados, sufrirán  una  capitalización mensual, formando  la base del  capital sobre  la que se efectuará el calculo de los ' , columnaBase, filaBase + 42 * incrementoFila);
+    doc.text('mismos, y asi sucesivamente, conforme lo autoriza el art. 623 del codigo civil, modificado por el art. 11 de la ley 23928. ', columnaBase, filaBase + 43 * incrementoFila);
+    doc.text('En nuestro caracter de suscriptores-libradores ampliamos el plazo de  presentación para el pago de este pagaré hasta (1) mes  a contar de la fecha' , columnaBase, filaBase + 44 * incrementoFila);
+    doc.text('de vencimiento. (art.36 de la Ley 5965/63). A los fines de la ejecución como obligados reconocemos el caracter de titulo ejecutivo al presente pagaré' , columnaBase, filaBase + 45 * incrementoFila);
+    doc.text('y renuncio/renunciamos a oponer excepción que no sea la de pago comprobado con documento escrito emanado del acreedor, como la de apelar y de' , columnaBase, filaBase + 46 * incrementoFila);
+    doc.text('recusar sin causa.Como asi también facultamos al acreedor a nombrar martillero publico para el hipotetico caso de venta en subasta pública de bienes' , columnaBase, filaBase + 47 * incrementoFila);
+    doc.text('embargados pagadero en San Pedro de Jujuy.' , columnaBase, filaBase + 48 * incrementoFila);
+
+    doc.text('Firma ..........................................................                                     Firma ..........................................................' , columnaBase + 30, filaBase + 51 * incrementoFila);
+
+
+
+   // INICIO DETALLE DE CUOTAS ---------------------------
+   this.carroIndividual = 50;
+   this.cantidadTotal = 0;
+
+   doc.addPage();
+   doc.text('Fecha: ' + moment(today).format('DD-MM-YYYY'), 130, 25);
+   this.characters.forEach(x => {
+     if (x._id === id) {
+       this.crearNumeroFactura(x.legajo_prefijo, x.legajo);
+       doc.text('Legajo Nº:  ' + this.numeroFactura, 130, 30);
+       doc.text('Estado: ' + x.estado.nombre, 130, 35);
+     }
+   });
+
+   doc.text('SUR Créditos', 20, 15, 'center');
+   doc.setFontSize(7);
+   doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
+
+
+
+
+
+   doc.setFontSize(12);
+
+   doc.setTextColor(0);
+   doc.text('Detalle de cuotas', 20, 40);
+
+   doc.autoTable({
+     head: this.getData('CabeceraPlanPago'),
+     body: this.getData('CuerpoPlanPago', id),
+
+     margin: {
+       top: 50
+     }
+   });
+
+
+
+// FIN DETALLE DE CUOTAS
+
 
     // TODO: agregar esta apertura de pestaña a todos los cruds
     doc.save('credito.pdf');
@@ -534,7 +732,7 @@ export class CrudCreditosComponent implements OnInit {
       case 'cabecera':
         {
           dataArray.push({
-            razonSocial: 'Razon Social',
+            razonSocial: 'Cliente',
             montoPedido: 'Monto Pedido',
             cantidadCuotas: 'Cant. Cuotas',
             valorCuota: 'Valor de Cuota',
@@ -556,8 +754,10 @@ export class CrudCreditosComponent implements OnInit {
             cobroDom = 'No';
           }
 
+
+
           dataArray.push({
-            razonSocial: element.comercio.razonSocial,
+            razonSocial: element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres,
             montoPedido: new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })
             .format(Number(element.montoPedido)).toString(),
             cantidadCuotas: element.cantidadCuotas,

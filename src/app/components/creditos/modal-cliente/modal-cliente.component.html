@@ -1,6 +1,12 @@
-<ngx-smart-modal #myModal identifier="myModal">
-    <h1>Formulario Modal</h1>
-    <p>Formulario de Clientes...</p>
+<ngx-smart-modal #clienteModalPorFiltro identifier="clienteModalPorFiltro" customClass="reveal">
+    <h4>Seleccion de Cliente</h4>
 
-    <button (click)="myModal.close()">Close</button>
+    <label for="inputdefault">Ingrese Dni o Apellido</label>
+    <input #search class="search form-control form-control-sm" type="text" placeholder="Buscar..." (keydown.enter)="onSearch(search.value)">&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn btn-outline-primary" (click)="onSearch(search.value)">Buscar</span>
+
+    <ng2-smart-table [settings]="settings" class="table table-hover thead-dark" [source]="source" (custom)="onCustom($event)" #clienteForm></ng2-smart-table>
+
+    <!--  <button (click)="seleccionar()">Elegir Cliente</button>
+    <button (click)="clienteModalPorFiltro.close()">Close</button> -->
 </ngx-smart-modal>

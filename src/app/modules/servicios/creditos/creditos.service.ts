@@ -3,6 +3,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Session } from '../../../modelo/util/session';
 import { Observable } from 'rxjs';
 import { TableCreditos } from '../../../components/creditos/crud-creditos/TableCreditos';
+import { NewSession } from '../../../modelo/util/newSession';
 
 
 const cudOptions = {
@@ -34,6 +35,21 @@ export class CreditosService {
    public urlPostGetCreditoPorId = this.urlBase + '/credito/buscar_credito/';
    public urlPostGetAllCreditosTodosLosUsuarios = this.urlBase + '/credito/listar_todos/';
    public urlPostGetCreditoVitenge = this.urlBase + '/credito/consultar_plan_pago_vigente/';
+   public urlPostCerrarCredito = this.urlBase + '/credito/cierre_manual/';
+   public urlPostGetConfiguraciones = this.urlBase + '/configuracion/consultar_configuraciones/';
+   public urlPostActualizarConfiguraciones = this.urlBase + '/configuracion/actualizar/';
+   public urlPostAgregarAnalisisCrediticio = this.urlBase + '/credito/agregar_analisis/';
+
+   public urlPostGetDineroCirculante = this.urlBase + '/reporte/dinero_circulante/';
+   private urlPostGetCuotasAtrasadas = this.urlBase + '/reporte/cuotas_atrasadas/';
+
+   public urlPostPlanDePagoNuevo = this.urlBase + '/plan/nuevo/';
+   public urlPostConsultaPlanesDePago = this.urlBase + '/plan/obtener_tipos_planes/';
+   public urlPostModificarTasaItem = this.urlBase +  '/plan/modificar_tasa/';
+   public urlPostInhabilitarTasaItem = this.urlBase + '/plan/inhabilitar_item_plan/';
+   public urlPostInhabilitarPlan = this.urlBase + '/plan/inhabilitar_plan/';
+
+
 
 
 
@@ -89,7 +105,101 @@ export class CreditosService {
       dni : dni
     };
 
-    const newSessio = Object.assign({},parameters);
-    return this.http.post<any[]>(this.urlPostGetCreditoVitenge,newSessio,cudOptions);
+    const newSession = Object.assign({},parameters);
+    return this.http.post<any[]>(this.urlPostGetCreditoVitenge, newSession, cudOptions);
   }
+
+  postCerrarCredito(session: Session, idCredito: string, comentario: string): Observable<any> {
+    let parameters = {
+      token: session.token,
+      idCredito: idCredito,
+      comentario: comentario
+    };
+    const newSession = Object.assign({}, parameters);
+    return this.http.post<any>(this.urlPostCerrarCredito, newSession, cudOptions);
+    }
+
+
+
+  postGetConfiguraciones(session: Session): Observable<any[]>{
+    let parameters = {
+      token : session.token
+    };
+    const newSession = Object.assign({}, parameters);
+    return this.http.post<any[]>(this.urlPostGetConfiguraciones, newSession, cudOptions);
+  }
+
+
+  postActualizarConfiguraciones(session: Session, configuraciones: any): Observable<any[]>{
+    let parameters = {
+      token : session.token,
+      configuraciones: configuraciones
+    };
+    const newSession = Object.assign({}, parameters);
+    return this.http.post<any[]>(this.urlPostActualizarConfiguraciones, newSession, cudOptions);
+  }
+
+  postAgregarAnalisisCrediticio(session: Session, analisis: any[], idCredito: string): Observable<any>{
+    let parameters = {
+      token : session.token,
+      analisis: analisis,
+      idCredito: idCredito,
+    };
+    const newSession = Object.assign({}, parameters);
+    return this.http.post<any>(this.urlPostAgregarAnalisisCrediticio, newSession, cudOptions);
+  }
+
+  postGetDineroCirculante(token: string): Observable<any>{
+    let parameters = {
+      token : token
+    };
+
+    const newSessio = Object.assign({},parameters);
+    return this.http.post<any[]>(this.urlPostGetDineroCirculante,newSessio,cudOptions);
+  }
+ postGetCuotasAtrasadas(token: string): Observable<any>{
+    let parameters = {
+      token : token
+    };
+
+    const newSessio = Object.assign({},parameters);
+    return this.http.post<any[]>(this.urlPostGetCuotasAtrasadas,newSessio,cudOptions);
+  }
+
+  postPlanDePagoNuevo(planDePago: any): Observable<any> {
+    let parameters = {
+      planes : planDePago
+    };
+
+    const newSessio = Object.assign({}, parameters);
+      return this.http.post<any[]>(this.urlPostPlanDePagoNuevo, newSessio, cudOptions);
+  }
+  postConsultarTiposDePlanDePago(): Observable<any> {
+    const newSessio = null;
+      return this.http.post<any[]>(this.urlPostConsultaPlanesDePago, newSessio, cudOptions);
+  }
+
+  postModificarTasaItem(itemsTasa: any): Observable<any> {
+    let parameters = {
+      items : itemsTasa
+    };
+    const newSessio = Object.assign({}, parameters);
+      return this.http.post<any[]>(this.urlPostModificarTasaItem, newSessio, cudOptions);
+  }
+  postInhabilitarTasaItem(itemsTasa: any): Observable<any> {
+    let parameters = {
+      items : itemsTasa
+    };
+    const newSessio = Object.assign({}, parameters);
+      return this.http.post<any[]>(this.urlPostInhabilitarTasaItem, newSessio, cudOptions);
+  }
+  postInhabilitarTodoElPlanDePago(plan: any[]): Observable<any> {
+    let parameters = {
+      planes : plan
+    };
+    const newSessio = Object.assign({}, parameters);
+      return this.http.post<any[]>(this.urlPostInhabilitarPlan, newSessio, cudOptions);
+  }
+
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 // import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -11,18 +11,28 @@ import { TableClientes } from './TableClientes';
 import * as moment from 'moment';
 import { EstadoCasa } from '../../../modelo/negocio/estado-casa';
 import { elementEnd } from '@angular/core/src/render3/instructions';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { FormClienteComponent } from '../../clientes/form-cliente/form-cliente.component';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import swal from 'sweetalert2';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
 declare let jsPDF;
 
 
 @Component({
   selector: 'app-crud-clientes',
   templateUrl: './crud-clientes.component.html',
+  styleUrls: ['./crud-clientes.component.css'],
 })
 export class CrudClientesComponent implements OnInit {
+  @ViewChild(FormClienteComponent) hijo: FormClienteComponent;
+
 
   message = '';
 
   characters: any[];
+  charactersUnNivel: any[];
   session = new Session();
   estadosCasa: EstadoCasa[];
   settings = {
@@ -37,11 +47,76 @@ export class CrudClientesComponent implements OnInit {
       custom: [
         {
           name: 'imprimirPDF',
-          title: 'PDF'
+          title: 'Pdf/'
+        },
+        {
+          name: 'cambioColor',
+          title: ' Color'
         }
       ],
     },
-    columns: {
+
+
+
+
+columns: {
+      fechaAlta: {
+        title: 'Alta',
+        width: '15%',
+        filter: true,
+        sort: true,
+        valuePrepareFunction: (cell, row) => { return moment(row.fechaAlta).format('DD-MM-YYYY') }
+      },
+      dni: {
+        title: 'Dni',
+        width: '10%',
+        filter: true,
+        sort: true,
+      },
+      nombreCompleto: {
+        title: 'Apellido y Nombre',
+        width: '20%',
+        filter: true,
+        sort: true,
+      },
+      localidad: {
+        title: 'Localidad',
+        width: '20%',
+        filter: true,
+        sort: true,
+      },
+      barrio: {
+        title: 'Barrio',
+        width: '15%',
+        filter: true,
+        sort: true,
+      },
+      calle: {
+        title: 'Calle',
+        width: '15%',
+        filter: true,
+        sort: true,
+      },
+      numeroCasa: {
+        title: 'Numero',
+        width: '5%',
+        filter: true,
+        sort: true,
+      },
+      color: {
+        title: 'Color',
+        width: '5%',
+        filter: true,
+        sort: true,
+        type: 'html',
+        valuePrepareFunction: (cell, row) => {
+          return this.getHtmlForCell(row.color);
+        }
+      }
+
+
+
+    /* columns: {
       'titular.dni': {
         title: 'Dni',
         width: '10%',
@@ -53,13 +128,13 @@ export class CrudClientesComponent implements OnInit {
         valuePrepareFunction: (cell, row) => { return row.titular.apellidos + ', ' + row.titular.nombres }
       },
       fechaAlta: {
-        title: 'Fecha de Alta',
+        title: 'Alta',
         width: '15%',
         valuePrepareFunction: (cell, row) => { return moment(row.fechaAlta).format('DD-MM-YYYY') }
       },
       localidad: {
         title: 'Localidad',
-        width: '10%',
+        width: '25%',
         valuePrepareFunction: (cell, row) => { return row.titular.domicilio.localidad }
       },
       calle: {
@@ -71,7 +146,16 @@ export class CrudClientesComponent implements OnInit {
         title: 'Numero',
         width: '10%',
         valuePrepareFunction: (cell, row) => { return row.titular.domicilio.numeroCasa }
-      }
+      } */
+
+
+
+
+
+
+
+
+
 
     },
     pager: {
@@ -83,23 +167,77 @@ export class CrudClientesComponent implements OnInit {
   constructor(
     private router: Router,
     private clientesService: ClientesService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private spinnerService: Ng4LoadingSpinnerService,
+    public ngxSmartModalService: NgxSmartModalService
   ) { }
 
   ngOnInit() {
     // let tokenizer = new TokenPost();
     this.session.token = this.loginService.getTokenDeSession();
+
+    this.spinnerService.show();
     this.clientesService.postGetClientes(this.session).subscribe((response: TableClientes[]) => {
       this.characters = response['clientes'];
+      this.spinnerService.hide();
+      this.cargarTabla(this.characters);
+      // console.log(this.characters);
+    } // , () => this.spinnerService.hide()
+    );
+
+
+  }
+
+
+  getHtmlForCell(value: string) {
+
+    // console.log(value);
+
+    if (value === 'VERDE') {
+        return `<p><font color="green">███</font></p>`;
+    } else {
+      if (value === 'AMARILLO') {
+        return `<p><font color="yellow">███</font></p>`;
+      } else {
+        return `<p><font color="red">███</font></p>`;
+      }
+    }
+  }
+
+
+
+  cargarTabla(resClientes: any[]){
+    this.charactersUnNivel = [];
+
+    resClientes.forEach(element => {
+          let fila = {
+            id: element._id,
+            dni: element.titular.dni,
+            nombreCompleto: element.titular.apellidos + ', ' +   element.titular.nombres,
+            fechaAlta: element.titular.fechaAlta,
+            localidad: element.titular.domicilio.localidad,
+            calle: element.titular.domicilio.calle,
+            numeroCasa: element.titular.domicilio.numeroCasa,
+            barrio: element.titular.domicilio.barrio,
+            fechaNacimiento: element.titular.fechaNacimiento,
+            estado: element.estado,
+            tel1: element.contactos[0].codigoPais + element.contactos[0].codigoArea + element.contactos[0].numeroCelular,
+            tel2: element.contactos[1].codigoPais + element.contactos[1].codigoArea + element.contactos[1].numeroCelular,
+            mail: element.contactos[2].email,
+            color: element.colorReferencia,
+          };
+          this.charactersUnNivel.push(fila);
+
     });
-//    console.log(this.characters);
+
+     // console.log(this.charactersUnNivel);
   }
 
   onCustom(event) {
     // alert(`Custom event '${event.action}' fired on row №: ${event.data.dni}`);
     let evento = (`${event.action}`);
     let dni = (`${event.data.dni}`);
-    let id = (`${event.data._id}`);
+    let id = (`${event.data.id}`);
     let apellidos = (`${event.data.apellidos}`);
     let nombres = (`${event.data.nombres}`);
 
@@ -117,6 +255,12 @@ export class CrudClientesComponent implements OnInit {
         this.imprimirPDF(id, dni);
         break;
       }
+      case 'cambioColor': {
+        this.cambiarColor(id,event.data);
+        break;
+      }
+
+
       default: {
         console.log('Invalid choice');
         break;
@@ -124,8 +268,97 @@ export class CrudClientesComponent implements OnInit {
     }
   }
 
-  nuevoCliente() {
-    this.router.navigate(['formcliente']);
+  async cambiarColor(idCliente: string, itemCliente: any) {
+
+      const {value: color} = await swal({
+        title: 'Select field validation',
+        input: 'select',
+        inputOptions: {
+          'ROJO': 'ROJO',
+          'AMARILLO': 'AMARILLO',
+          'VERDE': 'VERDE'
+        },
+        inputPlaceholder: 'Selecciona un color',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          return new Promise((resolve) => {
+            if (value === 'ROJO' || value === 'VERDE' || value === 'AMARILLO') {
+              resolve();
+            } else {
+              resolve('Debes seleccionar un color');
+            }
+          });
+        }
+      });
+
+      if (color) {
+        this.clientesService.postCambiarColorCliente(this.session, idCliente, color).subscribe( result => {
+          swal(
+            'Color Cambiado',
+            'Color de cliente cambiado correctamente a: ' + color,
+            'success'
+          );
+
+/*
+          let cli = this.charactersUnNivel.filter(cliente => cliente._id === idCliente)[0];
+          cli.color = color;
+ */
+
+
+
+        }, err => {
+          swal(
+            'Color no se pudo cambiar',
+            'No se pudo cambiar, intente mas tarde',
+            'error'
+          );
+        });
+      }
+  }
+
+
+
+
+
+
+
+  async nuevoCliente() {
+
+    // Ingrese dni
+
+    const {value: dniCliente} = await swal({
+      title: 'Dni del Nuevo Cliente',
+      input: 'text',
+      inputValue: '',
+      showCancelButton: true,
+      inputValidator: (value) => {
+        return !value && 'Debe ingresar un Dni valido!';
+      }
+    });
+
+    if (dniCliente) {
+      const clienteEncontrado = this.charactersUnNivel.filter(cliente => cliente.dni === dniCliente)[0];
+      if (clienteEncontrado) {
+        swal('Cliente con Dni ' + clienteEncontrado.dni + ' Ya Existe!');
+      } else {
+        // swal(`Cliente No Existe`);
+        // Sino esta en la lista recien dar el alta
+        let tipoDeAlta = 'NoExistePersona';
+        let persona = {
+          dni: dniCliente,
+        };
+        this.hijo.recibePametros(persona, tipoDeAlta);
+        this.ngxSmartModalService.getModal('clienteModal').open();
+      }
+    }
+  }
+
+  showCliente(event): void {
+
+    /* console.log('CLIENTE GUARDADO: ', event.cliente);
+    console.log('CLIENTE RESULT: ', event.result);
+     */
+    this.ngOnInit();
   }
 
   imprimirClientes() {
@@ -155,6 +388,7 @@ export class CrudClientesComponent implements OnInit {
   }
 
   imprimirPDF(id: string, dni: string) {
+
     const doc = new jsPDF();
 
     doc.setFontSize(18);
@@ -164,15 +398,15 @@ export class CrudClientesComponent implements OnInit {
 
     doc.text('Sur Creditos', 20, 15, 'center');
     doc.setFontSize(7);
-    doc.text('CREDITOS PARA COMERCIANTES', 6, 18);
+    doc.text('Creditos para comerciantes', 6, 18);
 
     doc.setFontSize(12);
     doc.setTextColor(255);
     doc.setFillColor(52, 152, 219)
-    doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
-    doc.setFillColor(1);
+    // doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
+    // doc.setFillColor(1);
 
-    doc.text('DATOS  DE CLIENTE', 72, 30, 'center');
+    // doc.text('DATOS  DE CLIENTE', 72, 30, 'center');
 
     doc.setFontSize(10);
     doc.setTextColor(0)

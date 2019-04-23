@@ -6,7 +6,7 @@
 
 <div class="form-row text-center">
     <div class="col-12">
-        <p class="bg-primary">Ver Crédito</p>
+        <p class="bg-secondary-gradient">VER CRÉDITO</p>
     </div>
 </div>
 
@@ -67,9 +67,9 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row text-right">
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+                                        <span class="btn btn btn-secondary" (click)="t.select('tab-selectbyid2')">Siguiente</span>
                                     </div>
                                 </div>
                             </ng-template>
@@ -147,12 +147,18 @@
                                 </div>
 
 
-                                <div class="form-row text-right">
+
+
+
+
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</span>
-                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</span>
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid1')">&nbsp;&nbsp;Atrás &nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid3')">Siguiente</span>
                                     </div>
                                 </div>
+
+
                             </ng-template>
                         </ngb-tab>
 
@@ -233,10 +239,10 @@
                                     <input type="text" formControlName="razonSocial" class="form-control form-control-sm" id="inputRazonSocial" placeholder="Juan Perez">
                                 </div>
 
-                                <div class="form-row text-right">
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</button>
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid4')">Siguiente</button>
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid2')">&nbsp;&nbsp;Atrás &nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid4')">Siguiente</span>
                                     </div>
                                 </div>
                             </ng-template>
@@ -249,19 +255,6 @@
 
                                 <!-- Campo 1: Documentacion presentada -->
                                 <div class="form-group">
-                                    <!-- <div class="form-check" *ngFor="let tag of documentosAPresentar; let i=index;">
-                                        <label class="form-check-label" for="tag{{tag.nombre}}">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            id="tag{{tag.value}}"
-                                            name="tagOptions"
-                                            (change)="changeCheckboxDocumentacion(i)"
-                                            [checked]="tag.requerido"
-                                            >
-                                            {{tag.nombre}}
-                                        </label>
-                                    </div> -->
 
                                     <div class="form-group col-md-8">
                                         <ul>
@@ -270,34 +263,12 @@
                                             </li>
                                         </ul>
                                     </div>
-
-
                                 </div>
-
-
-
 
 
                                 <h4>Referencias del Titular</h4>
                                 <!-- Campo 3: Combo Referencia Titular -->
                                 <div class="form-row text-left">
-
-
-                                    <!-- Campo 4: Checkbox Referencias TItular -->
-                                    <!--  <div class="form-group col-md-8">
-                                        <div class="form-check" *ngFor="let tag of referenciaTitulares; let i=index;">
-                                            <label class="form-check-label" for="tag{{tag.item}}">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                id="tag{{tag._id}}"
-                                                name="tagOptionsReferenciaTitular"
-                                                (change)="changeCheckboxReferenciaTitular(i)"
-                                                >
-                                                {{tag.item}}
-                                            </label>
-                                        </div>
-                                    </div> -->
 
                                     <div class="form-group col-md-8">
                                         <ul>
@@ -306,21 +277,6 @@
                                             </li>
                                         </ul>
                                     </div>
-
-                                    <!-- <div class="col-md-4">
-                                        <label class="badge badge-secondary">Calificación: </label>
-                                        <p class="badge badge-warning"> {{ calificacionTitular | percent}}</p>
-
-                                        <div class="form-group">
-                                            <label for="inputReferenciaTitular"></label>
-                                            <select formControlName="tipoReferenciaTitular" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputReferenciaTitular">
-                                          <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
-                                              {{eReferencia.nombre}}
-                                            </option>
-                                          </select>
-                                        </div>
-                                    </div> -->
-
 
 
                                     <div class="form-group col-md-4">
@@ -344,21 +300,6 @@
                                 <h4>Referencias del Comercio</h4>
 
                                 <div class="form-row text-left">
-                                    <!--     <div class="form-group col-md-8">
-                                        <div class="form-check" *ngFor="let tag of referenciaComercios; let i=index;">
-                                            <label class="form-check-label " for="tag{{tag.item}}">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                id="tag{{tag._id}}"
-                                                name="tagOptionsReferenciaComercios"
-                                                (change)="changeCheckboxReferenciaComercio(i)"
-                                                >
-                                                {{tag.item}}
-                                            </label>
-                                        </div>
-                                    </div> -->
-
                                     <div class="form-group col-md-8">
                                         <ul>
                                             <li *ngFor="let ref of referenciaComercios">
@@ -366,23 +307,6 @@
                                             </li>
                                         </ul>
                                     </div>
-
-
-                                    <!--             <div class="col-md-4">
-                                        <label class="badge badge-secondary">Calificación: </label>
-                                        <p class="badge badge-warning"> {{ calificacionComercio | percent}}</p> -->
-
-                                    <!-- Campo 6: Combo Referencia Comercio -->
-                                    <!--   <div class="form-group">
-                                            <label for="inputTipoReferenciaComercio"></label>
-                                            <select formControlName="tipoReferenciaComercio" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoReferenciaComercio">
-                                                <option *ngFor="let eReferencia of tiposReferencias" [value]="eReferencia._id">
-                                                        {{eReferencia.nombre}}
-                                                </option>
-                                            </select>
-                                        </div> -->
-                                    <!--
-                                    </div> -->
 
                                     <div class="form-group col-md-4">
                                         <label class="badge badge-secondary">Calificación</label>
@@ -417,10 +341,12 @@
                                 <!--- Buttons Block Solo envia si el form esta validado-->
                                 <div class="form-row text-right">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select( 'tab-selectbyid3')">Atrás</button>
-                                        <!-- <button type="reset " class="btn btn-outline-primary ">Cancelar</button> -->
-                                        <button type="button" href="#btnCancelarModal" class="btn btn-outline-primary" data-toggle="modal" disabled>Cancelar</button>
-                                        <button type="submit" [disabled]="!creditoForm.valid" class="btn btn-outline-primary">Guardar</button>
+                                        <!--  <button type="submit" [disabled]="!creditoForm.valid" class="btn btn-outline-primary">Guardar</button> -->
+
+                                        <button class="btn btn-secondary" (click)="t.select( 'tab-selectbyid3')">&nbsp; Atrás &nbsp;</button>&nbsp;&nbsp;
+                                        <!-- <button type="button" href="#btnCancelarModal" class="btn btn-secondary" data-toggle="modal">Cancelar</button>&nbsp;&nbsp; -->
+                                        <!-- <button type="submit" [disabled]="true" class="btn btn-secondary">Guardar</button> -->
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid5')">Siguiente</span>
 
                                         <!-- Boton oculto que permite abrir el modal de guardado OK -->
                                         <div id="oculto" style="display:none;">
@@ -433,19 +359,167 @@
                             </ng-template>
                         </ngb-tab>
 
+                        <!--TABSET PARA EL PASO 5 -->
+                        <ngb-tab id="tab-selectbyid5" title="5- Carga de Analisis Crediticio">
+                            <ng-template ngbTabContent>
+                                <h4>Informe Veraz</h4>
+
+                                <!-- Campo 1: TextArea Veraz-->
+                                <div class="form-row text-left">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <textarea class="col-md-12" formControlName="notaVeraz"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4>Informe BCRA</h4>
+
+                                <!-- Campo 2: TextArea BCRA-->
+                                <div class="form-row text-left">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <textarea class="col-md-12" formControlName="notaBcra"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4>Resultado Final</h4>
+                                <!-- Campo 3: Resultado Final-->
+                                <div class="form-row text-left">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <textarea class="col-md-12" formControlName="notaResultadoFinal"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-row text-center bg-gray-light">
+                                    <div class="col-12">
+                                        <button [disabled]="noPermitidoGuardar" class="btn btn-secondary" (click)="guardarAnalisis()">Guardar Analisis Crediticio</button>
+                                    </div>
+                                </div>
+                                <hr>
+
+
+                                <!--- Buttons Block Solo envia si el form esta validado-->
+                                <div class="form-row text-right">
+                                    <div class="col-12">
+                                        <!--  <button type="submit" [disabled]="!creditoForm.valid" class="btn btn-outline-primary">Guardar</button> -->
+
+                                        <button class="btn btn-secondary" (click)="t.select( 'tab-selectbyid4')">&nbsp; Atrás &nbsp;</button>&nbsp;&nbsp;
+                                        <!-- <button type="button" href="#btnCancelarModal" class="btn btn-secondary" data-toggle="modal">Cancelar</button>&nbsp;&nbsp; -->
+                                        <!-- <button  [disabled]="true" class="btn btn-secondary">Guardar</button> -->
+                                        <!--  <button class="btn btn-secondary" (click)="guardarAnalisis()">Guardar Analisis Crediticio</button> -->
+
+                                        <!-- Boton oculto que permite abrir el modal de guardado OK -->
+                                        <div id="oculto" style="display:none;">
+                                            <button type="button" href="#eventoGuardadoCorrecto" id="guardarOk" data-toggle="modal"></button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                        </ngb-tab>
+
+
+
+
                     </ngb-tabset>
                 </fieldset>
             </form>
+
+
+
+
+            <!--  DATOS ESTADISTICOS DE PAGOS -->
+            <p></p>
+            <hr>
+            <div class="row">
+                <hr>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-aqua"><i class="fa fa-percent" aria-hidden="true"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Cumplimiento</span>
+                            <span class="info-box-number">{{porcentajeDeCumplimiento | percent}}<small></small></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Promedio de Retraso</span>
+                            <span class="info-box-number"> {{promedioDiasDeRetraso | number}}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+
+                <!-- fix for small devices only -->
+                <div class="clearfix visible-sm-block"></div>
+
+
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-yellow"><i class="fa fa-exclamation" aria-hidden="true"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Dias de Retraso</span>
+                            <span class="info-box-number"> {{ totalDiasRetraso | number}}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+
+
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-history" aria-hidden="true"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Estado Del Credito</span>
+                            <span class="info-box-number">{{ estadoCredito }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+
+            </div>
+
+
+
+
+            <div class="form-row text-center bg-gray-light">
+                <div class="col-12">
+                    <!-- <span class="btn btn-warning" (click)="historialCliente()">Historial Cliente</span> -->
+                    <button [disabled]="cambiarEstadoCredito" class="btn btn-warning" (click)="aprobarCredito('APROBADO')">Aprobar Credito</button> &nbsp; &nbsp; &nbsp;
+                    <button [disabled]="cambiarEstadoCredito" class="btn btn-warning" (click)="aprobarCredito('RECHAZADO')">Rechazar Credito</button>&nbsp; &nbsp; &nbsp;
+                    <button [disabled]="cierreCredito" class="btn btn-warning" (click)="cerrarCredito()">Cerrar Credito</button>
+                </div>
+            </div>
+
+
+            <!--  DATOS ESTADISTICOS DE PAGOS -->
+
+
+
+
 
         </div>
         <div class="col-md-1">
         </div>
     </div>
 </div>
-
-
-<!-- <span class="btn btn-outline-primary" (click)="getReferenciaCliente()"> Ver Referencias</span> -->
-
-
-<!-- <button (click)="ngxSmartModalService.getModal( 'myModal').open() ">Open myModal</button>
-<button (click)="ngxSmartModalService.getModal( 'clienteModal').open() ">Open myModal</button> -->

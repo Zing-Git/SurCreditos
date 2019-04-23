@@ -1,22 +1,40 @@
 <div class="form-row text-center">
-    <div class="col-12">
-        <p class="bg-primary">Administración de Nóminas de Cobro para Cobradores</p>
+    <div class="col-12">        
+        <p class="bg-secondary-gradient">GESTION DE NÓMINAS DE COBRO PARA COBRADORES</p>
     </div>
 </div>
 
 
-
 <div class="container">
     <div class="form-row text-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <label for="inputCobrador">Cobrador:  </label>&nbsp;&nbsp;
-            <input #search class="search input-lg" type="text" placeholder="Buscar Cobrador..." (keyup.enter)="onSearch(search.value)">&nbsp;&nbsp;
-            <span class="btn btn-secondary" (click)="onSearch(search.value)">Buscar</span>
-            <br><br>
-            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="source" (custom)="onCustom($event)"></ng2-smart-table>
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            
+             
+             
+             <div class="form-row">          
+                <div class="container form-row form-group text-center col-md-12 bg-gray-light">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        
+                        <label for="inputCobrador">Cobrador:  </label>&nbsp;&nbsp; <br>
+                        <input #search class="search input-lg" type="text" placeholder="Buscar Cobrador..." id="inputCobrador" (keyup.enter)="onSearch(search.value)">&nbsp;&nbsp;&nbsp;&nbsp;
+                        
+                        <span class="btn btn-outline-primary" (click)="onSearch(search.value)">Buscar</span>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>     
+            </div>
+
+            <div class="form-row">
+                <br><br>
+                <ng2-smart-table [settings]="settings" class="table table-hover" [source]="source" (custom)="onCustom($event)"></ng2-smart-table>
+            </div>
+
+        
+        
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
         </div>
     </div>
 </div>

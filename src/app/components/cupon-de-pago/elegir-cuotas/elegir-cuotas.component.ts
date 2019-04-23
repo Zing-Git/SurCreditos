@@ -47,7 +47,7 @@ export class ElegirCuotasComponent implements OnInit {
           row.legajoPrefijo + " - " + row.legajo
       },
       titular: {
-        title: 'Nombre titular',
+        title: 'Titular',
         width: '15%',
         filter: false,
         valuePrepareFunction: (cell, row) =>
@@ -55,8 +55,8 @@ export class ElegirCuotasComponent implements OnInit {
       },
 
       totalAPagar: {
-        title: 'Monto a Pagar',
-        width: '30%',
+        title: 'Total a Pagar',
+        width: '20%',
         filter: false,
         valuePrepareFunction: value => {
           return value === 'totalAPagar'
@@ -68,7 +68,7 @@ export class ElegirCuotasComponent implements OnInit {
         }
       },
       tipoPlan: {
-        title: 'Tipo Plan',
+        title: 'Plan',
         width: '10%',
         filter: false
       }

@@ -1,0 +1,156 @@
+<div class="py-5 text-center">
+    <div class="container">
+        <div class="row" style="">
+            <div class="mx-auto col-lg-12 col-10" style="">
+                <h2>Nuevo Plan de Pago</h2>
+                <p class="mb-3">Un nuevo plan de pago permite que los vendedores puedan seleccionarlo para ofrecer una alternativa de credito al cliente, con tasa y plazos diferentes</p>
+                <form class="text-left">
+                    <div class="form-group"> <label for="form16" contenteditable="true">Tipo de Plan</label> <input type="text" [(ngModel)]="plan" [ngModelOptions]="{standalone: true}" class="form-control" id="form16" placeholder="Nombre del plan, ej. Mensual"> </div>
+
+
+                    <!-- Campo 2: Tipo de Plan -->
+                    <!-- <div class="form-group col-md-6">
+                        <label for="inputTipoDePlan">* Tipo de Plan</label>
+                        <select formControlName="planesDePago" (change)="onChangeTipoPlanes()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoDePlan">
+                        <option *ngFor="let eTipoDePlan of planesDePago">
+                          {{eTipoDePlan.nombre}}
+                        </option>
+                  </select>
+                    </div> -->
+
+
+
+                    <div class="form-group"> <label for="form17">Cantidad de días</label> <input type="number" [(ngModel)]="dias" [ngModelOptions]="{standalone: true}" class="form-control" id="form17" placeholder="30" required="required"> </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12"> <label for="form19" class="text-center">Cantidad de cuotas admitidas del
+                plan, cada cuota corresponde a la cantidad de dias especificados anteriormente:</label>
+                            <div class="row">
+                                <div class="col-md-12" style="">
+                                    <div class="row">
+                                        <div class="col-md-6 text-center bg-secondary text-primary"><label for="form18" class="text-white">Cant. de cuotas admitidas</label></div>
+                                        <div class="col-md-6 bg-secondary text-primary text-center" style=""><label for="form18" class="text-white">Interés (en decimales, ej. 0,35)</label></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Cuotas</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="cuota1" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Interés</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="tasa1" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Cuotas</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="cuota2" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Interés</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="tasa2" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Cuotas</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="cuota3" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Interés</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="tasa3" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Cuotas</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="cuota4" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Interés</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="tasa4" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Cuotas</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="cuota5" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Interés</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="tasa5" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Cuotas</label>
+                                <div class="col-10"><input type="number" [(ngModel)]="cuota6" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row"><label class="col-2">Interés</label>
+                                <div class="col-10">
+                                    <input type="number" [(ngModel)]="tasa6" [ngModelOptions]="{standalone: true}" class="form-control" id="form19" style="opacity: 0.5; "></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-6 ">
+                            <div class="form-group row "><label class="col-2 ">Cuotas</label>
+                                <div class="col-10 "><input type="number " [(ngModel)]="cuota7" [ngModelOptions]="{standalone: true}" class="form-control " id="form19 " style="opacity: 0.5; "></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group row "><label class="col-2 ">Interés</label>
+                                <div class="col-10 "><input type="number" [(ngModel)]="tasa7" [ngModelOptions]="{standalone: true}" class="form-control " id="form19 " style="opacity: 0.5; "></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-6 ">
+                            <div class="form-group row "><label class="col-2 ">Cuotas</label>
+                                <div class="col-10 "><input type="number" [(ngModel)]="cuota8" [ngModelOptions]="{standalone: true}" class="form-control " id="form19 " style="opacity: 0.5; "></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group row "><label class="col-2 ">Interés</label>
+                                <div class="col-10 "><input type="number " [(ngModel)]="tasa8" [ngModelOptions]="{standalone: true}" class="form-control " id="form19 " style="opacity: 0.5; "></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-6 ">
+                            <div class="form-group row "><label class="col-2 ">Cuotas</label>
+                                <div class="col-10 "><input type="number " [(ngModel)]="cuota9" [ngModelOptions]="{standalone: true}" class="form-control " id="form19 " style="opacity: 0.5; "></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group row "><label class="col-2 ">Interés</label>
+                                <div class="col-10 "><input type="number " [(ngModel)]="tasa9" [ngModelOptions]="{standalone: true}" class="form-control " id="form19 " style="opacity: 0.5; "></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" col-md-12>
+                        <div class="col-md-6 text-center "><button class="btn btn-secondary " (click)="volver()">Volver</button></div>
+                        <div class="col-md-6 text-center "><button class="btn btn-secondary " (click)="lanzarGuardar()">Guardar</button></div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -54,14 +54,28 @@ import { CuponDePagoComponent } from './components/cupon-de-pago/cupon-de-pago.c
 import { SeleccionDeClienteComponent } from './components/cupon-de-pago/seleccion-de-cliente/seleccion-de-cliente.component';
 import { ElegirCuotasComponent } from './components/cupon-de-pago/elegir-cuotas/elegir-cuotas.component';
 import { ModalCuotasCobranzaComponent } from './components/cupon-de-pago/modal-cuotas-cobranza/modal-cuotas-cobranza.component';
-import { ModalCuotasCobroComponent } from './components/cupon-de-pago/modal-cuotas-cobro/modal-cuotas-cobro.component';
 import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/rendicion-de-nomina.component';
 import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egreso.component';
 import { OpertativosComponent } from './components/reportes/opertativos/opertativos.component';
 import { FinancierosComponent } from './components/reportes/financieros/financieros.component';
-import { CajaComponent } from './components/reportes/caja/caja.component';
+// import { CajaComponent } from './components/reportes/caja/caja.component';
 import { AbrirCajaComponent } from './components/caja/abrir-caja/abrir-caja.component';
 import { CerrarCajaComponent } from './components/caja/cerrar-caja/cerrar-caja.component';
+import { ReporteCreditos } from './components/reportes/reporteOperativos/reporteCreditos/reporteCreditos.component';
+import { ReporteClientes } from './components/reportes/reporteOperativos/reporteClientes/reporteClientes.component';
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
+import { ReportePlanes } from './components/reportes/reporteOperativos/reportePlanes/reportePlanes.component';
+import { ConfiguracionesComponent } from './components/configuraciones/configuraciones.component';
+import { RendicionesPendientesComponent } from './components/rendiciones-pendientes/rendiciones-pendientes.component';
+import { CreditosHistorialComponent } from './components/creditos-historial/creditos-historial.component';
+import { ReporteCaja } from './components/reportes/caja/reporteCaja/reporteCaja.component';
+import { ModelCajaComponent } from './components/reportes/caja/reporteCaja/model-caja/model-caja.component';
+import { ViewClienteComponent } from './components/clientes/view-cliente/view-cliente.component';
+import { ReportePlanesAtrasadosComponent } from './components/reportes/reporteOperativos/reporte-planes-atrasados/reporte-planes-atrasados.component';
+import { PlanesdepagoComponent } from './components/configuraciones/planesdepago/planesdepago.component';
+import { ModificarPlanComponent } from './components/configuraciones/planesdepago/modificar-plan/modificar-plan.component';
+
+
 
 @NgModule({
   declarations: [
@@ -93,16 +107,28 @@ import { CerrarCajaComponent } from './components/caja/cerrar-caja/cerrar-caja.c
     SeleccionDeClienteComponent,
     ElegirCuotasComponent,
     ModalCuotasCobranzaComponent,
-    ModalCuotasCobroComponent,
     RendicionDeNominaComponent,
     IngresoEgresoComponent,
     OpertativosComponent,
     FinancierosComponent,
-    CajaComponent,
+    // CajaComponent,
     AbrirCajaComponent,
-    CerrarCajaComponent
+    CerrarCajaComponent,
+    ReporteCreditos,
+    ReporteClientes,
+    ReportePlanes,
+    ConfiguracionesComponent,
+    RendicionesPendientesComponent,
+    CreditosHistorialComponent,
+    ReporteCaja,
+    ModelCajaComponent,
+    ViewClienteComponent,
+    ReportePlanesAtrasadosComponent,
+    PlanesdepagoComponent,
+    ModificarPlanComponent
   ],
   imports: [
+
     BrowserModule,
     HttpClientModule,
     DataTablesModule,
@@ -114,6 +140,7 @@ import { CerrarCajaComponent } from './components/caja/cerrar-caja/cerrar-caja.c
     NgbModule.forRoot(),
     Ng2SmartTableModule,
     NgxSmartModalModule.forRoot(),
+    Ng4LoadingSpinnerModule.forRoot()
   ],
   providers: [
     LoginGuard,

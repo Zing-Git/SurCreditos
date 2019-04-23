@@ -1,0 +1,36 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+        <p class="bg-secondary-gradient">REPORTE DE PLANES QUE FINALIZAN EN EL MES</p>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <div class="form-row">
+                <!-- Campo 1:  Dni Garante-->
+                <div class="form-group col-md-3" *ngIf="fechaActual">
+                    <label>Mes Actual: {{mesActual}}</label>
+                </div>
+
+                <div class="col-md-3">
+                    <span class="btn btn-outline-primary" (click)="getData()">Cargar datos</span>
+                </div>
+                <div class="col-md-3">
+                    <span class="btn btn-outline-primary" (click)="generarXls()" *ngIf="bandera">Generar Excel</span>
+                </div>
+
+                <div class="line-separator"></div>
+                <div class="col-md-12">
+                    <ng2-smart-table [settings]="settings" class="table table-hover" [source]="planViewModel" #fplanesTableForm></ng2-smart-table>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>

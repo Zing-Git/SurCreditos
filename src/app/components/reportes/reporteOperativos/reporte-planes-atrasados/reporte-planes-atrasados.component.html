@@ -1,0 +1,51 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+        <p class="bg-secondary-gradient">REPORTE DE PLANES ATRASADOS</p>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <div class="form-row">
+                <!-- Campo 1:  Dni Garante
+              <div class="form-group col-md-3" *ngIf="fechaActual">
+                  <label>Mes Actual: {{mesActual}}</label>
+              </div>-->
+
+                <div class="col-md-6">
+
+
+                    <div class=" form-group " *ngIf="bandera">
+                        <span style="margin:5px;" class="btn btn-outline-primary" (click)="getData()">Buscar</span>
+
+                        <span style="margin:5px;" class="btn btn-outline-primary" (click)="generarXls()" *ngIf="bandera">Generar Excel</span>
+                    </div>
+                </div>
+
+                <div class="col-md-6" style="text-align: center;" *ngIf="creditos">
+                    <p style="text-align: center;" class="bg-primary" text-center>Condición de Clientes</p>
+                    <div class="form-group" *ngIf="creditos">
+                        <label> Cantidad de Creditos: {{creditos.cantidadCreditos}}</label>
+                    </div>
+
+                    <p>Cantidad cuotas atrasadas: {{creditos.cantidadCuotasRetrasadas}}<br> Total cuotas Impagas: {{totalCredito}}<br>
+                    </p>
+
+                </div>
+                <div class="line-separator"></div>
+
+                <div class="line-separator"></div>
+                <div class="col-md-12" *ngIf='planesXls'>
+                    <ng2-smart-table [settings]="settings" class="table table-hover" [source]="planesXls" #fplanesTableForm></ng2-smart-table>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>

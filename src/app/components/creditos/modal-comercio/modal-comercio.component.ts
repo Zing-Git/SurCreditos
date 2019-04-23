@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ClientesService } from '../../../modules/servicios/clientes/clientes.service';
 import { LoginService } from '../../../modules/servicios/login/login.service';
@@ -6,6 +6,7 @@ import { UtilidadesService } from '../../../modules/servicios/utiles/utilidades.
 import { Session } from '../../../modelo/util/session';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { UsuariosService } from '../../../modules/servicios/usuarios/usuarios.service';
+import { NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-modal-comercio',
@@ -24,6 +25,9 @@ estadosCasa: any[];
 actividades: any[];
 idCliente = '0';
 idDomicilio =  '0';
+defaultProvincia: any;
+private ngbTabset: NgbTabset;
+mensajeGuardar: String = '';
 
 constructor(private fb: FormBuilder,
   private clientesService: ClientesService,
@@ -36,6 +40,7 @@ constructor(private fb: FormBuilder,
   ngOnInit() {
     this.session = new Session();
     this.session.token = this.loginService.getTokenDeSession();
+
 
     this.comercioForm = this.fb.group({
       cuit: new FormControl('', [Validators.required]),
@@ -76,6 +81,12 @@ constructor(private fb: FormBuilder,
       this.provincias = result['respuesta'].provincias;
       this.estadosCasa = result['respuesta'].estadosCasa;
       this.actividades = result['respuesta'].rubrosComerciales;
+
+      // this.defaultProvincia = this.provincias[0];
+      // console.log(this.actividades);
+      // this.actividad.setValue(this.actividades[0].DESC_ACTIVIDAD_F883);
+
+      // this.onChange();
     });
 
   }
@@ -113,11 +124,16 @@ constructor(private fb: FormBuilder,
   onChange() {
     let prov = this.provincias.find(x => x.provincia === this.comercioForm.get('provincia').value);
     this.localidades = prov.localidad;
+
+    console.log('provincias...');
   }
 
   onFormSubmit() {
     this.ngxSmartModalService.close('comercioModal');
+
   }
+
+
 
 
  // COMUNICACION CON EL COMPONENTE PADRE FormCreditoComponent
@@ -129,27 +145,91 @@ constructor(private fb: FormBuilder,
       // console.log('LLego de formulario padre: ', personaC);
       this.idCliente = comercioC._id;
       this.cuit.setValue(comercioC.cuit);
+      console.log('Recibiendo parametros como cuit de padre modal');
     }
   }
 
 
 
-  guardar(event) {
-    let comercioC = this.capturarValoresDeFormulario();
+  guardar() {
+
+
+    try {
+      let comercioC = this.capturarValoresDeFormulario();
+      console.log(comercioC);
+
+      // tslint:disable-next-line:max-line-length
+      if (this.actividad.value === null || this.actividad.value === undefined || this.provincia.value === null || this.localidad.value === null || this.estadoCasa.value === null || this.barrio.value === null || this.calle.value === null || this.numeroCasa === null) {
+        this.mensajeGuardar = 'Falta seleccionar algún elemento, verifique la Actividad, Provincia, Localidad, Vivienda y otros datos obligatorios';
+      }
+      console.log(this.provincia.value);
+      console.log(this.localidad.value);
+      console.log(this.barrio.value);
+      console.log(this.calle.value);
+      console.log(this.estadoCasa.value);
+      console.log(this.actividad.value);
+
+      this.clientesService.postGuardarComercio(comercioC).subscribe( result => {
+          if (result) {
+            this.clientesService.postGetComercioPorCuit(this.session, this.cuit.value).subscribe ( res => {
+              let comercioEncontrado = res['comercio'][0];
+              // console.log('Comercio Guardado y Encontrado: ', comercioEncontrado);
+              this.pasameDatosDelComercio.emit({comercio: comercioEncontrado});
+              alert('El Comercio se guardo con éxito');
+              this.ngxSmartModalService.close('comercioModal');
+            });
+          }
+      }, err => {
+          alert('Hubo un problema al Guardar el Comercio');
+      });
+
+      this.localidades = null;
+
+    } catch {
+      this.mensajeGuardar = 'Falta seleccionar algun elemento, verifique la Actividad, Provincia, Localidad y Vivienda';
+    }
+
+
     // console.log('A guardar: ', JSON.stringify(comercioC));
 
-    this.clientesService.postGuardarComercio(comercioC).subscribe( result => {
-      if (result) {
-        this.clientesService.postGetComercioPorCuit(this.session, this.cuit.value).subscribe ( res => {
-          let comercioEncontrado = res['comercio'][0];
-          // console.log('Comercio Guardado y Encontrado: ', comercioEncontrado);
-          this.pasameDatosDelComercio.emit({comercio: comercioEncontrado});
-          alert('El Comercio se guardo con éxito');
-          this.ngxSmartModalService.close('comercioModal');
-        });
-      }
-    }, err => {
-      alert('Hubo un problema al Guardar el Comercio');
-    });
+
+
+
   }
+
+  alCerrar()  {
+    console.log('CERRADO EL POPUP...');
+    // this.comercioForm.reset();
+    this.localidades = null;
+
+
+  }
+  alAbrir() {
+    console.log('abriendo EL POPUP...');
+    // this.ngOnInit();
+    // this.ngbTabset.select('tab-selectbyid1');
+
+
+  }
+  onTabChange() {
+    console.log('cambia TAB');
+    console.log(this.provincia.value);
+    console.log(this.localidad.value);
+    console.log(this.actividad.value);
+    // this.provincia.setValue(this.provincia.provincia);
+    // this.provincia.setValue(this.provincia.value);
+    // this.provincia.setValue(this.provincias[4].provincia);
+
+    /* if (this.provincia.value !== null ) {
+      this.provincia.setValue(this.provincia.value);
+
+
+    } else {
+
+      this.provincia.setValue(undefined);
+    } */
+
+  }
+
+
 }

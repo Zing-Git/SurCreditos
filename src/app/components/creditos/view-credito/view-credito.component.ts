@@ -20,6 +20,8 @@ import { UtilidadesService } from '../../../modules/servicios/utiles/utilidades.
 import { TableCreditos } from '../crud-creditos/TableCreditos';
 import { NewSession } from '../../../modelo/util/newSession';
 import * as moment from 'moment/moment';
+import swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-credito',
@@ -91,6 +93,17 @@ export class ViewCreditoComponent implements OnInit {
   thisCreditos: TableCreditos[];
   //creditos : TableCreditos;
   creditos: any;
+
+  promedioDiasDeRetraso: any;
+  porcentajeDeCumplimiento: any;
+  cuotasRetrasadas: any;
+  totalDiasRetraso: any;
+
+  estadoCredito: string;
+  noPermitidoGuardar = true;
+  cambiarEstadoCredito = true;
+  cierreCredito = true;
+
   settings = {
 
     actions: {
@@ -116,11 +129,11 @@ export class ViewCreditoComponent implements OnInit {
           return value === 'montoCapital' ? value : Intl.NumberFormat('es-AR', {style: 'currency', currency: 'ARS'}).format(value);
         }
       },
-      vencimiento: {
+      fechaVencimiento: {
         title: 'Vencimiento',
         width: '15%',
         filter: false,
-        valuePrepareFunction: (cell, row) => { return moment(row.vencimiento).format('DD-MM-YYYY') }
+        valuePrepareFunction: (cell, row) => { return moment(row.fechaVencimiento).format('DD-MM-YYYY') }
       },
 
       montoInteres: {
@@ -146,7 +159,20 @@ export class ViewCreditoComponent implements OnInit {
         valuePrepareFunction: (value) => {
           return value === 'MontoTotalCuota' ? value : Intl.NumberFormat('es-AR', {style: 'currency', currency: 'ARS'}).format(value);
         }
-      }
+      },
+      cuotaPagada: {
+        title: 'Pagado',
+        width: '10%',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          return (value === true) ? 'Si' : 'No';
+        }
+      },
+      diasRetraso: {
+        title: 'Retraso',
+        width: '5%',
+        filter: false,
+      },
     },
     pager: {
       display: true,
@@ -156,6 +182,7 @@ export class ViewCreditoComponent implements OnInit {
 
 
   constructor(private router: ActivatedRoute,
+    private router2: Router,
     private fb: FormBuilder,
     private creditosService: CreditosService,
     private usuariosService: UsuariosService,
@@ -170,11 +197,15 @@ export class ViewCreditoComponent implements OnInit {
 
 
     this.creditos =  this.creditosService.Storage;
+    this.estadoCredito = this.creditos.estado.nombre;
 
     console.log('Var STORAGE: ', this.creditosService.Storage);
     this.characters = this.creditos.planPagos.cuotas;
 
-    this.session.token = this.loginService.getTokenDeSession();
+    this.calculosEstadisticos(this.characters);
+
+    this.session = this.loginService.getDatosDeSession();
+
     this.router.params.subscribe(params => {
       this.idDni = params['id'];
       this.evento = params['evento'];
@@ -186,6 +217,174 @@ export class ViewCreditoComponent implements OnInit {
     });
     this.cargarformControls();
     this.cargarFormConDatos();
+  }
+
+  guardarAnalisis() {
+
+    let analisis = [
+      {
+        item: 'Informe Veraz',
+        comentario: this.notaVeraz.value,
+        resultado: true
+      },
+      {
+        item: 'Informe BCRA',
+        comentario: this.notaBcra.value,
+        resultado: true
+      },
+      {
+        item: 'Resultado Final',
+        comentario: this.notaResultadoFinal.value,
+        resultado: true
+      }
+    ];
+    this.creditosService.postAgregarAnalisisCrediticio(this.session, analisis, this.creditos._id).subscribe( result => {
+        swal('Perfecto', 'Se guardaron tus notas de Análisis Crediticio', 'success');
+
+        // tslint:disable-next-line:max-line-length
+        if (this.creditos.estado.nombre === 'PENDIENTE DE REVISION' && (this.session.rolNombre === 'ADMINISTRADOR' || this.session.rolNombre === 'ROOT')) {
+          this.cambiarEstadoCredito = false;
+          this.cierreCredito = false;
+          this.noPermitidoGuardar = true;
+        }
+
+    }, err => {
+        swal('No se puso guardar las notas del analisis del credito', 'Intente nuevamente mas tarde', 'error');
+    });
+
+
+
+  }
+
+  aprobarCredito(nuevoEstado : string) {
+    // let nuevoEstado = 'APROBADO';
+    let idNuevoEstado: string;
+
+    console.log(this.creditos);
+
+    this.clientesService.postGetCombos().subscribe(result => {
+      let estados = result["respuesta"].estadosCredito;
+
+      estados.forEach(element => {
+        if (nuevoEstado === element.nombre) {
+          idNuevoEstado = element._id;
+        }
+      });
+      // tslint:disable-next-line:max-line-length
+      if (this.creditos.estado.nombre === "PENDIENTE DE REVISION" || this.creditos.estado.nombre === "PENDIENTE DE APROBACION" ) {
+          let nuevoCredito = {
+            idCredito: this.creditos._id,
+            estado: idNuevoEstado, // '5b72b281708d0830d07f3562'        // element.estado._id
+            nombre_nuevo_estado: nuevoEstado, // APROBADO RECHASADO OTRO,
+            cliente: this.creditos.cliente._id,
+            monto: this.creditos.montoPedido,
+            nombre_estado_actual: this.creditos.estado.nombre,
+            token: this.session.token
+          };
+          console.log(nuevoCredito);
+          this.estadoCredito = nuevoEstado;
+
+
+          this.creditosService.postCambiarEstadoCredito(nuevoCredito).subscribe(result => {
+               swal('Perfecto', 'Se actualizó el estado de Credito y se guardó las notas de Análisis Crediticio', 'success');
+          }, err => {
+               swal('No se puso cambiar el estado del credito', 'Intente nuevamente mas tarde', 'error');
+          });
+      } else {
+          if (this.creditos.estado.nombre === "APROBADO"){
+            swal('El credito ya está aprobado', 'No es posible volver a repetir la operación', 'error');
+          } else {
+            swal('No se pudo cambiar el estado del credito', 'Solo los creditos pendientes de aprobacion pueden ser aprobados', 'error');
+          }
+      }
+    });
+  }
+
+
+
+
+  calculosEstadisticos(cuotas: any) {
+
+
+    let totalCuotas = cuotas.length;
+    let cuotasPagadas = 0;
+    this.cuotasRetrasadas = 0;
+    this.totalDiasRetraso = 0;
+
+    cuotas.forEach(element => {
+      if (element.cuotaPagada) {
+        cuotasPagadas = cuotasPagadas + 1;
+      }
+      if (element.diasRetraso > 0) {
+        this.cuotasRetrasadas = this.cuotasRetrasadas + 1;
+        this.totalDiasRetraso =  this.totalDiasRetraso + element.diasRetraso;
+      }
+    });
+
+    this.promedioDiasDeRetraso = this.totalDiasRetraso / this.cuotasRetrasadas;
+    this.porcentajeDeCumplimiento = (cuotasPagadas / totalCuotas);
+
+
+
+  }
+  cerrarCredito() {
+    swal({
+      title: 'Estas a punto de cerrar el credito!! ',
+      text: "Esta operacion es Irreversible!, Al cerrar el credito no podrá cobrar ninguna cuota de este credito, estas seguro?",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Cerrar Credito!'
+    }).then(async (result) => {
+      if (result.value) {
+        const {value: text} = await swal({
+          input: 'textarea',
+          inputPlaceholder: 'Ingrese un comentario sobre el motivo del cierre del credito...',
+          showCancelButton: true
+        });
+        if (text) {
+
+          this.creditosService.postCerrarCredito(this.session, this.creditos._id, text).subscribe (result => {
+            if (result) {
+              swal(
+                'Credito Cerrado!',
+                'El credito fue cerrado.',
+                'success'
+              );
+              this.router2.navigate(['crudcreditosadmintodos']);
+            }
+          }, err => {
+            if (err.status === 401 || err.status === 403) {
+              swal('Usuario no autorizado', 'Comuniquele al administrador para cerrar el credito, solo él puede hacer esta operación', 'error');
+            } else {
+
+           /*    console.log(err.status);
+              console.log(err); */
+              swal(
+                'No se pudo cerrar el credito!',
+                'Hubo un error, intente mas tarde',
+                'error'
+              );
+            }
+
+
+
+
+
+
+          });
+
+        } else {
+          swal(
+            'El Credito no fue cerrado',
+            'Intente nuevamente, pero debe agregar un comentario del cierre del credito',
+            'info'
+          );
+        }
+      }
+    });
+
   }
 
   onFormSubmit() {
@@ -215,6 +414,10 @@ export class ViewCreditoComponent implements OnInit {
   get tipoReferenciaComercio() { return this.creditoForm.get('tipoReferenciaComercio'); }
   get itemsReferenciasComercio() { return this.creditoForm.get('itemsReferenciasComercio'); }
   get notaComentarioComercio() { return this.creditoForm.get('notaComentarioComercio'); }
+
+  get notaVeraz() { return this.creditoForm.get('notaVeraz'); }
+  get notaBcra() { return this.creditoForm.get('notaBcra'); }
+  get notaResultadoFinal() { return this.creditoForm.get('notaResultadoFinal'); }
 
 
   cargarformControls() {
@@ -248,7 +451,9 @@ export class ViewCreditoComponent implements OnInit {
           numeroLegajo: new FormControl('', [Validators.required]),
           prefijoLegajo: new FormControl(''),
 
-
+          notaVeraz: new FormControl(''),
+          notaBcra:  new FormControl(''),
+          notaResultadoFinal:  new FormControl(''),
       });
 
 
@@ -281,9 +486,16 @@ export class ViewCreditoComponent implements OnInit {
       this.itemsReferenciasTitular.disable();
       this.notaComentarioTitular.disable();
       this.notaComentarioComercio.disable();
+
+
     }
   }
 
+  historialCliente(){
+
+
+
+  }
   cargarFormConDatos(){
 
     this.dni.setValue(this.creditos.cliente.titular.dni);
@@ -296,32 +508,79 @@ export class ViewCreditoComponent implements OnInit {
     this.tipoDePlan.setValue(this.creditos.planPagos.tipoPlan.nombre);
     this.plan.setValue(this.creditos.planPagos.CantidadCuotas);
 
+    // tslint:disable-next-line:max-line-length
+    if ((this.creditos.hasOwnProperty('comercio') && this.creditos.comercio != null)) {
+      this.cuit.setValue(this.creditos.comercio.cuit);
+      this.razonSocial.setValue(this.creditos.comercio.razonSocial);
+      this.tiposReferencias = this.creditos.comercio.referencias;
 
-    this.dniGarante.setValue(this.creditos.garante.titular.dni);
-    this.apellidosGarante.setValue(this.creditos.garante.titular.apellidos);
-    this.nombresGarante.setValue(this.creditos.garante.titular.nombres);
-    this.fechaNacimientoGarante.setValue(this.utilidadesService.formateaDateAAAAMMDD(this.creditos.garante.titular.fechaNacimiento));
-    this.cuit.setValue(this.creditos.comercio.cuit);
-    this.razonSocial.setValue(this.creditos.comercio.razonSocial);
+      let arrayComercios = this.creditos.comercio.referencias;
+      this.referenciaComercios = arrayComercios[arrayComercios.length - 1].itemsReferencia;
+      this.calificacionReferenciaComercio = arrayComercios[arrayComercios.length - 1].tipoReferencia.nombre;
+      this.notaComentarioComercio.setValue(arrayComercios[arrayComercios.length - 1].comentario);
+
+    } else {
+      this.cuit.setValue('');
+      this.razonSocial.setValue('');
+      this.tiposReferencias = [];
+    }
+
+    if ((this.creditos.hasOwnProperty('garante') && this.creditos.garante != null)) {
+      this.dniGarante.setValue(this.creditos.garante.titular.dni);
+      this.apellidosGarante.setValue(this.creditos.garante.titular.apellidos);
+      this.nombresGarante.setValue(this.creditos.garante.titular.nombres);
+      this.fechaNacimientoGarante.setValue(this.utilidadesService.formateaDateAAAAMMDD(this.creditos.garante.titular.fechaNacimiento));
+    } else {
+      this.dniGarante.setValue(0);
+      this.apellidosGarante.setValue('');
+      this.nombresGarante.setValue('');
+      this.fechaNacimientoGarante.setValue('');
+    }
+
+
+
     this.cobroDomicilio.setValue(this.creditos.tieneCobranzaADomicilio);
-
-
     this.numeroLegajo.setValue(this.creditos.legajo);
     this.prefijoLegajo.setValue(this.creditos.legajo_prefijo);
 
-
     this.documentosAPresentar = this.creditos.documentos;
-    this.tiposReferencias = this.creditos.comercio.referencias;
+
 
     let arrayClientes = this.creditos.cliente.referencias;
     this.referenciaTitulares = arrayClientes[arrayClientes.length - 1].itemsReferencia;
     this.calificacionReferencia = arrayClientes[arrayClientes.length - 1].tipoReferencia.nombre;
     this.notaComentarioTitular.setValue(arrayClientes[arrayClientes.length - 1].comentario);
 
-    let arrayComercios = this.creditos.comercio.referencias;
-    this.referenciaComercios = arrayComercios[arrayComercios.length - 1].itemsReferencia;
-    this.calificacionReferenciaComercio = arrayComercios[arrayComercios.length - 1].tipoReferencia.nombre;
-    this.notaComentarioComercio.setValue(arrayComercios[arrayComercios.length - 1].comentario);
+    // Carga de Analisis Crediticio
+    if (this.creditos.analisisCredito.length > 0) {
+      this.creditos.analisisCredito.forEach(element => {
+        if (element.item === 'Informe Veraz') {
+          this.notaVeraz.setValue(element.comentario);
+        }
+        if (element.item === 'Informe BCRA') {
+          this.notaBcra.setValue(element.comentario);
+        }
+        if (element.item === 'Resultado Final') {
+          this.notaResultadoFinal.setValue(element.comentario);
+        }
+      });
+
+      // tslint:disable-next-line:max-line-length
+      if (this.creditos.estado.nombre === 'PENDIENTE DE REVISION' && (this.session.rolNombre === 'ADMINISTRADOR' || this.session.rolNombre === 'ROOT')) {
+        this.cambiarEstadoCredito = false;
+        this.cierreCredito = false;
+      }
+
+
+    } else {
+      if (this.session.rolNombre === 'ADMINISTRADOR' || this.session.rolNombre === 'ROOT') {
+        this.noPermitidoGuardar = false;
+      }
+
+    }
+
+
+
 
   }
 

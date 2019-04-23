@@ -1,0 +1,70 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+        <p class="bg-secondary-gradient">REPORTE DE CREDITOS</p>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <form class="" [formGroup]="fechasForm">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group col-md-10">
+                            <label for="inputFechaInicio">Fecha Inicio</label>
+                            <input type="date" formControlName="fechaInicio" class="form-control form-control-sm" id="inputFechaInicio" placeholder="dd/MM/AAAA">
+                        </div>
+                        <div class="form-group col-md-10">
+                            <label for="inputFechaFin">Fecha Fin</label>
+                            <input type="date" formControlName="fechaFin" class="form-control form-control-sm" id="inputFechaFin" placeholder="dd/MM/AAAA">
+                        </div>
+
+                        <div class=" form-group ">
+                            <span style="margin:5px;" class="btn btn-outline-primary" (click)="getData()">Buscar</span>
+
+                            <span style="margin:5px;" class="btn btn-outline-primary" (click)="generarXls()" *ngIf="bandera">Generar Excel</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="text-align: center;">
+                        <p style="text-align: center;" class="bg-primary" text-center>Condición de Clientes</p>
+                        <div class="form-group" *ngIf="clientesActivos">
+                            <label> Clientes Activos: {{clientesActivos}}</label>
+                        </div>
+                        <div class="form-group" *ngIf="clientesInactivos">
+                            <label>Clientes Inactivos: {{clientesInactivos}}</label>
+                        </div>
+                        <div class="form-group" *ngIf="dineroCirculante">
+                            <p>Cantidad de Creditos: {{dineroCirculante.cantidadCreditos}}<br> Total cuotas Pagadas: {{dineroCirculante.cantidadCuotasPagadas}}<br> Total cuotas Pendientes: {{dineroCirculante.cantidadCuotasPendientes}}<br> Dinero Circulante:
+                                $ {{dineroCirculante.dineroCirculante}}</p>
+                        </div>
+                    </div>
+                    <div class="line-separator"></div>
+
+                    <div class="col-md-12">
+                        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="creditosViewModel" (custom)="onCustom($event)" #fechasTableForm></ng2-smart-table>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+    <!--   <div class="form-row text-center">
+    <div class="col-12">
+      <p class="bg-primary">Reporte de Clientes</p>
+    <button type="button" class="btn btn-outline-info" (click)="nuevoCredito()">Nuevo</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-10">
+      <div class="col-md-6">
+        <span class="btn btn-outline-primary" (click)="showReporteCliente()">Visualizar Clientes Activos</span>
+      </div>
+    </div>
+  </div> -->
+</div>

@@ -1,21 +1,38 @@
 <div class="form-row text-center">
     <div class="col-12">
-        <p class="bg-primary">Créditos generados por los vendedores</p>
+        <p class="bg-secondary-gradient">CREDITOS GENERADO POR VENDEDORES</p>
     </div>
 </div>
-<div class="form-row text-right">
-    <div class="col-12">
-        <button class="btn btn-outline-primary" (click)="filtrarEnEsperaDeAprobacion()">Ver Pendientes</button>
-        <button class="btn btn-outline-primary" (click)="filtrarTodos()">Ver Todos</button>
-    </div>
-</div>
-<ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersNuevo" (custom)="onCustom($event)" #creditosForm></ng2-smart-table>
-<div class="form-row text-right">
-    <div class="col-1">
 
+
+
+
+
+
+<div class="container">
+    <div class="form-row text-left">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <ng2-smart-table [settings]="settings" class="table table-hover thead-dark" [source]="charactersNuevo" (custom)="onCustom($event)" #creditosForm></ng2-smart-table>
+
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+
+    <div class="container form-row text-center col-lg-12 bg-gray-light">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <button class="btn btn btn-secondary" (click)="filtrarEnEsperaDeAprobacion()">Ver Pendientes</button>&nbsp;&nbsp;&nbsp;
+            <button class="btn btn btn-secondary" (click)="filtrarTodos()">&nbsp;&nbsp;Ver Todos&nbsp;&nbsp;</button>
+        </div>
+        <div class="col-lg-4"></div>
     </div>
 </div>
+
+
+
+
 
 <canvas>
-
 </canvas>

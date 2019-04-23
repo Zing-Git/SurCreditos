@@ -1,6 +1,7 @@
 <div class="form-row text-center">
     <div class="col-12">
-        <p class="bg-primary">Rendición de Nomina de Cobro</p>
+        <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+        <p class="bg-secondary-gradient">RENDICION DE NÓMINAS DE COBRO DE COBRADORES</p>
     </div>
 </div>
 
@@ -11,7 +12,8 @@
         <div class="col-md-10">
 
             <ng2-smart-table [settings]="settings" class="table table-hover" [source]="source" (custom)="onCustom($event)"></ng2-smart-table>
-
+            <br>
+            <br>
             <!-- <label for="inputCobrador">ID Nomina de Cobro (ver identificador de la Nómina): &nbsp;&nbsp;  </label>
             <input #search class="form-control input-lg" type="text" placeholder="Buscar Nómina..." (keyup.enter)="onSearch(search.value)" [(ngModel)]="texto">
             <span class="btn btn-secondary" (click)="onSearch(search.value)">Buscar</span> -->
@@ -25,10 +27,16 @@
 
 
 
-<div class="container">
+<div class="container" *ngIf="mostrarDetalleAsignacion">
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
+
+            <div class="container form-row form-group text-center col-md-12 bg-gray-light">
+                <div class="col-md-12">
+                    <span>Detalle de Cobros Realizados por el Cobrador</span>
+                </div>
+            </div>
 
             <table class="table table-hover">
                 <tr>
@@ -39,6 +47,7 @@
                     <th>Fecha de Nomina</th>
                     <th>A Cobrar</th>
                     <th>Monto Cobrado</th>
+                    <span class="btn btn btn-outline-primary" (click)="calcularTotalCobrado()">Totalizar</span>
                 </tr>
                 <tr *ngFor="let item of nominas.asignaciones; let indice=index">
                     <td>{{indice+1}}</td>
@@ -58,7 +67,7 @@
                         {{item.saldoACobrar | currency}}
                     </td>
                     <td>
-                        <input [(ngModel)]='item.montoCobrado' type="number" name="decimals" (focusout)="focusOutFunction()" ng-model="decimals" ng-pattern="/^(\d{0,3}(\.\d{0,2})?)$/ ">
+                        <input [disabled]='guardado' [(ngModel)]='item.montoCobrado' type="number" name="decimals" (focusout)="focusOutFunction()" ng-model="decimals" ng-pattern="/^(\d{0,3}(\.\d{0,2})?)$/ ">
                     </td>
                 </tr>
             </table>
@@ -68,21 +77,23 @@
                     <blockquote class="blockquote text-center">
                         <p class="mb-0"> Total Cobrado: {{nominas.totalCobrado | currency}} </p>
                         <footer class="blockquote-footer">Este monto debe recibir del cobrador</footer>
+                        <p class="mb-0"> {{ comisionCobrador }} </p>
+
                     </blockquote>
                 </div>
             </div>
 
-            <div class="form-row text-center bg-secondary">
+            <div class="form-row text-center bg-gray-light">
                 <div class="col-4">
-                    <button class="btn btn-outline-light " [disabled]="buttonGuargarDisabled" (click)="lanzarPopupGuardar() ">Guardar Rendicion de Nómina</button>
+                    <button class="btn btn-secondary " [disabled]="buttonGuargarDisabled" (click)="lanzarPopupGuardar() ">Guardar Rendicion de Nómina</button>
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-outline-light " [disabled]="buttonImprimirDisabled" (click)="imprimirComprobanteNominaPago() ">Imprimir Rendición</button>
+                    <button class="btn btn-secondary " [disabled]="buttonImprimirDisabled" (click)="imprimirComprobanteNominaPago() ">Imprimir Rendición</button>
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-outline-light" routerLink="/cupondepago">Realizar otra Rendición</button>
+                    <button class="btn btn-secondary" routerLink="/cupondepago">Realizar otra Rendición</button>
 
-                    <button class="btn btn-outline-light " (click)="verCobros() ">VER COBROS</button>
+                    <!-- <button class="btn btn-outline-light " (click)="verCobros() ">VER COBROS</button> -->
                 </div>
             </div>
 

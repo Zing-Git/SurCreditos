@@ -27,7 +27,7 @@ export class IngresoEgresoComponent implements OnInit {
   operacion: any;
   selectedValue: any;
   cajaId: any;
-
+  mostrarMovimiento = false;
 
 
 
@@ -51,10 +51,12 @@ export class IngresoEgresoComponent implements OnInit {
 
   cargarCombos() {
     this.cajaService.postGetComboIngresoEgreso(this.token).subscribe( resp => {
+
       this.dataCombos = resp;
       console.log(this.dataCombos);
       this.onChangeTipoDeOperacion('INGRESO');
     });
+
 
 
   }
@@ -89,15 +91,30 @@ export class IngresoEgresoComponent implements OnInit {
 
 
   agregarAOperaciones(coment: string = '', monto: number = 0) {
-    const fila = {
-      tipoOperacion: this.selectedValue.tipoItem,
-      idOperacion: this.selectedValue._id,
-      operacion: this.selectedValue.item,
-      montoOperacion: monto,
-      comentario: coment
-    };
-    console.log(fila);
-    this.filasRegistradas.push(fila);
+    let operacionInvalida = false;
+
+    if (this.selectedValue.item === 'COBRO DE CUOTA' || this.selectedValue.item === 'RENDICION COBRO DE CUOTA EN DOMICILIO'){
+        operacionInvalida = true;
+    }
+
+    if (operacionInvalida) {
+      Swal(
+        'Esta operacion no puede generar un ingreso manual',
+        'No se puede Guardar, porque la operacion se registra en alguna de las funciones de caja',
+        'info'
+      );
+    } else {
+      const fila = {
+        tipoOperacion: this.selectedValue.tipoItem,
+        idOperacion: this.selectedValue._id,
+        operacion: this.selectedValue.item,
+        montoOperacion: monto,
+        comentario: coment
+      };
+      // console.log(fila);
+      this.mostrarMovimiento = true;
+      this.filasRegistradas.push(fila);
+    }
   }
 
 
@@ -161,6 +178,9 @@ export class IngresoEgresoComponent implements OnInit {
   }
 
   guardar() {
+
+
+
 
       this.cajaService.postRegistrarMovimiento(this.operacionesIngresosEgresos).subscribe( resp => {
           let resultado = resp;

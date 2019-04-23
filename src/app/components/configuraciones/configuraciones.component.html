@@ -1,0 +1,61 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+        <p class="bg-secondary-gradient">CONFIGURACIONES</p>
+    </div>
+</div>
+
+
+
+<!-- <div class="container" *ngIf="mostrarDetalleAsignacion"> -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <div class="container form-row form-group text-center col-md-12 bg-gray-light">
+                <div class="col-md-12">
+                    <span>Actualización de Configuraciones</span>
+                </div>
+            </div>
+
+            <table class="table table-hover">
+                <tr>
+                    <th>Id</th>
+                    <th>Item</th>
+                    <th>Valor Actual</th>
+                    <th>Valor Nuevo</th>
+                </tr>
+                <tr *ngFor="let item of configuraciones; let indice=index">
+                    <td>{{indice+1}}</td>
+                    <td>
+                        {{item.item}}
+                    </td>
+                    <td>
+                        {{item.valor}}
+                    </td>
+                    <td>
+                        <input [(ngModel)]='item.valorNuevo' type="number" name="decimals" ng-model="decimals" ng-pattern="/^(\d{0,3}(\.\d{0,2})?)$/ ">
+                    </td>
+                </tr>
+            </table>
+
+
+
+            <div class="form-row text-center bg-gray-light">
+                <div class="col-4">
+
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-secondary " (click)="lanzarPopupGuardar()">Actualizar Configuraciones</button>
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-1 ">
+        </div>
+    </div>
+</div>

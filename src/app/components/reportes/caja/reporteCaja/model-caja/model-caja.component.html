@@ -1,0 +1,15 @@
+<ngx-smart-modal #cajaModal  identifier='cajaModal' customClass="medium-modal">
+  <div class="form-row text-center">
+    <div class="col-12">
+      <p class="bg-primary">Reporte de cuotas</p>
+      <span style="margin:5px;" class="btn btn-outline-primary" (click)="generarXls()" >Generar
+        Excel</span>
+    </div>
+  </div>
+            
+        
+   
+            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="cajaViewModel" (custom)="onCustom($event)"
+              #fechasTableForm></ng2-smart-table>
+         
+</ngx-smart-modal>

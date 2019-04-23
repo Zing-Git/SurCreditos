@@ -1,29 +1,27 @@
 <ngx-smart-modal #popupTwo [identifier]="'popupTwo'">
-    <h1>Seleccion de Nº de Cuotas a Cobrar</h1>
+
+    <div class="form-row text-center">
+        <div class="col-12">
+            <p class="bg-secondary-gradient">Seleccion de Cuotas a Cobrar</p>
+        </div>
+    </div>
+
+
     <div>
         <ng2-smart-table [settings]="settings" class="table table-hover" [source]="cuotasPendientesAPagar" (custom)="onCustom($event)" #Form1></ng2-smart-table>
+    </div>
 
+    <label>Ingrese hasta que numero de cuota quiere cobrar (se cargarán todas las cuotas hasta el numero que indique)</label>
+
+    <div class="container form-row text-center col-md-12 bg-gray-light">
+        <div class="col-md-12">
+            <input #box (keyup.enter)="cargarCuotasAPagar(box.value)">
+            <button class="btn btn-secondary" (click)="cargarCuotasAPagar(box.value)">Seleccionar</button>
+        </div>
     </div>
 
 
 
-    <!--     <button (click)="cargarCuotasPendientes()">Ver cuotas a pagar</button>
-    <table>
-        <tr *ngFor="let item of cuotasPendientes;let indice=index">
-            <td>{{indice+1}}</td>
-            <td>{{item.orden}}</td>
-            <td>{{item.MontoTotalCuota}}</td>
-            <td>{{item.montoPendienteDePago}}</td>
-        </tr>
-    </table> -->
-
-    <!-- <button (click)="popupTwo.close()">Cerrar</button> -->
-
-    <label>Ingrese hasta que numero de cuota quiere cobrar (se cargarán todas las cuotas hasta el numero que indique)</label>
-
-    <input #box (keyup.enter)="cargarCuotasAPagar(box.value)">
-
-    <button class="btn btn-secondary" (click)="cargarCuotasAPagar(box.value)">Seleccionar</button>
     <p>{{msjCobros}}</p>
     <ul>
         <li *ngFor="let cuotasCobro of cuotasSeleccionadasAPagar">
@@ -31,12 +29,11 @@
         </li>
     </ul>
 
-    <button class="btn btn-secondary" (click)="aceptarCuotasAPagar($event)">Cargar Cuotas a Cobrar al Cobrador</button>
-
-    <p>Si el monto a cobrar es menor que el Total, implica que ya hizo pagos parciales de la cuota</p>
-
-
-
-
+    <div class="container form-row text-center col-md-12 bg-gray-light">
+        <div class="col-md-12">
+            <button class="btn btn-secondary" (click)="aceptarCuotasAPagar($event)">Cargar Cuotas a Cobrar al Cobrador</button>
+            <p class="small">Si el monto a cobrar es menor que el Total, implica que ya hizo pagos parciales de la cuota</p>
+        </div>
+    </div>
 
 </ngx-smart-modal>

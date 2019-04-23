@@ -28,7 +28,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                         <!--MENU CREDITOS -->
-                        <ng-container *ngSwitchCase="rol === 'VENDEDOR' || rol === 'ROOT'">
+                        <ng-container *ngSwitchCase="rol === 'VENDEDOR'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-edit"></i><p>Creditos<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -65,7 +65,7 @@
                         <!--FIN MENU CLIENTES -->
 
                         <!--MENU CAJA -->
-                        <ng-container *ngSwitchCase="rol === 'CAJERO' || rol === 'ROOT'">
+                        <ng-container *ngSwitchCase="rol === 'CAJERO'">
 
                             <ng-container *ngIf="estadoCajaSwitch">
                                 <li class="nav-item has-treeview">
@@ -98,7 +98,7 @@
 
 
                         <!--MENU ADMINISTRACION -->
-                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT'">
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR'">
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link" style="color:white">
                                     <i class="nav-icon fa fa-cog"></i>
@@ -110,7 +110,9 @@
 
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item"><a class="nav-link" routerLink="crudusuarios"><i class="fa fa-angle-right nav-icon"></i><p>Usuarios</p></a></li>
-                                    <!-- <li class="nav-item"><a class="nav-link" routerLink="cuotas"><i class="fa fa-angle-right nav-icon"></i><p>Cobrar Cuota</p></a></li> -->
+                                    <li class="nav-item"><a class="nav-link" routerLink="configuraciones"><i class="fa fa-angle-right nav-icon"></i><p>Configuraciones</p></a></li>
+                                    <!-- <li class="nav-item"><a class="nav-link" routerLink="planesdepago"><i class="fa fa-angle-right nav-icon"></i><p>Nuevo Plan de Pago</p></a></li> -->
+                                    <li class="nav-item"><a class="nav-link" routerLink="modificarplandepago"><i class="fa fa-angle-right nav-icon"></i><p>Planes de Pago</p></a></li>
                                 </ul>
 
                             </li>
@@ -119,13 +121,21 @@
 
 
                         <!--MENU REPORTES -->
-                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR' || rol === 'ROOT'">
+                        <ng-container *ngSwitchCase="rol === 'ADMINISTRADOR'">
                             <li class="nav-item has-treeview">
                                 <a href="" class="nav-link" style="color:white"><i class="nav-icon fa fa-money"></i><p>Reportes<i class="fa fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item"><a class="nav-link" routerLink="reportesoperativos"><i class="fa fa-angle-right nav-icon"></i><p>Reportes Operativos</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="reportesfinancieros"><i class="fa fa-angle-right nav-icon"></i><p>Reportes Financieros</p></a></li>
-                                    <li class="nav-item"><a class="nav-link" routerLink="reportescaja"><i class="fa fa-angle-right nav-icon"></i><p>Reportes de Caja</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="rendicionespendientes"><i class="fa fa-angle-right nav-icon"></i><p>Cobradores</p></a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="reportecaja"><i class="fa fa-angle-right nav-icon"></i><p>Caja</p></a></li>
+
+                                    <li class="nav-item"><a class="nav-link" routerLink="reporteCreditos"><i class="fa fa-angle-right nav-icon"></i><p>Creditos</p></a></li>
+                                    <!-- <li class="nav-item"><a class="nav-link" routerLink="reporteClientes"><i class="fa fa-angle-right nav-icon"></i><p>Clientes</p></a></li> -->
+                                    <li class="nav-item"><a class="nav-link" routerLink="reportePlanes"><i class="fa fa-angle-right nav-icon"></i><p>Planes</p></a></li>
+
+                                    <li class="nav-item"><a class="nav-link" routerLink="reporteplanesatrasados"><i class="fa fa-angle-right nav-icon"></i><p>Planes Atrasados</p></a></li>
+                                    <!--  <li class="nav-item"><a class="nav-link" routerLink="reportesfinancieros"><i class="fa fa-angle-right nav-icon"></i><p>Reportes Financieros</p></a></li> -->
+
+
                                 </ul>
                             </li>
                         </ng-container>

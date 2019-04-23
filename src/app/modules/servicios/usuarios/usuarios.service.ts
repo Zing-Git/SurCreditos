@@ -34,9 +34,9 @@ export class UsuariosService {
   // headers = new Headers();
 
   // URLs de Credisur
-  // public urlBase = environment.URL_BASE_WEBSERVICES;
+   public urlBase = environment.URL_BASE_WEBSERVICES;
   // public urlBase = 'https://ws-sur-creditos.herokuapp.com';
-  public urlBase = 'http://18.223.146.82:3001';
+  //public urlBase = 'http://18.223.146.82:3001';
 
   // GET URLs
   public urlPostGetPersonaPorDni = this.urlBase + '/persona/obtener_persona/';
@@ -76,6 +76,7 @@ export class UsuariosService {
   // POST SERVICES   emanuel emanuel123 usuario administrador.....
   postLogin(session: Session) {
     const newSession = Object.assign({}, session);
+    // console.log(session);
     return this.http.post<any>(this.urlPostTokenLogin, newSession, cudOptions);
   }
 
@@ -102,7 +103,7 @@ export class UsuariosService {
    deleteUsuario(token: string, idUsuario: string): Observable<any> {
      const url = `${this.urlDeleteUsuario}${idUsuario}/${token}`;
      // const url = `${this.urlDeleteUsuario}`;
-     console.log('URL DELETE: ' , url);
+     // console.log('URL DELETE: ' , url);
     return this.http.delete<any>(url, cudOptions);
   }
   postDeleteUsuario(token: string, idUsuario: string): Observable<any> {

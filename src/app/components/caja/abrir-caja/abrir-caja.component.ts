@@ -26,14 +26,14 @@ export class AbrirCajaComponent implements OnInit {
     this.cajaService.postGetComboIngresoEgreso(this.token).subscribe( resp => {
       this.dataCajas = resp['combos'].cajas;
       this.selectedValue = this.dataCajas[0];
-      console.log(this.dataCajas);
+      // console.log(this.dataCajas);
     });
 
 
   }
 
   onChangeOperacion() {
-    console.log(this.selectedValue);
+    // console.log(this.selectedValue);
 
   }
 
@@ -43,12 +43,12 @@ export class AbrirCajaComponent implements OnInit {
       caja: this.selectedValue._id,
       montoInicial: monto
     };
-    console.log(caja);
+    // console.log(caja);
 
 
     this.cajaService.postAbrirCaja(caja).subscribe( resp =>  {
       let respuesta = resp;
-      console.log(respuesta);
+      // console.log(respuesta);
       if (resp['ok']) {
         this.loginService.registrarIdentificadorDeCaja(respuesta.idApertura, this.selectedValue.identificador);
         swal(

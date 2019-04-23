@@ -1,8 +1,9 @@
-<ngx-smart-modal #comercioModal identifier="comercioModal" customClass="reveal">
+<ngx-smart-modal #comercioModal identifier="comercioModal" (onOpen)="alAbrir()" (onClose)="alCerrar()" customClass="reveal">
+
 
     <div class="form-row text-center">
         <div class="col-12">
-            <p class="bg-primary">Nuevo Comercio</p>
+            <p class="bg-secondary-gradient">Nuevo Comercio</p>
         </div>
     </div>
 
@@ -15,7 +16,7 @@
                 <!-- FORMULARIO INICIO -->
                 <form class="" [formGroup]="comercioForm" (ngSubmit)="onFormSubmit()">
                     <fieldset>
-                        <ngb-tabset #t="ngbTabset" [justify]="currentJustify">
+                        <ngb-tabset #t="ngbTabset" (tabChange)="onTabChange()" [justify]="currentJustify">
 
 
 
@@ -24,7 +25,7 @@
                                 <ng-template ngbTabContent>
 
                                     <!-- Campo 5:  Cuit-->
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-12 ">
                                         <label for="inputCuit" class="small h4 text-muted">* Cuit</label>
                                         <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20303003000">
                                     </div>
@@ -45,7 +46,8 @@
                                     <div class="form-group col-md-12">
                                         <label for="inputActividad" class="small h4 text-muted">* Actividad</label>
                                         <select formControlName="actividad" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputActividad">
-                                  <option *ngFor="let fActividad of actividades">
+                                          <!-- <option [value]="undefined ">Seleccione una...</option> -->
+                                          <option *ngFor="let fActividad of actividades">
                                       {{fActividad.DESC_ACTIVIDAD_F883}}
                                   </option>
                                 </select>
@@ -58,7 +60,7 @@
 
                                     <div class="form-row text-right">
                                         <div class="col-12">
-                                            <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+                                            <span class="btn btn-secondary" (click)="t.select( 'tab-selectbyid2')">Siguiente</span>
                                         </div>
                                     </div>
                                 </ng-template>
@@ -76,7 +78,8 @@
                                         <div class="form-group col-md-6">
                                             <label for="inputProvincia" class="small h4 text-muted">* Provincia</label>
                                             <select formControlName="provincia" (change)="onChange()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputProvincia">
-                                        <option *ngFor="let fProv of provincias">
+                                              <option [value]="undefined">Seleccione una...</option>
+                                              <option *ngFor="let fProv of provincias">
                                             {{fProv.provincia}}
                                         </option>
                                       </select>
@@ -85,7 +88,8 @@
                                         <div class="form-group col-md-6">
                                             <label for="inputLocalidad" class="small h4 text-muted">* Localidad</label>
                                             <select formControlName="localidad" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputLocalidad">
-                                        <option *ngFor="let fLoc of localidades">
+
+                                              <option *ngFor="let fLoc of localidades">
                                             {{fLoc}}
                                         </option>
                                       </select>
@@ -140,11 +144,11 @@
                                     </select>
                                         </div>
                                     </div>
-
+                                    <label>{{mensajeGuardar}} </label>
                                     <div class="form-row text-right">
                                         <div class="col-12">
-                                            <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</button>
-                                            <button class="btn btn-outline-primary" (click)="guardar($event)">Guardar</button>
+                                            <button class="btn btn-secondary" (click)="t.select('tab-selectbyid1')">&nbsp;Atrás&nbsp;</button>&nbsp;&nbsp;&nbsp;
+                                            <span class="btn btn-secondary" (click)="guardar()">Guardar</span>
                                         </div>
                                     </div>
 

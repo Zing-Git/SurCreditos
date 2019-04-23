@@ -17,6 +17,8 @@ import { TableUsuarios } from "../../usuarios/crud-usuarios/TableUsuarios";
 import { Estado } from "../../../modelo/negocio/estado";
 import { element } from "@angular/core/src/render3/instructions";
 import swal from "sweetalert2";
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+
 
 @Component({
   selector: "app-crud-creditos-admin-todos",
@@ -48,39 +50,51 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       custom: [
         {
           name: "view",
-          title: "Ver/ "
+          title: "Ver"
         },
-        {
+     /*    {
           name: "aprobar",
           title: "Aprobar /"
         },
         {
           name: "rechazar",
           title: "Rechazar /"
-        },
-        {
+        }, */
+        /* {
           name: "derivar",
           title: "Derivar a Root /"
-        },
-        {
+        }, */
+
+
+        /* {
           name: "PDF",
           title: "PDF"
-        }
+        } */
+
+
       ]
     },
     columns: {
+      fechaAlta: {
+        title: "Fecha",
+        width: "12%",
+        filter: true,
+        sort: true,
+        valuePrepareFunction: (cell, row) => { return moment(row.fechaAlta).format('DD-MM-YYYY') }
+      },
       legajo_prefijo: {
-        title: "Prefijo",
-        width: "5%",
-        filter: true,
-        sort: true
-      },
-      legajo: {
         title: "Legajo",
-        width: "5%",
+        width: "4%",
+        filter: true,
+        sort: true,
+        // valuePrepareFunction: (cell, row) => row.legajo_prefijo + "-" + row.legajo
+      },
+    /*   legajo: {
+        title: "Legajo",
+        width: "4%",
         filter: true,
         sort: true
-      },
+      }, */
       dni: {
         title: "Dni",
         width: "10%",
@@ -88,23 +102,29 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
       },
       nombreApellido: {
         title: "Titular",
-        width: "15%",
+        width: "17%",
         filter: true,
         sort: true,
         // valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ", " + row.cliente.titular.nombres
       },
-      cuit: {
+      vendedor: {
+        title: "Vendedor",
+        width: "17%",
+        filter: true,
+        sort: true,
+      },
+      /* cuit: {
         title: "Cuit",
         width: "10%",
         filter: true,
         sort: true,
         // valuePrepareFunction: (cell, row) => row.comercio.cuit
-      },
-      razonSocial: {
+      }, */
+      /* razonSocial: {
         title: "Comercio",
         width: "15%",
         // valuePrepareFunction: (cell, row) => row.comercio.razonSocial
-      },
+      }, */
 
       montoPedido: {
         title: "Credito",
@@ -135,47 +155,42 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     private creditosService: CreditosService,
     private loginService: LoginService,
     private clientesServices: ClientesService,
-    private usuariosServices: UsuariosService
+    private usuariosServices: UsuariosService,
+    private spinnerService: Ng4LoadingSpinnerService
   ) {}
 
   ngOnInit() {
     this.session.token = this.loginService.getTokenDeSession();
 
-    // this.creditosService.postGetAllCreditos(this.session).subscribe((response: TableCreditos[]) => {
+    this.spinnerService.show();
     this.creditosService
       .postGetAllCreditosTodosLosUsuarios(this.session)
       .subscribe((response: TableCreditos[]) => {
         this.characters = response["credito"];
-        // console.log('CREDITOS OBTENIDOS:  ', this.characters);
+        this.spinnerService.hide();
 
-        // TODO: Reemplazar cuando se pueda:
-        // con esto cargo la tabla pero con un solo nivel de profundidad, para que me tome el filter de la smart table
-        // la otra alternativa es que el servicio me devuelva la estructura de arrayCreditos en un
-        // solo nivel y eso se lo asigno a characters y elimino charactersNuevo.
         this.charactersNuevo = this.convertirDataSourceParaTabla(this.characters, '');
-
-
-
-
-      });
+      } // , () => this.spinnerService.hide()
+      );
     this.cargarControlesCombos();
-    this.getAllUsuarios();
+    /* this.getAllUsuarios(); */
   }
 
-  convertirDataSourceParaTabla(tabla: TableCreditos[], filtro: string): any[] {
+  convertirDataSourceParaTabla(tabla: any[], filtro: string): any[] {
     let arrayCreditos = [];
     let arrayCreditosFiltrados = [];
     tabla.forEach(element => {
 
       let fila = {
         _id: element._id,
-        legajo_prefijo: element.legajo_prefijo,
+        fechaAlta: element.fechaAlta,
+        legajo_prefijo: element.legajo_prefijo + '-' + element.legajo,
         legajo: element.legajo,
         dni: element.cliente.titular.dni,
-        nombreApellido:
-        element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres,
-        cuit: element.comercio.cuit,
-        razonSocial: element.comercio.razonSocial,
+        nombreApellido: element.cliente.titular.apellidos + ', ' + element.cliente.titular.nombres,
+        vendedor: element.usuario.persona.apellidos + ', ' + element.usuario.persona.nombres + ' (' + element.usuario.persona.domicilio.localidad + ')',
+        // cuit: element.comercio.cuit,
+        // razonSocial: element.comercio.razonSocial,
         montoPedido: element.montoPedido,
         estado: element.estado.nombre,
       };
@@ -265,7 +280,14 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
         break;
       }
       case "PDF": {
-        this.imprimirPDF(id);
+        // es de getcombos
+        this.clientesServices.postGetCombos().subscribe(result => {
+          this.estadosCasa = result["respuesta"].estadosCasa;
+          this.estados = result["respuesta"].estadosCredito;
+          this.imprimirPDF(id);
+        });
+
+        /* this.imprimirPDF(id); */
         break;
       }
       default: {
@@ -306,9 +328,6 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
               swal('Perfecto', 'Se actualizó el estado de Credito', 'success');
               this.filtrarTodos(); // AGREGUE ESTO PARA ACTUALIZAR LA LISTA DESPUES DE APROBAR!
 
-
-              //alert("Se actualizó el estado de Credito");
-              // console.log(respuesta);
             },
             err => {
               alert("Ocurrio un problema");
@@ -328,7 +347,7 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     doc.setFontSize(18);
     doc.setTextColor(40);
     doc.setFontStyle("normal");
-    const imgData = new Image();
+    // const imgData = new Image();
     // tslint:disable-next-line:max-line-length
     // imgData.src = 'https://npclhg.dm.files.1drv.com/y4m9GX1-ImqUAw21oHBc1AU0cXj8xJb_B4EW3Omo1lOtFGEwYTmTagcQHp6Zn7AjSsa84JUu_H2bNDa_rY8Ubsl2hkNV4xk5zmWlUaN2tz_0i1q39QOAfWe_FLpR-Jfg_J94rvvQpLHLNw5_aT2hWdWRsBclGuCgF9U1i5taliO9DWw7sc4EnxfgcWT_WamOy60jkpOdDzEQIINslKGINAR6A?width=558&height=299&cropmode=none' ;
     // doc.addImage(imgData, 50, 50);
@@ -337,10 +356,6 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     doc.text("CREDITOS PARA COMERCIANTES", 20, 18);
 
     doc.setFontSize(12);
-    // doc.setTextColor(255);
-    // doc.setFillColor(52, 152, 219)
-    // doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
-    // doc.setFillColor(1);
 
     doc.text("NOTA DE PEDIDO", 72, 30, "center");
 
@@ -558,55 +573,70 @@ export class CrudCreditosAdminTodosComponent implements OnInit {
     });
 
     this.getData("CuerpoPlanPago", id);
+
+
+    doc.addPage();
+
     doc.setFontSize(10);
     // tslint:disable-next-line:max-line-length
     doc.text(
-      " ---------------------------------------------------------------------------------------------------------------------------------------------",
+      "         ----------------------------------------------------------------------------------------------------------------------------------------",
       10,
-      195
+      25
     );
+
+
     doc.setFontSize(14);
-    doc.text(" PAGARÉ:", 20, 205);
+    doc.text(" PAGARÉ:", 20, 35);
     doc.setFontSize(10);
     doc.text(
       "Pagaré sin protesto [art. 50 D. Ley 5965 / 53] a Sur Créditos o a su orden la cantidad de pesos ",
       20,
-      215
+      45
     );
     doc.setFontSize(10);
-    /*  doc.setLineWidth(0.2);
-    doc.line(10, 200, 190, 200);
-    doc.line(10, 215, 190, 215);   //x, , largo , y */
+
     doc.text(
       " -----------  " + this.toText(this.cantidadTotal) + "  ----------- ",
       60,
-      225
+      55
     );
     doc.setFontSize(10);
     doc.text(
       "Por igual valor recibido en efectivo a mi entera satisfaccion pagadero segun detalle de cuotas.-",
       20,
-      235
+      65
     );
-    doc.text(".................................................... ", 115, 255);
-    doc.text("Firmante (Lugar y fecha): ", 120, 260);
+    doc.text(".................................................... ", 115, 95);
+    doc.text("Firmante (Lugar y fecha): ", 120, 105);
 
     this.carroIndividual = 50;
     this.cantidadTotal = 0;
 
     doc.addPage();
 
-    doc.text("SUR Créditos", 20, 15, "center");
+
+
+    doc.setFontSize(18);
+    doc.setTextColor(40);
+    doc.setFontStyle("normal");
+    // const imgData = new Image();
+    // tslint:disable-next-line:max-line-length
+    // imgData.src = 'https://npclhg.dm.files.1drv.com/y4m9GX1-ImqUAw21oHBc1AU0cXj8xJb_B4EW3Omo1lOtFGEwYTmTagcQHp6Zn7AjSsa84JUu_H2bNDa_rY8Ubsl2hkNV4xk5zmWlUaN2tz_0i1q39QOAfWe_FLpR-Jfg_J94rvvQpLHLNw5_aT2hWdWRsBclGuCgF9U1i5taliO9DWw7sc4EnxfgcWT_WamOy60jkpOdDzEQIINslKGINAR6A?width=558&height=299&cropmode=none' ;
+    // doc.addImage(imgData, 50, 50);
+    doc.text("SUR Créditos", 20, 15);
     doc.setFontSize(7);
-    doc.text("CREDITOS PARA COMERCIANTES", 6, 18);
+    doc.text("CREDITOS PARA COMERCIANTES", 20, 18);
+    doc.setFontSize(10);
+    doc.text("Fecha: " + moment(today).format("DD-MM-YYYY"), 130, 25);
+    this.characters.forEach(x => {
+      if (x._id === id) {
+        this.crearNumeroFactura(x.legajo_prefijo, x.legajo);
+        doc.text("Legajo Nº:  " + this.numeroFactura, 130, 30);
+        doc.text("Estado: " + x.estado.nombre, 130, 35);
+      }
+    });
 
-    // doc.setFontSize(12);
-    // doc.setTextColor(255);
-    // doc.setFillColor(52, 152, 219)
-    // doc.roundedRect(50, 23, 45, 10, 3, 3, 'FD')  //10 inicio, 23 es altura, 182 largo, 10 es
-    // doc.setFillColor(1);
-
-    // doc.text('NOTA DE PEDIDO', 72, 30, 'center');
 
     doc.setFontSize(12);
 

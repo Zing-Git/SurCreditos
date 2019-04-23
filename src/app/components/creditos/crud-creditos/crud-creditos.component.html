@@ -1,16 +1,38 @@
 <div class="form-row text-center">
     <div class="col-12">
-        <p class="bg-primary">Mis créditos generados</p>
+        <p class="bg-secondary-gradient">MIS CREDITOS</p>
         <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCredito()">Nuevo</button> -->
     </div>
 </div>
 
-<ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersNuevo" (custom)="onCustom($event)" #usuarioForm></ng2-smart-table>
-<div class="form-row text-right">
-    <div class="col-1">
-        <button class="btn btn-outline-info" (click)="imprimirClientes()">Imprimir Listado</button>
+
+
+<div class="container">
+    <div class="form-row text-left">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <ng2-smart-table [settings]="settings" class="table table-hover thead-dark" [source]="charactersNuevo" (custom)="onCustom($event)" #usuarioForm></ng2-smart-table>
+            <div class="col-md-1">
+            </div>
+        </div>
+    </div>
+
+    <div class="container form-row text-center col-lg-12 bg-gray-light">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <button class="btn btn btn-secondary" (click)="imprimirClientes()">Imprimir Listado</button>
+        </div>
+        <div class="col-lg-4"></div>
     </div>
 </div>
+
+
+
+
+
+
+
+
 
 <canvas>
 

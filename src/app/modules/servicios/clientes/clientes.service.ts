@@ -34,6 +34,8 @@ export class ClientesService {
   public urlPostAgregarReferenciaComercio = this.urlBase + '/comercio/agregar_referencia/';
   public urlPostAgregarReferenciaCliente = this.urlBase + '/cliente/agregar_referencia/';
   public urlPostGetClientesActivos = this.urlBase + '/credito/listar_clientes_activos/';
+  public urlPostCambiarColorCliente = this.urlBase + '/cliente/cambiar_color_referencia/';
+
 
 
 
@@ -90,5 +92,17 @@ export class ClientesService {
     const newSession = Object.assign({}, session);
     return this.http.post<any[]>(this.urlPostGetClientesActivos, newSession, cudOptions);
   }
+  postCambiarColorCliente(session: Session, idCliente: string, colorReferencia: string): Observable<any> {
+    const parametros = {
+      token: session.token,
+      idCliente: idCliente,
+      colorReferencia: colorReferencia
+    };
+    const newSession = Object.assign({}, parametros);
+    return this.http.post<any>(this.urlPostCambiarColorCliente, newSession, cudOptions);
+  }
+
+
+
 
 }

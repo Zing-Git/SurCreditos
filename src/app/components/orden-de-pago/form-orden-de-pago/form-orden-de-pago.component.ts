@@ -35,6 +35,9 @@ export class FormOrdenDePagoComponent implements OnInit {
   estados: Estado[];
   confirmarAlerta: string= '';
 
+  yaPagoAUnCliente = false;
+
+
   settings = {
 
     actions: {
@@ -57,28 +60,28 @@ export class FormOrdenDePagoComponent implements OnInit {
     },
     columns: {
       legajo_prefijo: {
-        title: 'Num. Orden',
-        width: '10%',
+        title: 'Orden',
+        width: '6%',
         filter: false,
         valuePrepareFunction: (cell, row) => row.numeroOrden
       },
       nombre: {
-        title: 'Nombre Completo',
-        width: '15%',
+        title: 'Cliente',
+        width: '20%',
         filter: false,
         valuePrepareFunction: (cell, row) => row.cliente.titular.apellidos + ', ' + row.cliente.titular.nombres
       },
 
       montoAPagar: {
         title: 'Monto de Credito',
-        width: '30%',
+        width: '15%',
         filter: false,
         valuePrepareFunction: (value) => {
           return value === 'montoPedido' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
       },
       fechaGeneracion: {
-        title: 'Fecha Generación',
+        title: 'Fecha Crédito',
         width: '15%',
         filter: false,
         valuePrepareFunction: (date) => {
@@ -88,7 +91,7 @@ export class FormOrdenDePagoComponent implements OnInit {
         }
       },
       fechaPago: {
-        title: 'Fecha de Alta',
+        title: 'Fecha Pago',
         width: '15%',
         filter: false,
         valuePrepareFunction: (date) => {
@@ -136,7 +139,14 @@ export class FormOrdenDePagoComponent implements OnInit {
     }).then((result) => {
 
       if (result.value) {
+
+        console.log(id);
+
+
         this.pagarOrdenDePago(id);
+
+
+
         Swal(
           'Pagado!',
           'La Orden de Pago fue Pagada!!',
@@ -171,7 +181,10 @@ export class FormOrdenDePagoComponent implements OnInit {
         break;
       }
       case 'pagarOrdenDePago':{
+        // console.log('ide que se manda a pagar' + id);
+
         this.lanzarPopup(id);
+
         //this.pagarOrdenDePago(id);
         break;
       }
@@ -350,11 +363,16 @@ export class FormOrdenDePagoComponent implements OnInit {
     if (this.dni.value !== '') {
       this.ordenDePago.postGetOrdenPagoPorDni(this.session, dni).subscribe((response: TableOrdenDePago[]) => {
         this.characters = response['ordenDb'];
-        if(typeof this.characters === 'undefined'){
-          Swal('Advertencia', 'Orden de pago esta pagada o no existe!!', 'warning');
-        }
 
-        // console.log('Busqueda: ', this.characters);
+        if (typeof this.characters === 'undefined' && this.yaPagoAUnCliente === false) {
+          // tslint:disable-next-line:max-line-length
+          Swal('Advertencia', 'El cliente no tiene ordenes de pago pendientes, pudo haberse pagado o que el credito no se haya aprobado' , 'info');
+        }
+        if (this.yaPagoAUnCliente){
+          this.yaPagoAUnCliente = false;
+        }
+       /*  console.log('Busqueda: ', response);
+        console.log('Busqueda: ', this.characters); */
       });
     }
 
@@ -375,37 +393,51 @@ export class FormOrdenDePagoComponent implements OnInit {
   }
 
   private pagarOrdenDePago(idOrden: string){
+    let medioPago= this.formas[0].formaPago.toString();
 
-    let medioPago= this.formas[0].formaPago.toString()
-
+   /*  console.log(idOrden);
+    console.log(this.session.token);
+    console.log(medioPago); */
 
     this.ordenDePago.postPagarOrdenDePago(idOrden, this.session.token, medioPago).subscribe(result =>{
       let respuesta = result;
-
-      //alert('Se actualizó el estado de Credito');
+      console.log(respuesta);
+      Swal('Bien Hecho!', 'Ya pagaste el credito al cliente, el credito figurará como PAGADO' , 'success');
+      this.yaPagoAUnCliente = true;
       this.buscarCreditoPorDni();
+    }, error => {
+      Swal('No se pudo registrar el pago', 'Intentanta nuevamente, revisa tu conexión' , 'info');
     });
 
-    this.postAprobarRechazar(idOrden,'PAGADO');
-
+    // this.postAprobarRechazar(idOrden,'PAGADO');
   }
+
+
   cargarCreditos(dni: string){
     this.creditoService.postGetCreditosVigentes(this.session, dni).subscribe((response: TableCreditos[]) => {
       this.charactersCreditos = response['creditos'];
       if(typeof response['creditos'] === 'undefined'){
         Swal('Advertencia', 'Orden de pago esta pagada o no existe!!', 'warning');
       }
-      // console.log( 'AQUI UN RESULTADO DE CREDITOS------>' + response['creditos']);
+      console.log('AQUI UN RESULTADO DE CREDITOS------>' + this.charactersCreditos);
     });
-    // console.log('AQUI UN RESULTADO DE CREDITOS------>' +this.charactersCreditos);
+
   }
 
   postAprobarRechazar(id: string, nuevoEstado: string) {
     let dni = this.dni.value;
     this.cargarCreditos(dni);
+    this.creditoService.postGetCreditosVigentes(this.session, dni).subscribe((response: TableCreditos[]) => {
+      this.charactersCreditos = response['creditos'];
+      if(typeof response['creditos'] === 'undefined'){
+        Swal('Advertencia', 'Orden de pago esta pagada o no existe!!', 'warning');
+      }
+      console.log('AQUI UN RESULTADO DE CREDITOS------>' + this.charactersCreditos);
+    });
+
     let idNuevoEstado: string;
     this.estados.forEach(element => {
-      if (nuevoEstado == element.nombre) {
+      if (nuevoEstado === element.nombre) {
         idNuevoEstado = element._id;
       }
     });
@@ -435,7 +467,9 @@ export class FormOrdenDePagoComponent implements OnInit {
         }
       }
     });
-  }
+    }
+
+
 
   onEnterDniCliente(){
     this.buscarCreditoPorDni();

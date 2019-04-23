@@ -2,35 +2,68 @@
 <app-modal-cuotas-cobranza (pasameCuotasACobrar)="finalizar($event)"></app-modal-cuotas-cobranza>
 
 
-
 <div class="form-row text-center">
     <div class="col-12">
-        <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
-        <p class="bg-primary">NOMINA DE COBRANZA / COBRADOR: {{ apellidoCobrador }} / SELECCIONAR CLIENTES A COBRAR</p>
+        <p class="bg-secondary-gradient">GENERACION DE NOMINA DE COBROS PARA COBRADOR: {{ apellidoCobrador }}</p>
     </div>
 </div>
+
+
 
 <div class="container">
     <div class="form-row">
         <div class="col-1"></div>
         <div class="col-10">
-            <br><br>
-            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #clientesActivosForm></ng2-smart-table>
-            <br>
-            <br>
-            <div class="form-row text-center bg-secondary">
-                <div class="col-4">
-                    <button [disabled]="buttonGuargarDisabled" class="btn btn-outline-light" (click)="lanzarPopupGuardar()">Guardar Asignacion de Cobro</button>
+
+            <div class="container form-row form-group text-center col-md-12 bg-gray-light">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+
+
+
+
+
+                    <label for="inputdefault">Ingrese Dni o Apellido</label>
+                    <input #search class="search form-control form-control-sm" type="text" placeholder="Buscar..." (keydown.enter)="onSearch(search.value)">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="btn btn-outline-primary" (click)="onSearch(search.value)">Buscar</span>
+
+
+
                 </div>
-                <div class="col-4">
-                    <button [disabled]="buttonImprimirDisabled" class="btn btn-outline-light" (click)="imprimirCuponesDePago()">Imprimir Cupones de Pago</button>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-outline-light" routerLink="/cupondepago">Generar otra Nómina de Cobro</button>
+                <div class="col-md-3">
+                    <span class="small">Seleccione de a uno los clientes activos para preparar la nómina</span>
                 </div>
             </div>
+
+            <div>
+
+                <ng2-smart-table [settings]="settings" class="table table-hover" [source]="source" (custom)="onCustom($event)" #clientesActivosForm></ng2-smart-table>
+            </div>
             <br>
+
+
+
+
+            <div class="form-row text-center bg-gray-light">
+                <div class="col-4">
+                    <button [disabled]="buttonGuargarDisabled" class="btn btn-secondary" (click)="lanzarPopupGuardar()">Guardar Nómina de Cobros</button>
+                </div>
+                <div class="col-4">
+                    <button [disabled]="buttonImprimirDisabled" class="btn btn-secondary" (click)="imprimirCuponesDePago()">Imprimir Nómina de Cobros</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-secondary" routerLink="/cupondepago">Generar otra Nómina de Cobro</button>
+                </div>
+            </div>
+
+
             <br>
+            <div class="container form-row form-group text-center col-md-12 bg-gray-light">
+                <div class="col-md-12">
+                    <span>NOMINA DE COBRANZAS ASIGNADAS AL COBRADOR</span>
+                </div>
+            </div>
+
             <div class="form-row">
                 <div class="col-12">
                     <ng2-smart-table [settings]="settings2" class="table table-hover" [source]="source2" (custom)="onCustom($event)" #asignacionDeCuotasACobrar></ng2-smart-table>

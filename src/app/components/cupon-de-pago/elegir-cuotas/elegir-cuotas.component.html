@@ -2,10 +2,25 @@
 <!-- <app-modal-cuotas-cobranza (pasameCuotasACobrar)="finalizar($event)"></app-modal-cuotas-cobranza> -->
 
 <ngx-smart-modal #popupOne [identifier]="'popupOne'">
-    <h1>Creditos del Cliente</h1>
-    <div>
-        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersCreditos" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
+    <div class="form-row text-center">
+        <div class="col-12">
+            <p class="bg-secondary-gradient">Créditos del Cliente</p>
+        </div>
     </div>
-    <button class="btn btn-secondary" (click)="popupOne.close()">Cerrar</button>
 
+
+    <div class="small">
+
+        <ng2-smart-table [settings]="settings" class="table table-sm table-hover" [source]="charactersCreditos" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
+
+    </div>
+
+
+    <div class="container form-row text-center col-md-12 bg-gray-light">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <button class="btn btn-secondary" (click)="popupOne.close()">Cerrar</button>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
 </ngx-smart-modal>

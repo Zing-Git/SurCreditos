@@ -1,12 +1,30 @@
-<div class="form-row text-right">
-  <div class="col-12">
-      <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
-      <p class="bg-primary">Lista de Clientes</p>
-  </div>
+<app-form-cliente (pasameDatosDelCliente)="showCliente($event)"></app-form-cliente>
+
+<div class="form-row text-center">
+    <div class="col-12">
+        <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+        <p class="bg-secondary-gradient">LISTA DE CLIENTES</p>
+    </div>
 </div>
-<ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #usuarioForm></ng2-smart-table>
-<div class="form-row text-right">
-  <div class="col-1" >
-      <button class="btn btn-outline-info" (click)="imprimirClientes()">Imprimir Listado</button>
-  </div>
+
+<div class="container">
+    <div class="form-row text-left">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <!-- <ng2-smart-table [settings]="settings" class="table table-hover thead-dark" [source]="characters" (custom)="onCustom($event)" #usuarioForm></ng2-smart-table> -->
+            <ng2-smart-table [settings]="settings" class="table table-hover thead-dark" [source]="charactersUnNivel" (custom)="onCustom($event)" #usuarioForm></ng2-smart-table>
+
+            <div class="col-md-1">
+            </div>
+        </div>
+    </div>
+
+    <div class="container form-row text-center col-md-12 bg-gray-light">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <button class="btn btn btn-secondary" (click)="nuevoCliente()">Nuevo Cliente</button>
+            <button class="btn btn btn-secondary" (click)="imprimirClientes()">Imprimir Listado</button>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
 </div>

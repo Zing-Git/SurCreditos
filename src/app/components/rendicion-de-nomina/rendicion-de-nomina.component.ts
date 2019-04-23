@@ -21,11 +21,14 @@ export class RendicionDeNominaComponent implements OnInit {
   buttonImprimirDisabled: boolean = true;
   texto = '';
   source: any;
+  comisionCobrador: any;
+  guardado = false;
 
   dniCobrador: any;
   apellidoCobrador: any;
   token: string;
   idCobrador: string;
+  mostrarDetalleAsignacion = false;
 
   settings = {
     actions: {
@@ -90,6 +93,12 @@ export class RendicionDeNominaComponent implements OnInit {
 
         this.crearTablaDeNominasParaSeleccion(respuesta);
 
+      }, error => {
+        Swal(
+          'No se pudo obtener nominas de cobro del cobrador',
+          'Intente con otro cobrador',
+          'error'
+        );
       });
 
     });
@@ -155,8 +164,11 @@ export class RendicionDeNominaComponent implements OnInit {
        };
        rendicionCobranza.asignaciones.push(asignacion);
      });
+
+     this.mostrarDetalleAsignacion = true;
      // Carga de Nominas a la tabla
      this.nominas = rendicionCobranza;
+     this.calcularTotalCobrado();
      console.log(this.nominas);
    });
 
@@ -171,7 +183,13 @@ export class RendicionDeNominaComponent implements OnInit {
       let respuesta = resp;
       console.log(respuesta);
 
+
+      this.guardado = !this.guardado;
+
       if (resp.ok) {
+        // tslint:disable-next-line:max-line-length
+        this.comisionCobrador = 'Comision del Cobrador: ' + new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(respuesta.comisionCobrador)).toString();
+
         Swal({
           title: 'Se guardó correctamente las cobranzas del cobrador',
           text: 'Quieres imprimirla?',
@@ -182,7 +200,7 @@ export class RendicionDeNominaComponent implements OnInit {
           cancelButtonText: 'No, Cancelar'
         }).then((result) => {
           if (result.value) {
-            this.imprimirComprobanteNominaPago();
+            this.imprimirComprobanteNominaPago(respuesta);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
 
           }
@@ -205,6 +223,8 @@ export class RendicionDeNominaComponent implements OnInit {
   }
 
   calcularTotalCobrado(){
+
+    
     this.nominas.totalCobrado = 0;
     this.nominas.asignaciones.forEach(element => {
       this.nominas.totalCobrado = this.nominas.totalCobrado + element.montoCobrado;
@@ -245,7 +265,7 @@ export class RendicionDeNominaComponent implements OnInit {
 
 
 
-  imprimirComprobanteNominaPago() {
+  imprimirComprobanteNominaPago(respuesta: any) {
     const doc = new jsPDF();
     doc.setFontSize(12);
 
@@ -286,6 +306,8 @@ export class RendicionDeNominaComponent implements OnInit {
     // tslint:disable-next-line:max-line-length
     doc.text('Fecha de Rendición: ' + this.datePipe.transform(new Date(), 'dd/MM/yyyy') + '                 ' + 'Monto Pagado Total: ' + Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(this.nominas.totalCobrado), col1, fila1 + (i++ * incrementoFila));
     // tslint:disable-next-line:max-line-length
+    // doc.text('Comision Cobrador: ' + Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(respuesta.comisionCobrador), col1, fila1 + (i++ * incrementoFila));
+    doc.text(this.comisionCobrador, col1, fila1 + (i++ * incrementoFila));
     i++;
     i++;
     i++;

@@ -1,40 +1,49 @@
 <div class="form-row text-center">
-    <div class="col-12">
-        <p class="bg-primary">Orden de Pago</p>
+    <div class="col-12">        
+        <p class="bg-secondary-gradient">PAGO DE CREDITOS CON ORDEN DE PAGO</p>
     </div>
 </div>
 
+
+
 <div class="container">
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-10">
-            <form class="" [formGroup]="ordenDePagoForm">
-                <div class="form-row">
-                    <!-- Campo 1:  Dni Garante-->
-                    <div class="form-group col-md-6">
-                        <label for="inputDniGarante">* Número de Documento</label>
-                        <input type="number" formControlName="dni" class="form-control form-control-sm" (keyup.enter)="onEnterDniCliente()" id="inputDniCliente" placeholder="30300300">
-                    </div>
-
-                    <div class="col-md-6">
-                        <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>
-                    </div>
-
-                    <!-- Dni error block -->
-                    <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
-                        <div *ngIf="dni.errors['required']">
-                            El número de documento es requerido
-                        </div>
-                    </div>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <form class="" [formGroup]="ordenDePagoForm">
+        <div class="form-row">
+          
+             <div class="container form-row form-group text-center col-md-12 bg-gray-light">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <label for="inputDniGarante">* Dni del Cliente a Pagar</label>
+                    <input type="number" formControlName="dni" class="form-control form-control-sm" (keyup.enter)="onEnterDniCliente()" id="inputDniCliente" placeholder="">
+                    <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>        
                 </div>
-            </form>
+                <div class="col-md-4"></div>
+            </div>         
 
+         <!--  <div class="col-md-6"> -->
+            <!-- <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span> -->
+          <!-- </div> -->
+
+          <!-- Dni error block -->
+         <!--  <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
+            <div *ngIf="dni.errors['required']">
+              El número de documento es requerido
+            </div>
+          </div> -->
 
         </div>
-        <div>
-            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)" #ordenPagoForm></ng2-smart-table>
-        </div>
+      </form>
 
+      <div class="form-row">
+        <ng2-smart-table [settings]="settings" class="table table-hover" [source]="characters" (custom)="onCustom($event)"
+          #ordenPagoForm></ng2-smart-table>
+      </div>
     </div>
+
+
+  </div>
 
 </div>

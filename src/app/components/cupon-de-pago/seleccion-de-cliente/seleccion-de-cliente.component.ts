@@ -40,7 +40,7 @@ export class SeleccionDeClienteComponent implements OnInit {
   direccionCliente: string;
 
 
-
+  source: LocalDataSource;
 
   source2: LocalDataSource;
 
@@ -69,34 +69,46 @@ export class SeleccionDeClienteComponent implements OnInit {
       ],
     },
     columns: {
-      'titular.dni': {
+        dni: {
         title: 'Dni',
         width: '10%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.dni
       },
       nombreCompleto: {
         title: 'Apellido y Nombre',
         width: '25%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.apellidos + ', ' + row.nombres
       },
       localidad: {
         title: 'Localidad',
-        width: '20%',
+        width: '17%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.domicilio.localidad
+      },
+      barrio: {
+        title: 'Barrio',
+        width: '10%',
+        filter: false,
+        sort: true,
+        valuePrepareFunction: (cell, row) => row.domicilio.barrio
       },
       calle: {
         title: 'Calle',
-        width: '20%',
+        width: '15%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.domicilio.calle
       },
       numeroCasa: {
         title: 'Numero',
-        width: '10%',
+        width: '8%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.domicilio.numeroCasa
       }
 
@@ -105,6 +117,7 @@ export class SeleccionDeClienteComponent implements OnInit {
       display: true,
       perPage: 10
     },
+    noDataMessage: 'Esperando lista de clientes activos...'
   };
 
 
@@ -123,30 +136,35 @@ export class SeleccionDeClienteComponent implements OnInit {
         title: 'Dni',
         width: '10%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.cliente.dni
       },
       nombreApellido: {
         title: 'Cliente',
         width: '20%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.cliente.nombreApellido
       },
       direccion: {
         title: 'Direccion',
         width: '30%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.cliente.direccion
       },
       legajoCredito: {
         title: 'Legajo',
         width: '5%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.creditos[0].legajoCredito
       },
       valorDeCuota: {
         title: 'Cuota',
         width: '10%',
         filter: false,
+        sort: true,
         /* valuePrepareFunction: (cell, row) => row.creditos[0].valorDeCuota */
         valuePrepareFunction: (cell, row) => {
            return Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(row.creditos[0].valorDeCuota);
@@ -157,6 +175,7 @@ export class SeleccionDeClienteComponent implements OnInit {
         title: 'Saldo',
         width: '10%',
         filter: false,
+        sort: true,
         // valuePrepareFunction: (cell, row) => row.creditos[0].saldoACobrar
         valuePrepareFunction: (cell, row) => {
           return Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(row.creditos[0].saldoACobrar);
@@ -166,6 +185,7 @@ export class SeleccionDeClienteComponent implements OnInit {
         title: 'C. a cobrar',
         width: '15%',
         filter: false,
+        sort: true,
         valuePrepareFunction: (cell, row) => row.creditos[0].cuotasAdeudadas
       }
     },
@@ -173,6 +193,7 @@ export class SeleccionDeClienteComponent implements OnInit {
       display: true,
       perPage: 10
     },
+    noDataMessage: 'Esperando asignaciones de cobros...'
   };
 
 
@@ -183,6 +204,7 @@ export class SeleccionDeClienteComponent implements OnInit {
     public ngxSmartModalService: NgxSmartModalService,
     private cuotasService: CuotasService,
     private datePipe: DatePipe,
+
   ) {}
 
   ngOnInit() {
@@ -204,15 +226,43 @@ export class SeleccionDeClienteComponent implements OnInit {
     });
     this.cantidadCobranzas = 0;
   }
+
+
+
   cargarClientesActivos() {
+
+
 
     this.clientesService
       .postGetClientesActivos(this.session)
       .subscribe(resp => {
         this.characters = resp['clientes'];
-        // console.log(this.characters);
+        console.log(this.characters);
+        this.source = new LocalDataSource(this.characters); // create the source
       });
+
+
   }
+/*
+  buscarCreditosVigentes() {
+
+      this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe(response => {
+          let charactersCreditos = response['creditos'];
+
+
+            // console.log(characters);
+          if (typeof charactersCreditos === 'undefined') {
+            swal('Advertencia', 'Credito esta pagada o no existe!!', 'warning');
+          } else {
+            // this.charactersCreditos = characters;
+            this.charactersCreditos = JSON.parse(JSON.stringify(charactersCreditos));
+            // this.charactersCreditos = Object.assign({}, characters);
+          }
+
+        });
+  } */
+
+
 
   onCustom(event) {
     // alert(`Custom event '${event.action}' fired on row №: ${event.data.dni}`);
@@ -229,10 +279,12 @@ export class SeleccionDeClienteComponent implements OnInit {
     switch (evento) {
       case 'Carga de Cuotas': {
         console.log( 'DNI CLIENTE ELEGIDO: ' + dni);
+
         this.mostrarCuotas(dni);
         break;
       }
     }
+
 
 
 
@@ -281,6 +333,7 @@ export class SeleccionDeClienteComponent implements OnInit {
   cargarCobranzaACobrador(cobros: any) {
     // console.log(cobros);
 
+
     if (!this.cobranzaAsignadaACobrador) { // Encabezado-----------------------------------------------------------
 
       /* alert('Primera vuelta: ' + this.cantidadCobranzas.toString()); */
@@ -311,11 +364,6 @@ export class SeleccionDeClienteComponent implements OnInit {
 
     cobros[4].forEach(element => {
       // console.log('Cuotas Id:' + element._id);
-
-
-
-
-
       let xcuotaJson: Object = {
         _id: element._id,
       };
@@ -359,6 +407,16 @@ export class SeleccionDeClienteComponent implements OnInit {
     // this.asignacionesParaDataTable.push(asignacion);
 
 
+
+    // tslint:disable-next-line:max-line-length
+    // Se eliminar el cliente de la tabla: ---------------------------------------------- SI FUNCIONA, LO SAQUE PORQUE ES MEJOR USAR EL BUSCAR PARA PREPARAR LA NOMINA
+    // let objetoAEliminar =  this.characters.find(x => x.dni === this.dniCliente); // busca el objeto a eliminar con dni especifico
+    // console.log( 'Eliminar:::: ' , eliminar);
+    // this.characters = this.characters.filter(obj => obj !== objetoAEliminar);  // filtra la tabla mostrando todos menos el objeto eliminar
+    // FIN eliminar el cliente de la tabla: ----------------------------------------------
+
+
+
     this.source2 = new LocalDataSource();
     this.source2.load(this.asignaciones);
 
@@ -377,62 +435,7 @@ export class SeleccionDeClienteComponent implements OnInit {
 
   imprimirCuponesDePago() {
 
-    // Json con estructura de prueba
-    /* let xNominaCobrador =  {
-      token: 'ey',
-      usuario:'5bb35a1fb506ca09e8c37de6',
-      usuarioCobradorNombre:'Gutierrez',
-      fechaEmision:'Tue Oct 23 2018 20:26:07 GMT-0300 (hora estándar de Argentina)',
-      asignaciones:[
-         {
-            cliente: {
-               dni: '2000',
-               nombreApellido: 'Mercado, Mabel',
-               direccion: 'San Salvador - Sajama - 3324'
-            },
-            creditos: [
-               {
-                  _id: '5b967ac37243670454fa8b7c',
-                  legajoCredito: 'A-10',
-                  valorDeCuota: 2200,
-                  saldoACobrar: 200,
-                  interes: -2000,
-                  cuotas: [
-                     '5b967ac37243670454fa8b73'
-                  ],
-                  fechaCancelacionCredito: '2019-03-09T14:08:03.247Z',
-                  cuotasAdeudadas: '9, '
-               }
-            ]
-         },
-         {
-            cliente: {
-               dni: '1111',
-               nombreApellido: 'Muñoz, Alberto',
-               direccion: 'San Salvador - Sajama - 3324'
-            },
-            creditos: [
-               {
-                  _id: '5b9504177243670454fa8aa2',
-                  legajoCredito: 'A-9',
-                  valorDeCuota: 2034.5000000000002,
-                  saldoACobrar: 6103.500000000001,
-                  interes: 4069.000000000001,
-                  cuotas: [
-                     '5b9504177243670454fa8a91',
-                     '5b9504177243670454fa8a92',
-                     '5b9504177243670454fa8a93',
-                     '5b9504177243670454fa8a94'
-                  ],
-                  fechaCancelacionCredito: '2018-12-02T11:29:27.378Z',
-                  cuotasAdeudadas: '1, 2, 3, 4, '
-               }
-            ]
-         }
-      ]
-   }; */
 
-      // -----------------------
 
       let xNominaCobrador = this.cobranzaAsignadaACobrador;
 
@@ -575,7 +578,8 @@ export class SeleccionDeClienteComponent implements OnInit {
     });
   }
 
-  lanzarPopupGuardar(id: string){
+  // lanzarPopupGuardar(id: string){  tenia un argumento pero el build tiro error, se saco el argumento
+  lanzarPopupGuardar() {
     if (this.asignaciones.length > 0) {
       Swal({
         title: 'Estas seguro de guardar?',
@@ -599,6 +603,40 @@ export class SeleccionDeClienteComponent implements OnInit {
 
     }
   }
+
+  onSearch(query: string = '') {
+
+    if (query === '') {
+      this.source = new LocalDataSource(this.characters);
+    } else {
+        this.source.setFilter([
+          // fields we want to include in the search
+          {
+            field: 'dni',
+            search: query
+          },
+          {
+            field: 'apellidos',
+            search: query
+          },
+          {
+            field: 'domicilio.',
+            search: query
+          },
+          {
+            field: 'domicilio',
+            search: query
+          },
+          {
+            field: 'domicilio',
+            search: query
+          },
+
+        ], false);
+    }
+  }
+
+
 
 
 

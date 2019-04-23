@@ -3,18 +3,12 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { Session } from '../../modelo/util/session';
 import { LoginService } from '../../modules/servicios/login/login.service';
 import { Router } from '@angular/router';
-import { ClientesService } from '../../modules/servicios/clientes/clientes.service';
-import { DatePipe } from '@angular/common';
-import { OrdenPagoService } from '../../modules/servicios/ordenPago/orden-pago.service';
-import { TableOrdenDePago } from '../orden-de-pago/form-orden-de-pago/TableOrdenPago';
 import 'jspdf-autotable';
 import { CreditosService } from '../../modules/servicios/creditos/creditos.service';
-import { EstadoCasa } from '../../modelo/negocio/estado-casa';
-import { Estado } from '../../modelo/negocio/estado';
-import { TableCreditos } from './tableCreditos';
 import { ModalCuotasComponent } from './modal-cuotas/modal-cuotas.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import swal from 'sweetalert2';
+import * as moment from 'moment';
 
 declare let jsPDF;
 
@@ -50,12 +44,23 @@ export class CuotasComponent implements OnInit {
       ],
     },
     columns: {
+      fechaAlta: {
+        title: 'Fecha',
+        width: '15%',
+        filter: false,
+        valuePrepareFunction: (cell, row) => { return moment(row.fechaAlta).format('DD-MM-YYYY') }
+      },
+      titularDni: {
+        title: 'Dni',
+        width: '10%',
+        filter: false,
+        valuePrepareFunction: (cell, row) => row.titularDni
+      },
       nuevoLegajo: {
         title: 'Legajo',
         width: '10%',
         filter: false,
         valuePrepareFunction: (cell, row) => row.legajoPrefijo + ' - ' + row.legajo
-
       },
       titular: {
         title: 'Nombre titular',
@@ -63,14 +68,18 @@ export class CuotasComponent implements OnInit {
         filter: false,
         valuePrepareFunction: (cell, row) => row.titularApellidos + ', ' + row.titularNombres
       },
-
-      totalAPagar: {
-        title: 'Monto a Pagar',
-        width: '30%',
+      capital: {
+        title: 'Credito por',
+        width: '15%',
         filter: false,
         valuePrepareFunction: (value) => {
-          return value === 'totalAPagar' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+          return value === 'capital' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
         }
+      },
+      CantidadCuotas: {
+        title: 'Cuotas',
+        width: '10%',
+        filter: false,
       },
       tipoPlan: {
         title: 'Tipo Plan',
@@ -130,8 +139,11 @@ export class CuotasComponent implements OnInit {
     if (dni !== '') {
       this.creditosServices.postGetCreditosVigentes(this.session, dni).subscribe(response => {
         let charactersCreditos = response['creditos'];
+
+        console.log(charactersCreditos);
+
         if (typeof charactersCreditos === 'undefined') {
-          swal('Advertencia', 'Credito esta pagada o no existe!!', 'warning');
+          swal('info', 'Credito esta pagado o no existe!!', 'info');
           //location.reload();
         } else {
           this.charactersCreditos = JSON.parse(JSON.stringify(charactersCreditos));

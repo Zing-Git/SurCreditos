@@ -63,15 +63,11 @@ export class ModalCuotasComponent implements OnInit {
         filter: false,
         valuePrepareFunction: (value) => {
           let total: number= 0;
-          for(var i=0;i<value.length;i++)
-              {
+          for ( var i = 0 ; i < value.length; i++){
                      total += Number(value[i]);
                }
-
               return Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(total);
 
-
-            //value.join(",");   //aqui puedo usar metodos
         }
       },
       montoPendienteDePago: {
@@ -86,8 +82,10 @@ export class ModalCuotasComponent implements OnInit {
         title: 'Total a pagar',
         width: '8%',
         filter: false,
-        valuePrepareFunction: (value) => {
-          return value === 'MontoTotalCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+         valuePrepareFunction: (value) => {
+         return value === 'MontoTotalCuota' ? value : Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+
+
         }
       },
       fechaVencimiento: {
@@ -142,6 +140,8 @@ export class ModalCuotasComponent implements OnInit {
     //console.log('OBJETO CLONADO....' + this.cuotasSimuladas);
     if (monto > 0) {
 
+      console.log(this.cuotas);
+
       this.cuotas.forEach(i => {
 
         this.nuevaCuota = new Cuota();  //inicialiso la cuota
@@ -150,73 +150,58 @@ export class ModalCuotasComponent implements OnInit {
 
           valorConFormato = Math.round(i.montoPendienteDePago * 100) / 100;
 
-          if (i.montoPendienteDePago > 0 && monto >= valorConFormato) {   //tiene saldo? valorconformato
+          if (i.porcentajeInteresPorMora) {
+            this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
+          } else {
+            this.nuevaCuota.porcentajeInteresPorMora = 0;
+          }
 
-            monto = monto - valorConFormato; // i.montoPendienteDePago;
+          let interes = 0;
+          if (i.pagoInteres) {
+            interes = i.montoInteresPorMora;
+          }
 
+          // CASO: PAGO DE CUOTA COMPLETA QUE TIENE UN SALDO PENDIENTE DE PAGO
+          if ((i.montoPendienteDePago + interes) > 0 && monto >= (valorConFormato + interes)) {   //tiene saldo? valorconformato
+            monto = monto - (valorConFormato + interes); // i.montoPendienteDePago;
             this.nuevaCuota._id = String(i._id);
-
-            this.nuevaCuota.comentario = 'pago parcial';
+            this.nuevaCuota.comentario = 'pago total';
             this.nuevaCuota.diasRetraso = i.diasRetraso;
-            this.nuevaCuota.montoInteresPorMora = +i.montoInteresPorMora;
-            this.nuevaCuota.montoPagado = i.montoPendienteDePago;   //es el saldo
+
+            this.nuevaCuota.montoInteresPorMora = interes;
+
+            this.nuevaCuota.montoPagado = i.montoPendienteDePago + interes;   //es el saldo
             this.nuevaCuota.montoPagadoHistorico = i.montoPagado;
-
-            if(i.porcentajeInteresPorMora) {
-              this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
-            }else{
-              this.nuevaCuota.porcentajeInteresPorMora = 0;
-            }
-
             this.nuevaCuota.montoPendienteDePago = 0;
-            this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
+            this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota +  interes;
             this.nuevaCuota.orden = i.orden;
-            this.nuevaCuota.montoPagadoHistorico = i.montoPagado;
 
             this.cuotasSimuladas.push(this.nuevaCuota);
-            //controlar si es monto es 0 o negativo
 
-          } else {
+          } else { // CASO: PAGO DE CUOTA COMPLETAS QUE NO TIENE SALDO
             valorConFormato = Math.round(i.montoPendienteDePago * 100) / 100;
-            if (monto >= valorConFormato) {
 
-              monto = monto - (Math.round(i.MontoTotalCuota* 100) / 100);   //valocconformato
-
+            if (monto >= (valorConFormato + interes)) {
+              monto = monto - (Math.round((i.MontoTotalCuota + interes) * 100) / 100);   //valocconformato
               this.nuevaCuota._id = String(i._id);
-
               this.nuevaCuota.comentario = 'pago total';
               this.nuevaCuota.diasRetraso = i.diasRetraso;
-              this.nuevaCuota.montoPagado = i.MontoTotalCuota;   //es el total
-              this.nuevaCuota.montoInteresPorMora == i.montoInteresPorMora;
+              this.nuevaCuota.montoPagado = i.MontoTotalCuota + interes;   //es el total
+              this.nuevaCuota.montoInteresPorMora = interes;
               this.nuevaCuota.montoPagadoHistorico = i.montoPagado;
-
-              if(i.porcentajeInteresPorMora) {
-                this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
-              }else{
-                this.nuevaCuota.porcentajeInteresPorMora = 0;
-              }
-
               this.nuevaCuota.montoPendienteDePago = 0;
-              this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
+              this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota + interes;
               this.nuevaCuota.orden = i.orden;
 
               this.cuotasSimuladas.push(this.nuevaCuota);
 
-            } else {
+            } else { // CASO: PAGO PARCIAL DE UNA CUOTA
               valorConFormato = Math.round(i.montoPendienteDePago * 100) / 100;
               if (monto > 0) {
-
                 this.nuevaCuota._id = String(i._id);
-
-                if(i.porcentajeInteresPorMora) {
-                  this.nuevaCuota.porcentajeInteresPorMora = +i.porcentajeInteresPorMora;
-                }else{
-                  this.nuevaCuota.porcentajeInteresPorMora = 0;
-                }
-
                 this.nuevaCuota.comentario = 'pago parcial';
                 this.nuevaCuota.diasRetraso = i.diasRetraso;
-                this.nuevaCuota.montoInteresPorMora = +i.montoInteresPorMora;
+                this.nuevaCuota.montoInteresPorMora = interes;
                 this.nuevaCuota.montoPagado = monto;   //es el total
                 this.nuevaCuota.montoPagadoHistorico = i.montoPagado;
                 //aqui sumo el array de montos pagados
@@ -225,18 +210,31 @@ export class ModalCuotasComponent implements OnInit {
                     i.montoPendienteDePago = i.montoPendienteDePago + x;
                   })
                 }
-                this.nuevaCuota.montoPendienteDePago = i.montoPendienteDePago - monto;
-                this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota;
+
+                this.nuevaCuota.MontoTotalCuota = i.MontoTotalCuota + interes;
+                this.nuevaCuota.montoPendienteDePago = +this.nuevaCuota.MontoTotalCuota - monto;
                 this.nuevaCuota.orden = i.orden;
 
                 this.cuotasSimuladas.push(this.nuevaCuota);
-
-                monto = 0
+                monto = 0;
               }
             }
           }
         }
       });
+
+
+
+
+
+
+
+
+
+      console.log('PARA LA SIMULACION::::', this.cuotasSimuladas);
+
+
+
       //llamo al Simulador
       this.hijo.simularPago(this.cuotasSimuladas, this.creditos, this.idCredito, this.token);
       this.ngxSmartModalService.getModal('simuladorModal').open();

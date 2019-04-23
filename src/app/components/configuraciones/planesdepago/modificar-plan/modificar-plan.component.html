@@ -1,0 +1,63 @@
+<div class="py-5 text-center">
+    <div class="container">
+        <div class="row" style="">
+            <div class="mx-auto col-lg-6 col-10" style="">
+                <h2>Planes de Pago</h2>
+                <p class="mb-3"></p>
+                <form class="text-left">
+
+
+                    <!-- Campo 2: Tipo de Plan -->
+                    <div class="row " col-md-6>
+                        <label for="inputTipoDePlan ">Tipo de Plan de Pago</label>
+                        <select (change)="onChangeTipoPlanes()" [(ngModel)]="planElegido" [ngModelOptions]="{standalone: true}" class="custom-control custom-select custom-control-inline form-control-sm w-100 " id="inputTipoDePlan ">
+                          <option value="">Elige una opción</option>
+                          <option *ngFor="let eTipoDePlan of planesDePago ">
+                        {{eTipoDePlan.nombre}}
+                      </option>
+                      </select>
+                    </div>
+                    <br>
+
+                    <div class="row" col-md-12>
+                        <div class="col-md-6 text-center"><button type="submit" class="btn btn-secondary" (click)="lanzarInhabilitarTodoElPlan()">Inhabilitar Plan de Pago</button></div>
+                        <div class="col-md-6 text-center"><button class="btn btn-secondary" (click)="generarNuevoPlan()">Crear nuevo Plan de Pago</button></div>
+                    </div>
+                    <br>
+
+
+
+                    <div class="row " col-md-6>
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Orden</th>
+                                <th>Cantidad de Cuotas</th>
+                                <th>Tasa</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            <tr *ngFor="let item of planes; let indice=index">
+                                <td>{{indice+1}}</td>
+                                <td>
+                                    {{item.cantidadCuotas}}
+                                </td>
+                                <td>
+                                    {{item.tasa}}
+                                </td>
+                                <td>
+                                    <!-- <input [(ngModel)]='item.valorNuevo' [ngModelOptions]="{standalone: true}" type="number" name="decimals" ng-model="decimals" ng-pattern="/^(\d{0,3}(\.\d{0,2})?)$/ "> -->
+                                    <button class="btn btn-secondary" (click)="lanzarModificar(indice)">Modificar Tasa</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-secondary" (click)="lanzarInhabilitar(indice)">Inhabilitar Tasa</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

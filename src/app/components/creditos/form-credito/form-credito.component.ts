@@ -24,6 +24,7 @@ import { ModalComercioComponent } from '../modal-comercio/modal-comercio.compone
 import { Persona } from '../../../modelo/negocio/persona';
 import { Router } from '@angular/router';
 import swal from 'sweetalert2';
+import { ModalClienteComponent } from '../modal-cliente/modal-cliente.component';
 
 
 
@@ -37,6 +38,8 @@ export class FormCreditoComponent implements OnInit {
   // -------------------------
   @ViewChild(FormClienteComponent) hijo: FormClienteComponent;
   @ViewChild(ModalComercioComponent) hijoComercio: ModalComercioComponent;
+
+  @ViewChild(ModalClienteComponent) hijoClienteFiltro: ModalClienteComponent;
   // --------------------------
 
 
@@ -59,8 +62,8 @@ export class FormCreditoComponent implements OnInit {
   controls = [];
 
   cliente: any;
-  comercio: any;
-  garante: any;
+  comercio: any = '';
+  garante: any = '';
 
   referenciaCliente: ReferenciaCliente;
   referenciaComercio: ReferenciaComercio;
@@ -187,23 +190,23 @@ export class FormCreditoComponent implements OnInit {
       plan: new FormControl('', [Validators.required]),
       cobroDomicilio: new FormControl(false),
 
-      dniGarante: new FormControl('', [Validators.required]),
-      apellidosGarante: new FormControl('', [Validators.required]),
-      nombresGarante: new FormControl('', [Validators.required]),
-      fechaNacimientoGarante: new FormControl('', [Validators.required]),
+      dniGarante: new FormControl(''),
+      apellidosGarante: new FormControl(''),
+      nombresGarante: new FormControl(''),
+      fechaNacimientoGarante: new FormControl(''),
       cuit: new FormControl(''),
       razonSocial: new FormControl(''),
 
       // array de checkbox dinamico
       documentaciones: new FormArray(this.controls),
 
-      tipoReferenciaTitular: new FormControl('', [Validators.required]),
+      tipoReferenciaTitular: new FormControl(''),
       itemsReferenciasTitular: new FormArray(this.controls),
-      notaComentarioTitular: new FormControl('', [Validators.required]),
+      notaComentarioTitular: new FormControl(''),
 
-      tipoReferenciaComercio: new FormControl('', [Validators.required]),
+      tipoReferenciaComercio: new FormControl(''),
       itemsReferenciasComercio: new FormArray(this.controls),
-      notaComentarioComercio: new FormControl('', [Validators.required]),
+      notaComentarioComercio: new FormControl(''),
       prefijoLegajo: new FormControl(''),
       numeroLegajo:  new FormControl(''),
 
@@ -260,8 +263,20 @@ export class FormCreditoComponent implements OnInit {
     this.creditoNuevo.legajo = this.numeroLegajo.value;
     this.creditoNuevo.documentos = this.getDocumentosPresentadosAGuardar();
 
-    this.creditoNuevo.cliente = this.cliente._id;
-    this.creditoNuevo.garante = this.garante._id;
+    if (this.cliente._id === null) {
+      swal('Debe especificar un cliente titular!', 'No se puede guardar hasta que lo defina', 'info');
+    } else {
+      this.creditoNuevo.cliente = this.cliente._id;
+    }
+    if (this.garante._id) { // si es null entonces tira un undefined
+      this.creditoNuevo.garante = this.garante._id;
+      console.log('existe el id de garante');
+    } else {
+      delete this.creditoNuevo.garante;
+      console.log('no existe el id de garante');
+    }
+
+
     this.creditoNuevo.prefijoLegajo = this.prefijoLegajo.value;
 
 
@@ -273,26 +288,25 @@ export class FormCreditoComponent implements OnInit {
 
     this.getReferenciaCliente();
 
-    // console.log(this.creditoNuevo);
+    console.log(this.creditoNuevo);
+
+
+
+
 
     this.clientesService.postAgregarReferenciaCliente(this.referenciaCliente).subscribe( resultCliente => {
-      
-
         if (this.comercio) {
           // Si existe comercio
           this.creditoNuevo.comercio = this.comercio._id;
-          // console.log('ID de Comercio: ', this.creditoNuevo.comercio);
           // Agregar Referencia a Comercio
           this.getReferenciaComercio();
           // console.log('Referencia COmercio a GUARDAR: ', this.referenciaComercio);
           this.clientesService.postAgregarReferenciaComercio(this.referenciaComercio).subscribe( resultComercio => {
               // Alta de Credito
-              // console.log('Result de AgregarReferenciaA Comercio: ', resultComercio);
               this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
                   let respuesta = result;
                   // console.log('Result de Guardar Credito: ', respuesta);
-                  swal('Bien hecho!', 'Credito generado con éxito','success');
-                  //alert('Bien hecho!, Credito generado con éxito');
+                  swal('Bien hecho!', 'Credito generado con éxito', 'success');
                   this.router.navigate(['crudcreditos']);
               }, err => {
                   alert('Hubo un problema al registrar la solicitud de credito');
@@ -301,17 +315,21 @@ export class FormCreditoComponent implements OnInit {
               alert('Ocurrio un error al asignar la referencia al comercio');
           });
         } else {
-          // Si no Existe el  Comercio, dar el alta antes de guardar credito--------------------
-          alert('Hubo un problema con el comercio, intente seleccionar un comercio correcto');
+            this.creditosService.postGuardarCredito(this.creditoNuevo).subscribe(result => {
+                let respuesta = result;
+                swal('Bien hecho!', 'Credito generado con éxito', 'success');
+                this.router.navigate(['crudcreditos']);
+            }, err => {
+                swal('No se pudo guardar', 'Hubo un problema al registrar la solicitud de credito, reintente en un momento', 'error');
+            });
         }
     }, err => {
-      alert('Hubo un problema al asignar una referencia al cliente');
+
+      swal('No se pudo guardar', 'Hubo un problema al asignar una referencia al cliente', 'error');
     });
 
 
 
-
-    // console.log(this.creditoNuevo);
   }
 
 
@@ -419,6 +437,20 @@ export class FormCreditoComponent implements OnInit {
         let clientes = response['clientes'];
     });
   }
+
+  buscarClientePorFiltro() {
+    this.switchClienteGarante = 'FILTRO';
+    this.hijoClienteFiltro.recibePametros();
+    this.ngxSmartModalService.getModal('clienteModalPorFiltro').open();
+  }
+  buscarGarantePorFiltro() {
+    this.switchClienteGarante = 'FILTROGARANTE';
+    this.hijoClienteFiltro.recibePametros();
+    this.ngxSmartModalService.getModal('clienteModalPorFiltro').open();
+  }
+
+
+
   buscarClientePorDni() {
     let dni = this.dni.value;
     let tipoDeAlta: string;
@@ -447,8 +479,10 @@ export class FormCreditoComponent implements OnInit {
                 persona = {
                   dni: this.dni.value,
                 };
+
                 this.hijo.recibePametros(persona, tipoDeAlta);
                 this.ngxSmartModalService.getModal('clienteModal').open();
+
               }
             });
       });
@@ -475,6 +509,48 @@ export class FormCreditoComponent implements OnInit {
 
       // Carga de compos de Tipos de Planes
       this.tiposPlanes = response['respuesta'].tiposPlanes;
+
+
+
+
+
+
+
+/*       // Se elije por defecto la primer opcion de plan de pagos
+      this.tipoDePlan.setValue(this.tiposPlanes[0]);
+      console.log(this.tipoDePlan.value);
+      // this.onChangeTipoPlanes();
+      // this.tipoPlanElegido =  this.tiposPlanes.find(x => x.nombre === this.creditoForm.get('tipoDePlan').value);
+      this.tipoPlanElegido = this.tiposPlanes[0];
+      this.planes = this.tipoPlanElegido.plan;
+
+      this.plan.setValue(this.planes[0]);
+      // this.onChangePlanes();
+      // let planCuotaElegido = parseInt(this.creditoForm.get('plan').value, 10);
+      this.planElegido =  this.planes[0];
+
+      console.log(this.tipoPlanElegido);
+      // this.planes = this.tipoPlanElegido.plan;
+      this.onChangePlanes(); */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       // Tipo de Referencia: Buena - Mala - Regular
       this.tiposReferencias = response['respuesta'].tiposReferencias;
       this.prefijoLegajo.setValue('A');
@@ -633,21 +709,34 @@ export class FormCreditoComponent implements OnInit {
 
   calcularPlanDePago() {
 
-      this.planPago = {
-        montoSolicitado: this.montoSolicitado.value,
-        cobranzaEnDomicilio: this.cobroDomicilio.value,
-        cantidadCuotas: this.plan.value,
-        tasa: this.planElegido.tasa,
-        diasASumar: this.tipoPlanElegido.diasASumar,
-      };
+      if (this.tipoDePlan.value === '') {
+        swal('Debe seleccionar un Tipo de Plan de Pago', 'Luego seleccione un plan de cuotas', 'info');
+      } else {
+        if (this.plan.value === '') {
+          swal('Debe seleccionar un Plan de Cuotas', 'Luego presione Ver Plan de Pago ', 'info');
+        } else {
 
+          this.planPago = {
+            montoSolicitado: this.montoSolicitado.value,
+            cobranzaEnDomicilio: this.cobroDomicilio.value,
+            cantidadCuotas: this.plan.value,
+            tasa: this.planElegido.tasa,
+            diasASumar: this.tipoPlanElegido.diasASumar,
+          };
+          console.log(this.planPago);
 
-      this.creditosService.postGetPlanDePago(this.planPago).subscribe( response => {
-          let p = response['planPago'];
-         // Asignacion para cargar la tabla de datos
-         this.characters = p.planPagos;
-      });
+          this.creditosService.postGetPlanDePago(this.planPago).subscribe( response => {
+              let p = response['planPago'];
+             // Asignacion para cargar la tabla de datos
+             this.characters = p.planPagos;
+             console.log(this.characters);
+          }, error => {
+            swal('No se puede armar el plan de pago', 'Intente mas tarde', 'info');
 
+          });
+
+        }
+      }
   }
 
 
@@ -752,13 +841,27 @@ export class FormCreditoComponent implements OnInit {
 /*     console.log('CLIENTE GUARDADO: ', event.cliente);
     console.log('CLIENTE RESULT: ', event.result);
  */
+    console.log(this.switchClienteGarante);
+
     switch (this.switchClienteGarante) {
         case 'CLIENTE':
           this.buscarClientePorDni();
           break;
         case 'GARANTE':
-        this.buscarGarantePorDni();
-        break;
+          this.buscarGarantePorDni();
+          break;
+        case 'FILTRO':
+          console.log('CLIENTE seleccionado: ', event.cliente);
+          let dni = event.cliente;
+          this.dni.setValue(dni);
+          this.buscarClientePorDni();
+          break;
+       case 'FILTROGARANTE':
+          console.log('garante seleccionado: ', event.cliente);
+          let dniGarante = event.cliente;
+          this.dniGarante.setValue(dniGarante);
+          this.buscarGarantePorDni();
+          break;
     }
   }
   showComercio(event): void {
@@ -768,7 +871,7 @@ export class FormCreditoComponent implements OnInit {
 
   // Validaciones
   onEnterDniCliente() {
-    this.buscarClientePorDni();
+    // this.buscarClientePorDni();
   }
   onEnterDniGarante() {
     this.buscarGarantePorDni();

@@ -1,0 +1,57 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <!-- <button type="button" class="btn btn-outline-info" (click)="nuevoCliente()">Nuevo</button> -->
+        <p class="bg-secondary-gradient">RENDICIONES PENDIENTES DE COBRADORES</p>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="form-row text-left">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <ng2-smart-table [settings]="settings" class="table table-hover thead-dark" [source]="rendicionesPendientes" (custom)="onCustom($event)" #usuarioForm></ng2-smart-table>
+            <div class="col-md-1">
+            </div>
+        </div>
+    </div>
+
+    <!--  DATOS ESTADISTICOS DE PAGOS -->
+    <p></p>
+    <hr>
+    <div class="row bg-gray-light">
+        <hr>
+        <div class="col-md-4 col-sm-6 col-xs-12"></div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="fa fa-money" aria-hidden="true"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Total A Cobrar</span>
+                    <span class="info-box-number">{{totalAcobrar | currency }}<small></small></span>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- /.col -->
+        <!-- <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fa fa-usd" aria-hidden="true"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Cobrado</span>
+                    <span class="info-box-number"> {{totalCobrado | currency }}</span>
+                </div>
+
+            </div>
+
+        </div> -->
+        <div class="col-md-4 col-sm-6 col-xs-12"></div>
+        <!-- /.col -->
+    </div>
+
+
+
+    <!--  DATOS ESTADISTICOS DE PAGOS -->
+</div>

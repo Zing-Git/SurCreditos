@@ -1,41 +1,49 @@
 <app-modal-cuotas></app-modal-cuotas>
 
 <div class="form-row text-center">
-    <div class="col-12">
-        <p class="bg-primary">Cobro de Cuotas</p>
+    <div class="col-12">        
+        <p class="bg-secondary-gradient">COBRO DE CUOTAS A CLIENTES</p>
     </div>
 </div>
+
+
+
+
 <div class="container">
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
-            <!-- <h2><strong>Buscar Creditos</strong></h2> -->
             <form class="" [formGroup]="cuotasForm">
                 <div class="form-row">
-                    <!-- Campo 1:  Dni Garante-->
-                    <div class="form-group col-md-6">
-                        <label for="inputDni">* Número de Documento</label>
-                        <input type="number" formControlName="dni" class="form-control form-control-sm" (keyup.enter)="onEnterDniCliente()" id="inputDniCliente" placeholder="30300300">
-                    </div>
 
-                    <div class="col-md-6">
-                        <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>
-                    </div>
+                    
+                    <div class="container form-row form-group text-center col-md-12 bg-gray-light">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <label for="inputDni">* Dni del Cliente que quiere pagar</label>
+                            <input type="number" formControlName="dni" class="form-control form-control-sm" (keyup.enter)="onEnterDniCliente()" id="inputDniCliente" placeholder="">        
+                            <span class="btn btn-outline-primary" (click)="buscarCreditoPorDni()">Buscar</span>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>   
+
+
 
                     <!-- Dni error block -->
-                    <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
+                    <!-- <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
                         <div *ngIf="dni.errors['required']">
                             El número de documento es requerido
                         </div>
-                    </div>
+                    </div> -->
+
+
+                    
                 </div>
             </form>
-
+            <div>
+                <ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersCreditos" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
+            </div>
 
         </div>
-        <div>
-            <ng2-smart-table [settings]="settings" class="table table-hover" [source]="charactersCreditos" (custom)="onCustom($event)" #cuotasTableForm></ng2-smart-table>
-        </div>
-
     </div>
 </div>

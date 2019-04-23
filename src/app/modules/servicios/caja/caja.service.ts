@@ -26,6 +26,9 @@ export class CajaService {
   public urlAbrirCaja = this.urlBase + '/caja/abrir/';
   public urlCerrarCaja = this.urlBase + '/caja/cerar/';
   public urlVerificarEstadoCaja = this.urlBase + '/caja/obtener_caja_abierta/';
+  public urlRendicionesPendientes = this.urlBase + '/caja/devolver_rendiciones_pendientes/';
+  private urlGetReporteCaja = this.urlBase + '/reportes/ingresos_egresos_por_periodo/';
+  private urlGetReporteCajaPorFecha = this.urlBase + '/reportes/movimientos_de_caja_por_fecha/';
 
 
 
@@ -74,6 +77,46 @@ export class CajaService {
     const newSession = Object.assign({}, parametros);
     return this.http.post<any>(this.urlVerificarEstadoCaja, newSession, cudOptions);
   }
+  postGetNominasDeRendionDeCobranzasPendientes(token: string): Observable<any> {
+    const parametros = {
+      token: token
+    };
+    const newSession = Object.assign({}, parametros);
+    return this.http.post<any>(this.urlRendicionesPendientes, newSession, cudOptions);
+  }
+
+  postGetReporteCaja(param: any): Observable<any[]> {
+    const parameter = {
+      token: param.token,
+      diaInicio: param.diaInicio.toString(),
+      diaFin: param.diaFin.toString(),
+      mesInicio: param.mesInicio.toString(),
+      mesFin: param.mesFin.toString(),
+      anioInicio: param.anioInicio.toString(),
+      anioFin: param.anioFin.toString()
+    };
+    console.log(parameter);
+    const newSession = Object.assign({}, parameter);
+
+    return this.http.post<any[]>(this.urlGetReporteCaja, newSession,cudOptions);
+  }
+
+  postGetReportePorCajaSegunFecha(param: any): Observable<any[]>{
+
+    const parameter = {
+      token: param.token,
+      dia: param.dia.toString(),
+      mes: param.mes.toString(),
+      anio: param.anio.toString()
+    };
+    console.log(parameter);
+    const newSession = Object.assign({}, parameter);
+
+    return this.http.post<any[]>(this.urlGetReporteCajaPorFecha, newSession,cudOptions);
+  }
+
+
+
 
 
 

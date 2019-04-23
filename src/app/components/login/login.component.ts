@@ -6,6 +6,7 @@ import { LoginService } from '../../modules/servicios/login/login.service';
 import { Session } from '../../modelo/util/session';
 import { environment } from '../../../environments/environment';
 import swal from 'sweetalert2';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,10 @@ export class LoginComponent implements OnInit {
   mensaje: string;
   idRol: string;
   miSession: Session;
-  constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService) { }
+  constructor(private router: Router, private loginService: LoginService, private usuariosService: UsuariosService, private spinnerService: Ng4LoadingSpinnerService) {
+
+    this.consultar();
+  }
 
   ngOnInit() {
 
@@ -24,16 +28,20 @@ export class LoginComponent implements OnInit {
       console.log ('Servicio TEST: ', resp );
     }); */
 
+    this.consultar();
 
+
+  }
+
+  consultar(): void {
     if (this.loginService.getDatosDeSession().token == null) {
-      console.log(this.loginService.getDatosDeSession().token + 'TOKEN VACIO....');
+      // console.log(this.loginService.getDatosDeSession().token + 'TOKEN VACIO....');
       this.router.navigate(['/login']);
 
-    } else{
-      console.log(this.loginService.getDatosDeSession().token + 'TOKEN lleno....');
+    } else {
+      // console.log(this.loginService.getDatosDeSession().token + 'TOKEN lleno....');
       this.router.navigate(['/info']);
     }
-
   }
 
 
@@ -44,13 +52,14 @@ export class LoginComponent implements OnInit {
     session.nombreUsuario = form.value.nombreUsuario;
     session.clave = form.value.password;
 
+    this.spinnerService.show();
     this.usuariosService.postLogin(session).subscribe(response => {
       session.token = response['token'];
       session.rol_id = response['usuario'].rol._id;
       session.rolPrecendencia = response['usuario'].rol.precedencia;
       session.usuario_id = response['usuario']._id;
 
-      console.log('DATOS DE SESSION: ', response);
+      // console.log('DATOS DE SESSION: ', response);
 
       switch (session.rol_id) {
         case '5b91731eb02df40f286142bc': {
@@ -75,14 +84,17 @@ export class LoginComponent implements OnInit {
           break;
         }
         default: {
-          console.log('No se encontro este ID de rol en case de login component: ', session.rol_id);
+          // console.log('No se encontro este ID de rol en case de login component: ', session.rol_id);
           break;
         }
       }
       this.loginService.registrarLogin(session);
+      this.spinnerService.hide();
 
       if (session.rolNombre === 'CAJERO'){
-          if (this.loginService.getIdCaja() === '0') {
+        console.log(this.loginService.getIdCaja());
+
+          if (this.loginService.getIdCaja() === '0' || this.loginService.getIdCaja() === null) {
             swal(
               'Debe Abrir una Caja para comenzar a operar...',
               'Ingrese la caja sobre la que quiere trabajar y un monto inicial de caja',
@@ -103,6 +115,13 @@ export class LoginComponent implements OnInit {
 
       this.miSession = session;
 
-    });
+    }, error => {
+      swal(
+        'No se pudo iniciar sesión',
+        'Intente nuevamente con usuario y clave válidos',
+        'error'
+      );
+    }
+    );
   }
 }

@@ -32,7 +32,7 @@ export class FormUsuarioComponent implements OnInit {
                         __v: 0
                     }]
               }; */
- 
+
 
 
   public provincias: Provincia[];
@@ -191,11 +191,14 @@ export class FormUsuarioComponent implements OnInit {
 
 
     guardarUsuario(usuario: any) {
-      
+
       console.log('USUARIO A GUARDAR: ', usuario);
 
       this.usuariosService.postAddUsuario(usuario).subscribe(response => {
             let respuesta = response['usuarioDB'];
+
+            console.log(response['usuarioDB']);
+
             let element: HTMLElement = document.getElementById('guardarOk') as HTMLElement;
             element.click();
           }, err => {
@@ -220,6 +223,7 @@ export class FormUsuarioComponent implements OnInit {
 
         this.usuariosService.postGetRoles(this.tokenizer).subscribe(response => {
           this.roles = response['rol'];
+          console.log(this.roles);
         });
   }
 
@@ -230,6 +234,6 @@ export class FormUsuarioComponent implements OnInit {
 
   resetForm() {
     this.usuarioForm.reset();
-  }  
+  }
 
 }

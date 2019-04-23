@@ -23,9 +23,19 @@ import { RendicionDeNominaComponent } from './components/rendicion-de-nomina/ren
 import { IngresoEgresoComponent } from './components/ingreso-egreso/ingreso-egreso.component';
 import { OpertativosComponent } from './components/reportes/opertativos/opertativos.component';
 import { FinancierosComponent } from './components/reportes/financieros/financieros.component';
-import { CajaComponent } from './components/reportes/caja/caja.component';
+// import { CajaComponent } from './components/reportes/caja/caja.component';
 import { AbrirCajaComponent } from './components/caja/abrir-caja/abrir-caja.component';
 import { CerrarCajaComponent } from './components/caja/cerrar-caja/cerrar-caja.component';
+import { ReporteCreditos } from './components/reportes/reporteOperativos/reporteCreditos/reporteCreditos.component';
+import { ReporteClientes } from './components/reportes/reporteOperativos/reporteClientes/reporteClientes.component';
+import { ReportePlanes } from './components/reportes/reporteOperativos/reportePlanes/reportePlanes.component';
+import { ConfiguracionesComponent } from './components/configuraciones/configuraciones.component';
+import { RendicionesPendientesComponent } from './components/rendiciones-pendientes/rendiciones-pendientes.component';
+import { ReporteCaja } from './components/reportes/caja/reporteCaja/reporteCaja.component';
+import { ReportePlanesAtrasadosComponent } from './components/reportes/reporteOperativos/reporte-planes-atrasados/reporte-planes-atrasados.component';
+import { PlanesdepagoComponent } from './components/configuraciones/planesdepago/planesdepago.component';
+import { ModificarPlanComponent } from './components/configuraciones/planesdepago/modificar-plan/modificar-plan.component';
+
 
 export const appRoutes: Routes = [
   /* { path: "usuarioedit", component: UserEditComponent },
@@ -58,14 +68,23 @@ export const appRoutes: Routes = [
 { path: 'ingresoegreso', component: IngresoEgresoComponent , canActivate: [LoginGuard]},
 { path: 'reportesoperativos', component: OpertativosComponent , canActivate: [LoginGuard]},
 { path: 'reportesfinancieros', component: FinancierosComponent , canActivate: [LoginGuard]},
-{ path: 'reportescaja', component: CajaComponent , canActivate: [LoginGuard]},
+/* { path: 'reportescaja', component: CajaComponent , canActivate: [LoginGuard]}, */
 { path: 'abrircaja', component: AbrirCajaComponent , canActivate: [LoginGuard]},
 { path: 'cerrarcaja', component: CerrarCajaComponent , canActivate: [LoginGuard]},
+{ path: 'configuraciones', component: ConfiguracionesComponent , canActivate: [LoginGuard]},
+{ path: 'rendicionespendientes', component: RendicionesPendientesComponent , canActivate: [LoginGuard]},
+{ path: 'reportecaja', component: ReporteCaja , canActivate: [LoginGuard]},
+{ path: 'reporteplanesatrasados', component: ReportePlanesAtrasadosComponent , canActivate: [LoginGuard]},
+{ path: 'planesdepago', component: PlanesdepagoComponent , canActivate: [LoginGuard]},
+{ path: 'modificarplandepago', component: ModificarPlanComponent , canActivate: [LoginGuard]},
 
 
-
-
-
+/*
+{ path: 'reportesoperativos', component: OpertativosComponent, canActivate: [LoginGuard]},
+{ path: 'reportesfinancieros', component: FinancierosComponent, canActivate: [LoginGuard]}, */
+{ path: 'reporteCreditos', component: ReporteCreditos, canActivate: [LoginGuard]},
+{ path: 'reporteClientes', component: ReporteClientes, canActivate: [LoginGuard]},
+{ path: 'reportePlanes', component: ReportePlanes, canActivate: [LoginGuard]},
 { path: '', component: LoginComponent},
 /* { path: '', component: LoginComponent, canActivate: [NoLoginGuard] }, */
 // si es la raiz el login, sale el component de login al iniciar el menu

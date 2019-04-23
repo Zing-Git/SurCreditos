@@ -1,3 +1,9 @@
+<div class="form-row text-center">
+    <div class="col-12">
+        <p class="bg-secondary-gradient">VER DATOS DE USUARIO</p>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-1"></div>
@@ -72,10 +78,9 @@
                                     </div>
                                 </div>
 
-
-                                <div class="form-row text-right">
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</button>
+                                        <span class="btn btn btn-secondary" (click)="t.select('tab-selectbyid2')">Siguiente</span>                                        
                                     </div>
                                 </div>
                             </ng-template>
@@ -169,10 +174,10 @@
                                   </select>
                                 </div>
 
-                                <div class="form-row text-right">
+                                 <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</button>
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</button>
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid1')">&nbsp;&nbsp;Atrás &nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid3')">Siguiente</span>
                                     </div>
                                 </div>
 
@@ -284,12 +289,14 @@
                                     <input type="text" formControlName="email" id="inputEmail" class="form-control form-control-sm" placeholder="Ingrese dirección de email">
                                 </div>
 
-                                <div class="form-row text-right">
+                            
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</button>
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid4')">Siguiente</button>
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid2')">&nbsp;&nbsp;Atrás &nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid4')">Siguiente</span>
                                     </div>
                                 </div>
+
 
                             </ng-template>
                         </ngb-tab>
@@ -348,10 +355,10 @@
                                 <!--- Buttons Block Solo envia si el form esta validado-->
                                 <div class="form-row text-right">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Atrás</button>
-                                        <!-- <button type="reset" class="btn btn-outline-primary">Cancelar</button> -->
-                                        <button type="button" href="#btnCancelarModal" class="btn btn-outline-primary" data-toggle="modal">Cancelar</button>
-                                        <button type="submit" [disabled]="!usuarioForm.valid" class="btn btn-outline-primary">Guardar</button>
+                                        
+                                        <button class="btn btn-secondary" (click)="t.select( 'tab-selectbyid3')">&nbsp; Atrás &nbsp;</button>&nbsp;&nbsp;                                        
+                                        <button type="submit" [disabled]="true" class="btn btn-secondary">Guardar</button>
+
 
                                         <!-- Boton oculto que permite abrir el modal de guardado OK -->
                                         <div id="oculto" style="display:none;">

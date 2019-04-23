@@ -1,12 +1,12 @@
 <!-- <button (click)="buscarCreditoPorID()">BUSCAR CREDITO POR ID</button> -->
-<app-modal-cliente></app-modal-cliente>
 
 <app-modal-comercio (pasameDatosDelComercio)="showComercio($event)"></app-modal-comercio>
 <app-form-cliente (pasameDatosDelCliente)="showCliente($event)"></app-form-cliente>
+<app-modal-cliente (pasameCliente)="showCliente($event)"></app-modal-cliente>
 
 <div class="form-row text-center">
     <div class="col-12">
-        <p class="bg-primary">Nuevo Crédito</p>
+        <p class="bg-secondary-gradient">NUEVO CRÉDITO</p>
     </div>
 </div>
 
@@ -27,12 +27,16 @@
                                     <!-- Campo 1:  Dni-->
                                     <div class="form-group col-md-6">
                                         <label for="inputDni">* Número de Documento</label>
-                                        <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDni" placeholder="30300300" (keyup.enter)="onEnterDniCliente()">
+                                        <input type="number" formControlName="dni" class="form-control form-control-sm" id="inputDni" placeholder="" (keyup.enter)="onEnterDniCliente()">
                                     </div>
 
                                     <div class="col-md-6">
-                                        <span class="btn btn-outline-primary" (click)="buscarClientePorDni()">Buscar</span>
+                                        <span class="btn btn-outline-primary" (click)="buscarClientePorFiltro()"> + Agregar Cliente</span>
+
                                     </div>
+                                    <!-- <div class="col-md-6">
+                                        <span class="btn btn-outline-primary" (click)="buscarClientePorDni()">Buscar</span>
+                                    </div> -->
 
                                     <!-- Dni error block -->
                                     <div *ngIf="dni.invalid && dni.touched" class="col-sm-6 text-danger">
@@ -47,13 +51,13 @@
                                 <!-- Campo 2:  Apellido-->
                                 <div class="form-group">
                                     <label for="inputApellidos">* Apellido/s</label>
-                                    <input type="text" formControlName="apellidos" class="form-control form-control-sm" id="inputApellidos" placeholder="Perez">
+                                    <input type="text" formControlName="apellidos" class="form-control form-control-sm" id="inputApellidos" placeholder="">
                                 </div>
 
                                 <!-- Campo 3:  Nombres-->
                                 <div class="form-group">
                                     <label for="inputNombres">* Nombres</label>
-                                    <input type="text" formControlName="nombres" class="form-control form-control-sm" id="inputNombres" placeholder="Juan">
+                                    <input type="text" formControlName="nombres" class="form-control form-control-sm" id="inputNombres" placeholder="">
                                 </div>
 
                                 <!-- Campo 4:  Fecha de Nacimiento-->
@@ -70,9 +74,9 @@
 
 
 
-                                <div class="form-row text-right">
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Siguiente</span>
+                                        <span class="btn btn btn-secondary" (click)="t.select('tab-selectbyid2')">Siguiente</span>
                                     </div>
                                 </div>
                             </ng-template>
@@ -87,7 +91,7 @@
                                     <!-- Campo 1:  Monto Solicitado-->
                                     <div class="form-group col-md-6">
                                         <label for="inputMontoSolicitado">* Monto Solicitado</label>
-                                        <input type="number" formControlName="montoSolicitado" class="form-control form-control-sm" id="inputMontoSolicitado" placeholder="10000">
+                                        <input type="number" formControlName="montoSolicitado" class="form-control form-control-sm" id="inputMontoSolicitado" placeholder="">
                                     </div>
 
                                     <!-- Campo 2: Tipo de Plan -->
@@ -95,6 +99,7 @@
                                         <label for="inputTipoDePlan">* Tipo de Plan</label>
                                         <select formControlName="tipoDePlan" (change)="onChangeTipoPlanes()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputTipoDePlan">
                                       <!-- <option *ngFor="let eTipoDePlan of tiposPlanes" [value]="eTipoDePlan._id"> -->
+                                          <option selected>Elija una opcion...</option>
                                           <option *ngFor="let eTipoDePlan of tiposPlanes">
                                             {{eTipoDePlan.nombre}}
                                           </option>
@@ -112,9 +117,10 @@
                                 <!-- Campo 3: Plan-->
                                 <div class="form-row align-items-center">
                                     <div class="form-group col-md-4">
-                                        <label for="inputPlan">* Plan</label>
+                                        <label for="inputPlan">* Plan de Cuotas</label>
                                         <select formControlName="plan" (change)="onChangePlanes()" class="custom-control custom-select custom-control-inline form-control-sm w-100" id="inputPlan">
-                                      <option *ngFor="let fPlan of planes">
+                                          <option selected>Elija una opcion...</option>
+                                          <option *ngFor="let fPlan of planes">
                                           {{fPlan.cantidadCuotas}}
                                       </option>
                                     </select>
@@ -132,10 +138,10 @@
                                 </div>
 
 
-                                <div class="form-row text-right">
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid1')">Atrás</span>
-                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid3')">Siguiente</span>
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid1')">&nbsp;&nbsp;Atrás &nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid3')">Siguiente</span>
                                     </div>
                                 </div>
                             </ng-template>
@@ -151,12 +157,17 @@
                                     <!-- Campo 1:  Dni Garante-->
                                     <div class="form-group col-md-6">
                                         <label for="inputDniGarante">* Número de Documento</label>
-                                        <input type="number" formControlName="dniGarante" class="form-control form-control-sm" id="inputDniGarante" placeholder="30300300" (keyup.enter)="onEnterDniGarante()">
+                                        <input type="number" formControlName="dniGarante" class="form-control form-control-sm" id="inputDniGarante" placeholder="" (keyup.enter)="onEnterDniGarante()">
                                     </div>
 
                                     <div class=" col-md-6">
                                         <span class="btn btn-outline-primary " (click)="buscarGarantePorDni()">Buscar</span>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <span class="btn btn-outline-primary" (click)="buscarGarantePorFiltro()"> + Agregar Garante</span>
+                                    </div>
+
 
                                     <!-- Dni error block -->
                                     <div *ngIf="dniGarante.invalid && dniGarante.touched" class="col-sm-6 text-danger">
@@ -169,13 +180,13 @@
                                     <!-- Campo 2:  Apellido-->
                                     <div class="form-group col-md-4 ">
                                         <label for="inputApellidosGarante">* Apellido/s</label>
-                                        <input type="text" formControlName="apellidosGarante" class="form-control form-control-sm" id="inputApellidosGarante" placeholder="Perez">
+                                        <input type="text" formControlName="apellidosGarante" class="form-control form-control-sm" id="inputApellidosGarante" placeholder="">
                                     </div>
 
                                     <!-- Campo 3:  Nombres-->
                                     <div class="form-group col-md-4">
                                         <label for="inputNombresGarante">* Nombres</label>
-                                        <input type="text" formControlName="nombresGarante" class="form-control form-control-sm" id="inputNombresGarante" placeholder="Juan">
+                                        <input type="text" formControlName="nombresGarante" class="form-control form-control-sm" id="inputNombresGarante" placeholder="">
                                     </div>
 
                                     <!-- Campo 4:  Fecha de Nacimiento-->
@@ -197,7 +208,7 @@
                                 <div class="form-row">
                                     <!-- Campo 5:  Cuit-->
                                     <div class="form-group col-md-6">
-                                        <label for="inputCuit">* Cuit</label>
+                                        <label for="inputCuit">* Cuit (sin espacios)</label>
                                         <input type="number" formControlName="cuit" class="form-control form-control-sm" id="inputCuit" placeholder="20303003000" (keyup.enter)="onEnterCuitComercio()">
                                     </div>
                                     <div class="col-md-6">
@@ -215,13 +226,14 @@
                                 <!-- Campo 6:  Razon Social-->
                                 <div class="form-group">
                                     <label for="inputRazonSocial">* Razon Social</label>
-                                    <input type="text" formControlName="razonSocial" class="form-control form-control-sm" id="inputRazonSocial" placeholder="Juan Perez">
+                                    <input type="text" formControlName="razonSocial" class="form-control form-control-sm" id="inputRazonSocial" placeholder="">
                                 </div>
 
-                                <div class="form-row text-right">
+
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid2')">Atrás</span>
-                                        <span class="btn btn-outline-primary" (click)="t.select('tab-selectbyid4')">Siguiente</span>
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid2')">&nbsp;&nbsp;Atrás &nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;
+                                        <span class="btn btn-secondary" (click)="t.select('tab-selectbyid4')">Siguiente</span>
                                     </div>
                                 </div>
                             </ng-template>
@@ -371,13 +383,19 @@
                                 <hr size="30">
 
 
+
+
+
+
+
+
+
                                 <!--- Buttons Block Solo envia si el form esta validado-->
-                                <div class="form-row text-right">
+                                <div class="form-row text-right bg-gray-light">
                                     <div class="col-12">
-                                        <button class="btn btn-outline-primary" (click)="t.select( 'tab-selectbyid3')">Atrás</button>
-                                        <!-- <button type="reset " class="btn btn-outline-primary">Cancelar</button> -->
-                                        <button type="button" href="#btnCancelarModal" class="btn btn-outline-primary" data-toggle="modal">Cancelar</button>
-                                        <button type="submit" [disabled]="!creditoForm.valid" class="btn btn-outline-primary">Guardar</button>
+                                        <button class="btn btn-secondary" (click)="t.select( 'tab-selectbyid3')">&nbsp; Atrás &nbsp;</button>&nbsp;&nbsp;
+                                        <button type="button" href="#btnCancelarModal" class="btn btn-secondary" data-toggle="modal">Cancelar</button>&nbsp;&nbsp;
+                                        <button type="submit" [disabled]="!creditoForm.valid" class="btn btn-secondary">Guardar</button>
 
                                         <!-- Boton oculto que permite abrir el modal de guardado OK -->
                                         <div id="oculto" style="display:none;">

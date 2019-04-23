@@ -76,7 +76,6 @@ export class ReportePlanes implements OnInit {
                     }else{
                         return 'No Tiene'
                     }
-
                 }
             },
             tipoPlan: {
@@ -89,7 +88,6 @@ export class ReportePlanes implements OnInit {
                     }else{
                         return 'No Tiene'
                     }
-
                 }
             },
             legajo: {
@@ -279,8 +277,8 @@ export class ReportePlanes implements OnInit {
                     } else {
                         console.log('n no es mayor y vale  ' + n);
                     }
-                    if (typeof y.fechaPago[n - 1] != "undefined") {//TODO: fecha de vencimiento deberia ser, 
-                        /* ultimaFecha = this.datePipe.transform(y.fechaPago[n - 1], 'dd/MM/yyyy') 
+                    if (typeof y.fechaPago[n - 1] != "undefined") {//TODO: fecha de vencimiento deberia ser,
+                        /* ultimaFecha = this.datePipe.transform(y.fechaPago[n - 1], 'dd/MM/yyyy')
                         ultimaFecha = this.datePipe.transform(y.fechaPago[n - 1], 'dd/MM/yyyy')
                     }*/
 

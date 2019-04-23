@@ -28,11 +28,7 @@
         "datatables.net": "^1.10.19",
         "datatables.net-dt": "^1.10.19",
         "express": "^4.16.3",
-<<<<<<< HEAD
         "file-saver": "^2.0.0",
-=======
-        "file-saver": "^2.0.0-rc.4",
->>>>>>> 06a353160b01db4b5d9fe1221ff247f3bd52ae15
         "jquery": "^3.3.1",
         "jspdf": "^1.4.1",
         "jspdf-autotable": "^3.0.0-alpha.3",
@@ -47,11 +43,7 @@
         "sweetalert2": "^7.26.28",
         "typescript": "~2.7.2",
         "web-animations-js": "^2.3.1",
-<<<<<<< HEAD
         "xlsx": "^0.14.1",
-=======
-        "xlsx": "^0.14.0",
->>>>>>> 06a353160b01db4b5d9fe1221ff247f3bd52ae15
         "zone.js": "^0.8.26"
     },
     "devDependencies": {
